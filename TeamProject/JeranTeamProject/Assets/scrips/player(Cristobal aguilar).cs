@@ -115,7 +115,7 @@ public class playerController : MonoBehaviour
     public void updatePlayerUI()
     {
         GameManager.instance.PlayerHP_bar.fillAmount = (float)HP / HPorg;
-        GameManager.instance.
+       
 
     }
 
