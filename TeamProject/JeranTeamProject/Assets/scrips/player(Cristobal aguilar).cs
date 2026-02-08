@@ -2,7 +2,7 @@ using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.InputSystem.XR;
 
-public class player : MonoBehaviour
+public class playerController : MonoBehaviour
 {
 
     [SerializeField] CharacterController controller;
@@ -15,9 +15,18 @@ public class player : MonoBehaviour
     [SerializeField] int jumpSpeed;
     [SerializeField] int jumpMax;
     [SerializeField] int gravity;
+    [SerializeField] int max_ammo_carry;
+
+    [SerializeField] int shootDamge;
+    [SerializeField] int shootDist;
+    [SerializeField] float shootRate;
+
+
 
     int jumpCount;
     int HPorg;
+
+    float shootTimer;
 
     Vector3 moveDir;
     Vector3 playerVel;
@@ -27,6 +36,9 @@ public class player : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        HPorg = HP;
+        updatePlayerUI();
+
         
     }
 
@@ -78,6 +90,33 @@ public class player : MonoBehaviour
         {
             speed /= sprintMod;
         }
+    }
+
+    void shoot()
+    {
+        shootTimer = 0;
+
+        RaycastHit hit;
+
+        if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out hit, shootDist, ~ignoreLayer))
+        {
+            Debug.Log(hit.collider.name);
+
+            IDamage dmg = hit.collider.GetComponent<IDamage>();
+            if (dmg != null)
+            {
+                dmg.takeDamage(shootDamge);
+            }
+        }
+
+    }
+
+
+    public void updatePlayerUI()
+    {
+        GameManager.instance.PlayerHP_bar.fillAmount = (float)HP / HPorg;
+        GameManager.instance.
+
     }
 
 }
