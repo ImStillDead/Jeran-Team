@@ -16,6 +16,10 @@ public class playerController : MonoBehaviour
     [SerializeField] int jumpMax;
     [SerializeField] int gravity;
 
+    [SerializeField] int currentAmmo;
+    [SerializeField] int max_Ammo;
+    
+
     int jumpCount;
     int HPorg;
 
@@ -27,7 +31,7 @@ public class playerController : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        updatePlayerUI();
     }
 
     // Update is called once per frame
@@ -78,6 +82,17 @@ public class playerController : MonoBehaviour
         {
             speed /= sprintMod;
         }
+    }
+
+    public void updatePlayerUI()
+    {
+        if (currentAmmo < max_Ammo) currentAmmo = max_Ammo;
+
+        if (currentAmmo > max_Ammo) max_Ammo = currentAmmo;
+
+        GameManager.instance.update_ammocount(currentAmmo, max_Ammo);
+
+
     }
 
 }
