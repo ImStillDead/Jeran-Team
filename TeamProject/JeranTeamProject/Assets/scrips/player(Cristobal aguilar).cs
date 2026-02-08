@@ -2,7 +2,7 @@ using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.InputSystem.XR;
 
-public class player : MonoBehaviour
+public class playerController : MonoBehaviour
 {
 
     [SerializeField] CharacterController controller;
