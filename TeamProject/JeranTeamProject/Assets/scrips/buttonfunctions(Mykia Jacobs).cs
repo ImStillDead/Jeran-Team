@@ -1,12 +1,7 @@
 using UnityEngine;
-using UnityEngine.UI;
 
-
-public class gamemanager : MonoBehaviour
+public class buttonfunctions : MonoBehaviour
 {
-    [SerializeField] GameObject menuActive;
-    [SerializeField] GameObject menuPause;
-
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
