@@ -1,8 +1,10 @@
 using JetBrains.Annotations;
 using UnityEngine;
 using UnityEngine.InputSystem.XR;
+using System.Collections;
+using UnityEngine.Rendering;
 
-public class player : MonoBehaviour
+public class playerController : MonoBehaviour
 {
 
     [SerializeField] CharacterController controller;
@@ -15,6 +17,8 @@ public class player : MonoBehaviour
     [SerializeField] int jumpSpeed;
     [SerializeField] int jumpMax;
     [SerializeField] int gravity;
+    [SerializeField] Shooting testShoot;
+    [SerializeField] Damage dmg;
 
     int jumpCount;
     int HPorg;
@@ -27,7 +31,7 @@ public class player : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        UpdatePlayerUI();
     }
 
     // Update is called once per frame
@@ -58,6 +62,11 @@ public class player : MonoBehaviour
         playerVel.y -= gravity * Time.deltaTime;
         sprint();
 
+        if(Input.GetButton("Fire1") && Shooting.shootTimer >= Shooting.shootRate)
+        {
+            Shooting.instance.Shoot();
+        }
+
     }
     void jump()
     {
@@ -78,6 +87,11 @@ public class player : MonoBehaviour
         {
             speed /= sprintMod;
         }
+    }
+
+    public void UpdatePlayerUI()
+    {
+        GameManager.instance.update_ammocount(Shooting.instance.maxAmmo);
     }
 
 }
