@@ -5,9 +5,6 @@ public class Damage : MonoBehaviour
 {
     enum damageType { bullet, stationary, DOT }
     [SerializeField] damageType type;
-    [SerializeField] Rigidbody rb;
-    [SerializeField] GameObject projectile_shape;
-
     [SerializeField] int damageAmount;
     [SerializeField] float damageRate;
     [SerializeField] int speed;
@@ -16,15 +13,15 @@ public class Damage : MonoBehaviour
 
     bool isDamaging;
 
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         if (type == damageType.bullet)
         {
-            rb.linearVelocity = transform.forward * speed;
+            //rb.linearVelocity = transform.forward * speed;
             Destroy(gameObject, destroyTime);
         }
-
     }
 
     private void OnTriggerEnter(Collider other)
@@ -35,9 +32,10 @@ public class Damage : MonoBehaviour
         }
 
         IDamage dmg = other.GetComponent<IDamage>();
+
         if (dmg != null && type != damageType.DOT)
         {
-            dmg.takeDamage(damageAmount);
+            dmg.TakeDamage(damageAmount);
         }
 
         if (type == damageType.bullet)
@@ -49,7 +47,6 @@ public class Damage : MonoBehaviour
 
             Destroy(gameObject);
         }
-
     }
 
     private void OnTriggerStay(Collider other)
@@ -62,14 +59,14 @@ public class Damage : MonoBehaviour
         IDamage dmg = other.GetComponent<IDamage>();
         if (dmg != null && type == damageType.DOT && !isDamaging)
         {
-            StartCoroutine(damagOther(dmg));
+            StartCoroutine(damageOther(dmg));
         }
     }
 
-    IEnumerator damagOther(IDamage D)
+    IEnumerator damageOther(IDamage d)
     {
         isDamaging = true;
-        D.takeDamage(damageAmount);
+        d.TakeDamage(damageAmount);
         yield return new WaitForSeconds(damageRate);
         isDamaging = false;
     }
