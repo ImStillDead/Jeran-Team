@@ -9,6 +9,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject menuWin;
     [SerializeField] GameObject menuLose;
 
+
     [SerializeField] TMP_Text magazine_text;
     [SerializeField] TMP_Text maxMagsize_text;
     public Image PlayerHP_bar;
@@ -21,6 +22,7 @@ public class GameManager : MonoBehaviour
     int magsize;
     int maxMagsize;
 
+    
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -71,4 +73,22 @@ public class GameManager : MonoBehaviour
         maxMagsize += ammo;
         maxMagsize_text.text = maxMagsize_text.ToString();
     }
+
+    public void youWin()
+    {
+        // You Win!
+        statePause();
+        menuActive = menuWin;
+        menuActive.SetActive(true);
+        
+    }
+    public void youLose()
+    {
+         // You Lose!
+         statePause();
+         menuActive = menuLose;
+         menuActive.SetActive(true);
+
+    }
+
 }
