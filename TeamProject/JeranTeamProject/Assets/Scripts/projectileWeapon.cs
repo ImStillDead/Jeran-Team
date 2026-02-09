@@ -1,7 +1,7 @@
 using UnityEngine;
 
 
-public class projectileweapon : MonoBehaviour
+public class projectileWeapon : MonoBehaviour
 {
     [SerializeField] GameObject projectile_type;
     [SerializeField] Rigidbody rb;
