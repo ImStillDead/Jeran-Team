@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class Cameracontroller : MonoBehaviour
+public class CameraController : MonoBehaviour
 {
     [SerializeField] int sens;
     [SerializeField] int lockVertMin, lockVertMax;
