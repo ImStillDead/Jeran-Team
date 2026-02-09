@@ -13,20 +13,24 @@ public class PlayerController : MonoBehaviour, IDamage
     [SerializeField] int jumpSpeed;
     [SerializeField] int jumpMax;
     [SerializeField] int gravity;
-
+    [SerializeField] GameObject firstPersonCamera;
+    [SerializeField] GameObject thirdPersonCamera;
     [SerializeField] GameObject inventory1;
     [SerializeField] GameObject inventory2;
     [SerializeField] GameObject inventory3;
 
+    GameObject activeItem;
     int HPOrigin;
     int jumpCount;
-
+    bool isFirstPerson;
     Vector3 moveDir;
     Vector3 playerVel;
 
     void Start()
     {
         HPOrigin = HP;
+        activeItem = inventory1;
+        isFirstPerson = true;
     }
 
     void Update()
@@ -50,7 +54,35 @@ public class PlayerController : MonoBehaviour, IDamage
             jumpCount = 0;
             playerVel = Vector3.zero;
         }
+        cameraToggle();
 
+    }
+    void cameraToggle()
+    {
+        if (Input.GetButtonDown("ToggleCamera"))
+        {
+            if(isFirstPerson == true)
+            {
+                thirdPersonCamera.SetActive(true);
+                firstPersonCamera.SetActive(false);
+                isFirstPerson = false;
+            }
+            else
+            {
+                firstPersonCamera.SetActive(true);
+                thirdPersonCamera.SetActive(false);
+                isFirstPerson = true;
+            }
+        }
+    }
+    void cameraTP()
+    {
+        if (Input.GetButtonDown("ToggleCamera"))
+        {
+            isFirstPerson = false;
+            thirdPersonCamera.SetActive(true);
+            firstPersonCamera.SetActive(false);
+        }
     }
     void jump()
     {

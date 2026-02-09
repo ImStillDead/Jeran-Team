@@ -4,17 +4,14 @@ using UnityEngine;
 public class projectileWeapon : MonoBehaviour
 {
     [SerializeField] GameObject projectile_type;
-    [SerializeField] Rigidbody rb;
-    [SerializeField] int amount_of_projectiles;
-    [SerializeField] int projectile_speed_mult;
-    [SerializeField] int reload_speed;
-    [SerializeField] int magazine_amount;
+    [SerializeField] int currentAmmo;
+    [SerializeField] int projectileSpeed;
+    [SerializeField] int reloadSpeed;
+    [SerializeField] int maxAmmoCount;
     [SerializeField] int fireRate;
     [SerializeField] Transform shootPOS;
 
     float shootTimer;
-
-
 
     void Update()
     {
