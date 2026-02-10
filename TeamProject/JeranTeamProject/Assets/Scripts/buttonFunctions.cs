@@ -8,6 +8,22 @@ public class buttonFunctions : MonoBehaviour
     {
         GameManager.instance.stateUnpause();
     }
+    public void Play()
+    {
+        SceneManager.LoadScene("JeranDevScene");
+    }
+    public void LevelSelect()
+    {
+
+    }
+    public void Settings()
+    {
+        
+    }
+    public void MainMenu()
+    {
+        
+    }
 
     // Update is called once per frame
     public void Restart()
