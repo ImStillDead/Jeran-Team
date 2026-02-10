@@ -36,17 +36,17 @@ public class PlayerController : MonoBehaviour, IDamage
 
     void Update()
     {
-        movement();
-        weaponRotate();
+        Movement();
+        WeaponRotate();
     }
-    void movement()
+    void Movement()
     {
        
         //directional input
         moveDir = Input.GetAxis("Horizontal") * transform.right + (Input.GetAxis("Vertical") * transform.forward);
         playerController.Move(moveDir * speed * Time.deltaTime);
         //jump method
-        jump();
+        Jump();
         playerController.Move(playerVel * Time.deltaTime);
         //gravity
         playerVel.y -= gravity * Time.deltaTime;
@@ -56,14 +56,14 @@ public class PlayerController : MonoBehaviour, IDamage
             jumpCount = 0;
             playerVel = Vector3.zero;
         }
-        cameraToggle();
+        CameraToggle();
 
     }
-    void cameraToggle()
+    void CameraToggle()
     {
         if (Input.GetButtonDown("ToggleCamera"))
         {
-            if(isFirstPerson == true)
+            if (isFirstPerson)
             {
                 weaponPos.transform.Rotate(-4, 4, 0);
                 thirdPersonCamera.SetActive(true);
@@ -78,8 +78,9 @@ public class PlayerController : MonoBehaviour, IDamage
                 isFirstPerson = true;
             }
         }
+        
     }
-    void jump()
+    void Jump()
     {
         if(Input.GetButtonDown("Jump") && jumpCount < jumpMax)
         {
@@ -87,7 +88,7 @@ public class PlayerController : MonoBehaviour, IDamage
             jumpCount++;
         }
     }
-    void sprint()
+    void Sprint()
     {
         if (Input.GetButtonDown("Sprint"))
         {
@@ -101,7 +102,7 @@ public class PlayerController : MonoBehaviour, IDamage
     {
         HP -= ammount; 
     }
-    void weaponRotate()
+    void WeaponRotate()
     {
         if (isFirstPerson)
         {
@@ -112,5 +113,5 @@ public class PlayerController : MonoBehaviour, IDamage
             activeItem.transform.localRotation = thirdPersonCamera.transform.localRotation;
         }
     }
-
+    
 }
