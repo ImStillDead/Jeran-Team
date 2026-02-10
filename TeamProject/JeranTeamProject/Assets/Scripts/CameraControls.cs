@@ -5,8 +5,7 @@ public class CameraController : MonoBehaviour
     [SerializeField] int sens;
     [SerializeField] int lockVertMin, lockVertMax;
     [SerializeField] bool invertY;
-
-    float camRotX;
+    public float camRotX;
 
 
 
@@ -16,8 +15,6 @@ public class CameraController : MonoBehaviour
     {
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
-
-
     }
 
     // Update is called once per frame
@@ -40,6 +37,6 @@ public class CameraController : MonoBehaviour
         transform.localRotation = Quaternion.Euler(camRotX, 0, 0);
 
         transform.parent.Rotate(Vector3.up * mouseX);
-
+        
     }
 }
