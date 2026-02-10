@@ -23,4 +23,10 @@ public class buttonFunctions : MonoBehaviour
         Application.Quit();
         #endif
     }
+
+    public void StartGame()
+    {
+        int sceneIndex = SceneManager.GetActiveScene().buildIndex + 1;
+        SceneManager.LoadScene(sceneIndex);
+    }
 }
