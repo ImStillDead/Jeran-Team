@@ -5,13 +5,14 @@ using UnityEngine.EventSystems;
 public class PlayerController : MonoBehaviour, IDamage
 {
     [SerializeField] CharacterController playerController;
-    [SerializeField] LayerMask ignore;
+    [SerializeField] LayerMask ignoreLayer;
 
     [SerializeField] int HP;
     [SerializeField] int speed;
     [SerializeField] int sprintMod;
     [SerializeField] int jumpSpeed;
     [SerializeField] int jumpMax;
+    [SerializeField] int interactDis;
     [SerializeField] int gravity;
     [SerializeField] Transform weaponPos;
     [SerializeField] GameObject firstPersonCamera;
@@ -57,7 +58,10 @@ public class PlayerController : MonoBehaviour, IDamage
             playerVel = Vector3.zero;
         }
         CameraToggle();
-
+        if (Input.GetButtonDown("Interact"))
+        {
+            Interact();
+        }
     }
     void CameraToggle()
     {
@@ -107,11 +111,35 @@ public class PlayerController : MonoBehaviour, IDamage
         if (isFirstPerson)
         {
             activeItem.transform.localRotation = firstPersonCamera.transform.localRotation;
+            interactDis = 3;
         }
         else
         {
             activeItem.transform.localRotation = thirdPersonCamera.transform.localRotation;
+            interactDis = 5;
         }
     }
-    
+
+    void Interact()
+    {
+        Debug.DrawRay(Camera.main.transform.position, Camera.main.transform.forward * interactDis, Color.red);
+
+        RaycastHit interact;
+        if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out interact, interactDis, ~ignoreLayer))
+        {
+            if (interact.collider.gameObject.CompareTag("Door") == true)
+            {
+                if (interact.collider.gameObject.GetComponent<Collider>().isTrigger == false)
+                {
+                    interact.collider.gameObject.GetComponent<Collider>().isTrigger = true;
+                    interact.collider.gameObject.GetComponent<MeshRenderer>().enabled = false;
+                }
+                else if (interact.collider.isTrigger)
+                {
+                    interact.collider.gameObject.GetComponent<Collider>().isTrigger = false;
+                    interact.collider.gameObject.GetComponent<MeshRenderer>().enabled = true;
+                }
+            }
+        }
+    }
 }
