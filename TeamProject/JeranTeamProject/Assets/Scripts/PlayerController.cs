@@ -13,6 +13,7 @@ public class PlayerController : MonoBehaviour, IDamage
     [SerializeField] int jumpSpeed;
     [SerializeField] int jumpMax;
     [SerializeField] int gravity;
+    [SerializeField] Transform weaponPos;
     [SerializeField] GameObject firstPersonCamera;
     [SerializeField] GameObject thirdPersonCamera;
     [SerializeField] GameObject inventory1;
@@ -29,13 +30,14 @@ public class PlayerController : MonoBehaviour, IDamage
     void Start()
     {
         HPOrigin = HP;
-        activeItem = inventory1;
+        activeItem = Instantiate(inventory1, weaponPos);
         isFirstPerson = true;
     }
 
     void Update()
     {
         movement();
+        weaponRotate();
     }
     void movement()
     {
@@ -63,25 +65,18 @@ public class PlayerController : MonoBehaviour, IDamage
         {
             if(isFirstPerson == true)
             {
+                weaponPos.transform.Rotate(-4, 4, 0);
                 thirdPersonCamera.SetActive(true);
                 firstPersonCamera.SetActive(false);
                 isFirstPerson = false;
             }
             else
             {
+                weaponPos.transform.Rotate(4, -4, 0);
                 firstPersonCamera.SetActive(true);
                 thirdPersonCamera.SetActive(false);
                 isFirstPerson = true;
             }
-        }
-    }
-    void cameraTP()
-    {
-        if (Input.GetButtonDown("ToggleCamera"))
-        {
-            isFirstPerson = false;
-            thirdPersonCamera.SetActive(true);
-            firstPersonCamera.SetActive(false);
         }
     }
     void jump()
@@ -106,4 +101,16 @@ public class PlayerController : MonoBehaviour, IDamage
     {
         HP -= ammount; 
     }
+    void weaponRotate()
+    {
+        if (isFirstPerson)
+        {
+            activeItem.transform.localRotation = firstPersonCamera.transform.localRotation;
+        }
+        else
+        {
+            activeItem.transform.localRotation = thirdPersonCamera.transform.localRotation;
+        }
+    }
+
 }

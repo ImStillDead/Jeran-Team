@@ -6,7 +6,7 @@ public class Damage : MonoBehaviour
     enum damageType { bullet, stationary, DOT }
     [SerializeField] damageType type;
     [SerializeField] Rigidbody rb;
-    [SerializeField] GameObject projectile_shape;
+    [SerializeField] LayerMask ignoreLayer;
 
     [SerializeField] int damageAmount;
     [SerializeField] float damageRate;
@@ -15,7 +15,6 @@ public class Damage : MonoBehaviour
     [SerializeField] ParticleSystem hitEffect;
 
     bool isDamaging;
-
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {

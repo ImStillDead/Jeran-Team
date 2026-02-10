@@ -4,6 +4,7 @@ using UnityEngine;
 public class projectileWeapon : MonoBehaviour
 {
     [SerializeField] GameObject projectile_type;
+    [SerializeField] LayerMask ignoreLayer;
     [SerializeField] int currentAmmo;
     [SerializeField] int projectileSpeed;
     [SerializeField] int reloadSpeed;
@@ -17,11 +18,18 @@ public class projectileWeapon : MonoBehaviour
     {
         shootTimer += Time.deltaTime;
 
-
+        if (Input.GetButton("Fire1") && shootTimer >= fireRate)
+        {
+            shoot();
+        }
 
 
     }
-
+    void shoot()
+    {
+        shootTimer = 0;
+        Instantiate(projectile_type, shootPOS.position, transform.rotation);
+    }
 
 
 
