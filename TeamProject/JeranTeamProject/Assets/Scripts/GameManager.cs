@@ -8,7 +8,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject menuPause;
     [SerializeField] GameObject menuWin;
     [SerializeField] GameObject menuLose;
-
+    [SerializeField] int objectiveTimerDelay;
 
     [SerializeField] TMP_Text magazine_text;
     [SerializeField] TMP_Text maxMagsize_text;
@@ -18,7 +18,9 @@ public class GameManager : MonoBehaviour
     public GameObject player;
     public PlayerController playerScript;
     public bool isPaused;
+    public bool startTimer;
     float timeScaleOrg;
+    public float objectiveTimer;
     int magsize;
     int maxMagsize;
 
@@ -31,7 +33,6 @@ public class GameManager : MonoBehaviour
         timeScaleOrg = Time.timeScale;
         player = GameObject.FindWithTag("Player");
         playerScript = player.GetComponent<PlayerController>();
-
     }
 
     // Update is called once per frame
@@ -48,6 +49,14 @@ public class GameManager : MonoBehaviour
             else if (menuActive == menuPause)
             {
                 stateUnpause();
+            }
+        }
+        if (startTimer)
+        {
+            objectiveTimer += Time.deltaTime;
+            if(objectiveTimer >= objectiveTimerDelay)
+            {
+                startTimer = false;
             }
         }
 
@@ -89,6 +98,19 @@ public class GameManager : MonoBehaviour
          menuActive = menuLose;
          menuActive.SetActive(true);
 
+    }
+
+    public bool objectiveCheck()
+    {
+        if(objectiveTimer >= objectiveTimerDelay)
+        {
+            return true;
+        }
+        else if (objectiveTimer == 0)
+        {
+            startTimer = true;
+        }
+        return false;
     }
 
 }
