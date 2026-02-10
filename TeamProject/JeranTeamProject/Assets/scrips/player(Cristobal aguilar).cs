@@ -86,9 +86,6 @@ public class playerController : MonoBehaviour
 
     public void updatePlayerUI()
     {
-        if (currentAmmo < max_Ammo) currentAmmo = max_Ammo;
-
-        if (currentAmmo > max_Ammo) max_Ammo = currentAmmo;
 
         GameManager.instance.update_ammocount(currentAmmo, max_Ammo);
 

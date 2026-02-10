@@ -15,8 +15,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] TMP_Text magazine_text;
     [SerializeField] TMP_Text maxMagsize_text;
 
-    public int magsize;
-    public int maxMagsize;
+    int magsize;
+    int maxMagsize;
 
     public Image PlayerHP_bar;
     public GameObject playerDamageFlash;
@@ -45,12 +45,11 @@ public class GameManager : MonoBehaviour
         
     }
 
-    public void update_ammocount(int ammo, int clipsize)
+    public void update_ammocount(int ammo)
     {
         maxMagsize = ammo;
-        magsize = clipsize;
-        maxMagsize_text.text = maxMagsize.ToString();
-        magazine_text.text = maxMagsize.ToString();
+        maxMagsize_text.text = maxMagsize_text.ToString();
+
 
     }
 
