@@ -33,6 +33,7 @@ public class PlayerController : MonoBehaviour, IDamage
         HPOrigin = HP;
         activeItem = Instantiate(inventory1, weaponPos);
         isFirstPerson = true;
+        updatePlayerUI();
     }
 
     void Update()
@@ -102,10 +103,7 @@ public class PlayerController : MonoBehaviour, IDamage
             speed /= sprintMod;
         }
     }
-    public void takeDamage(int ammount)
-    {
-        HP -= ammount; 
-    }
+
     void WeaponRotate()
     {
         if (isFirstPerson)
@@ -142,4 +140,30 @@ public class PlayerController : MonoBehaviour, IDamage
             }
         }
     }
+
+    public void takeDamage(int amount)
+    {
+        HP -= amount;
+        updatePlayerUI();
+        StartCoroutine(flahScreen());
+
+        if (HP <= 0)
+        {
+            GameManager.instance.youLose();
+        }
+
+    }
+
+    IEnumerator flahScreen()
+    {
+        GameManager.instance.playerDamageFlash.SetActive(true);
+        yield return new WaitForSeconds(0.1f);
+        GameManager.instance.playerDamageFlash.SetActive(false);
+    }
+
+    public void updatePlayerUI()
+    {
+        GameManager.instance.PlayerHP_bar.fillAmount = (float)HP / HPOrigin;
+    }
+
 }

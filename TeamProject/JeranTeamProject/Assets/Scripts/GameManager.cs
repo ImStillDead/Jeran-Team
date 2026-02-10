@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject menuWin;
     [SerializeField] GameObject menuLose;
 
-
+    [SerializeField] GameObject reticle;
     [SerializeField] TMP_Text magazine_text;
     [SerializeField] TMP_Text maxMagsize_text;
     public Image PlayerHP_bar;
@@ -25,7 +25,7 @@ public class GameManager : MonoBehaviour
     
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    void Awake()
     {
         instance = this;
         timeScaleOrg = Time.timeScale;
@@ -54,10 +54,12 @@ public class GameManager : MonoBehaviour
     }
     public void statePause()
     {
+        reticle.SetActive(false); 
         isPaused = true;
         Time.timeScale = 0;
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
+        
     }
     public void stateUnpause()
     {
@@ -90,5 +92,15 @@ public class GameManager : MonoBehaviour
          menuActive.SetActive(true);
 
     }
+
+    public void ammocount(int mag, int max_mag)
+    {
+        magsize = mag;
+        maxMagsize = max_mag;
+
+        magazine_text.text = magsize.ToString();
+        maxMagsize_text.text = maxMagsize.ToString(); 
+    }
+
 
 }
