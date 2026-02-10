@@ -36,7 +36,7 @@ public class Damage : MonoBehaviour
         IDamage dmg = other.GetComponent<IDamage>();
         if (dmg != null && type != damageType.DOT)
         {
-            dmg.TakeDamage(damageAmount);
+            dmg.takeDamage(damageAmount);
         }
 
         if (type == damageType.bullet)
@@ -68,7 +68,7 @@ public class Damage : MonoBehaviour
     IEnumerator damagOther(IDamage D)
     {
         isDamaging = true;
-        D.TakeDamage(damageAmount);
+        D.takeDamage(damageAmount);
         yield return new WaitForSeconds(damageRate);
         isDamaging = false;
     }

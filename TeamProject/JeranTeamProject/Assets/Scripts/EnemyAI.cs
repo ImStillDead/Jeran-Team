@@ -41,7 +41,7 @@ public class EnemyAI : MonoBehaviour, IDamage
     void faceTarget()
     {
         Quaternion rot= Quaternion.LookRotation(playerDir);
-        transform.rotation=quaternion.Lerp(transform.rotation, rot,Time.deltaTime*faceTargetSpeed);
+        transform.rotation = Quaternion.Lerp(transform.rotation, rot, Time.deltaTime * faceTargetSpeed);
     }
     private void OnTriggerEnter(Collider other)
     {
@@ -58,7 +58,7 @@ public class EnemyAI : MonoBehaviour, IDamage
             playerInTrigger = false;
         }
     }
-    public void TakeDamage(int amount)
+    public void takeDamage(int amount)
     {
         Health -= amount;
 
@@ -78,4 +78,6 @@ public class EnemyAI : MonoBehaviour, IDamage
         yield return new WaitForSeconds(0.1f);
         model.material.color= colorOrg;
     }
+
+  
 }
