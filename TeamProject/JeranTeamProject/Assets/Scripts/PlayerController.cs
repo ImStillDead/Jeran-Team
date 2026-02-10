@@ -149,7 +149,15 @@ public class PlayerController : MonoBehaviour, IDamage
             {
                 GameManager.instance.objectiveTimer = 0;
                 sceneIndex += 1;
-                SceneManager.LoadScene(sceneIndex);
+                if(sceneIndex > SceneManager.sceneCount)
+                {
+                    GameManager.instance.statePause();
+                    SceneManager.LoadScene(0);
+                }
+                else
+                {
+                    SceneManager.LoadScene(sceneIndex);
+                }
             }
         }
     }

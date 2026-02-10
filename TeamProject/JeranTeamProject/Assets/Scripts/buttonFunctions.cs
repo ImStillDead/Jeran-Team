@@ -28,5 +28,6 @@ public class buttonFunctions : MonoBehaviour
     {
         int sceneIndex = SceneManager.GetActiveScene().buildIndex + 1;
         SceneManager.LoadScene(sceneIndex);
+        GameManager.instance.stateUnpause();
     }
 }
