@@ -5,12 +5,9 @@ public class Damage : MonoBehaviour
 {
     enum damageType { bullet, stationary, DOT }
     [SerializeField] damageType type;
-<<<<<<<< HEAD:TeamProject/JeranTeamProject/Assets/Scripts/Damage (Blake Beal).cs
-========
     [SerializeField] Rigidbody rb;
     [SerializeField] LayerMask ignoreLayer;
 
->>>>>>>> Safety:TeamProject/JeranTeamProject/Assets/Scripts/Damage.cs
     [SerializeField] int damageAmount;
     [SerializeField] float damageRate;
     [SerializeField] int speed;
@@ -18,12 +15,8 @@ public class Damage : MonoBehaviour
     [SerializeField] ParticleSystem hitEffect;
 
     bool isDamaging;
-<<<<<<<< HEAD:TeamProject/JeranTeamProject/Assets/Scripts/Damage (Blake Beal).cs
 
 
-========
->>>>>>>> Safety:TeamProject/JeranTeamProject/Assets/Scripts/Damage.cs
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
         if (type == damageType.bullet)
@@ -44,7 +37,7 @@ public class Damage : MonoBehaviour
 
         if (dmg != null && type != damageType.DOT)
         {
-            dmg.TakeDamage(damageAmount);
+            dmg.takeDamage(damageAmount);
         }
 
         if (type == damageType.bullet)
@@ -75,7 +68,7 @@ public class Damage : MonoBehaviour
     IEnumerator damageOther(IDamage d)
     {
         isDamaging = true;
-        d.TakeDamage(damageAmount);
+        d.takeDamage(damageAmount);
         yield return new WaitForSeconds(damageRate);
         isDamaging = false;
     }
