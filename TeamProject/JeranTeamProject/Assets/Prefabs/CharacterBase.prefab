@@ -47,6 +47,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0c997653bd6f8b49af2cd56a609434e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Cameracontroller
+  player: {fileID: 0}
   sens: 580
   lockVertMin: -15
   lockVertMax: 30
@@ -233,6 +234,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0c997653bd6f8b49af2cd56a609434e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Cameracontroller
+  player: {fileID: 0}
   sens: 580
   lockVertMin: -45
   lockVertMax: 45
@@ -394,14 +396,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
   playerController: {fileID: 7136655406761469723}
-  ignore:
+  ignoreLayer:
     serializedVersion: 2
-    m_Bits: 576
+    m_Bits: 0
   HP: 10
   speed: 8
   sprintMod: 2
   jumpSpeed: 10
   jumpMax: 1
+  interactDis: 3
   gravity: 35
   weaponPos: {fileID: 2322056319581036704}
   firstPersonCamera: {fileID: 8269506281394273731}
@@ -476,7 +479,7 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 1536
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -499,7 +502,7 @@ CharacterController:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 1536
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
