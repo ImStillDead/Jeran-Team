@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour, IDamage
 {
@@ -27,13 +28,14 @@ public class PlayerController : MonoBehaviour, IDamage
     bool isFirstPerson;
     Vector3 moveDir;
     Vector3 playerVel;
-
+    int sceneIndex;
     void Start()
     {
         HPOrigin = HP;
         activeItem = Instantiate(inventory1, weaponPos);
         isFirstPerson = true;
         updatePlayerUI();
+        sceneIndex = SceneManager.GetActiveScene().buildIndex;
     }
 
     void Update()
@@ -117,7 +119,6 @@ public class PlayerController : MonoBehaviour, IDamage
             interactDis = 5;
         }
     }
-
     void Interact()
     {
         Debug.DrawRay(Camera.main.transform.position, Camera.main.transform.forward * interactDis, Color.red);
@@ -136,6 +137,24 @@ public class PlayerController : MonoBehaviour, IDamage
                 {
                     interact.collider.gameObject.GetComponent<Collider>().isTrigger = false;
                     interact.collider.gameObject.GetComponent<MeshRenderer>().enabled = true;
+                }
+            }
+            if (interact.collider.gameObject.CompareTag("Objective") == true)
+            {
+                GameManager.instance.objectiveCheck();
+            }
+                if (interact.collider.gameObject.CompareTag("LevelDoor") == true && GameManager.instance.objectiveCheck())
+            {
+                GameManager.instance.objectiveTimer = 0;
+                sceneIndex += 1;
+                if(sceneIndex > SceneManager.sceneCount)
+                {
+                    GameManager.instance.statePause();
+                    SceneManager.LoadScene(0);
+                }
+                else
+                {
+                    SceneManager.LoadScene(sceneIndex);
                 }
             }
         }
