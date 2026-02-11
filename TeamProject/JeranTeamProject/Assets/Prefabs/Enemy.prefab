@@ -121,7 +121,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 696709738729945811}
-  - component: {fileID: 6680587823511027183}
   - component: {fileID: 5285626837206032121}
   - component: {fileID: 5672984400017759591}
   - component: {fileID: 5776221733896935418}
@@ -155,28 +154,6 @@ Transform:
   - {fileID: 5975991327047215468}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6680587823511027183
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2553612289123517612}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b8faccb8e72f5b644bf2b2d77b4fdeec, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Damage
-  type: 2
-  rb: {fileID: 0}
-  ignoreLayer:
-    serializedVersion: 2
-    m_Bits: 0
-  damageAmount: 1
-  damageRate: 1
-  speed: 1
-  destroyTime: 0
-  hitEffect: {fileID: 0}
 --- !u!114 &5285626837206032121
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -192,7 +169,15 @@ MonoBehaviour:
   model: {fileID: 3286630283137833765}
   agent: {fileID: 5672984400017759591}
   Health: 2
+  Speed: 0
   faceTargetSpeed: 10
+  roamDist: 0
+  roamPauseTime: 0
+  spit: {fileID: 0}
+  spitRate: 0
+  spitPos: {fileID: 0}
+  contactDamage: 10
+  damageRate: 1
 --- !u!195 &5672984400017759591
 NavMeshAgent:
   m_ObjectHideFlags: 0
