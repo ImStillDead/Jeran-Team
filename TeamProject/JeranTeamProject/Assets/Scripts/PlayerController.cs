@@ -1,17 +1,19 @@
 using UnityEngine;
 using System.Collections;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour, IDamage
 {
     [SerializeField] CharacterController playerController;
-    [SerializeField] LayerMask ignore;
+    [SerializeField] LayerMask ignoreLayer;
 
     [SerializeField] int HP;
     [SerializeField] int speed;
     [SerializeField] int sprintMod;
     [SerializeField] int jumpSpeed;
     [SerializeField] int jumpMax;
+    [SerializeField] int interactDis;
     [SerializeField] int gravity;
     [SerializeField] Transform weaponPos;
     [SerializeField] GameObject firstPersonCamera;
@@ -26,27 +28,29 @@ public class PlayerController : MonoBehaviour, IDamage
     bool isFirstPerson;
     Vector3 moveDir;
     Vector3 playerVel;
-
+    int sceneIndex;
     void Start()
     {
         HPOrigin = HP;
         activeItem = Instantiate(inventory1, weaponPos);
         isFirstPerson = true;
+        updatePlayerUI();
+        sceneIndex = SceneManager.GetActiveScene().buildIndex;
     }
 
     void Update()
     {
-        movement();
-        weaponRotate();
+        Movement();
+        WeaponRotate();
     }
-    void movement()
+    void Movement()
     {
        
         //directional input
         moveDir = Input.GetAxis("Horizontal") * transform.right + (Input.GetAxis("Vertical") * transform.forward);
         playerController.Move(moveDir * speed * Time.deltaTime);
         //jump method
-        jump();
+        Jump();
         playerController.Move(playerVel * Time.deltaTime);
         //gravity
         playerVel.y -= gravity * Time.deltaTime;
@@ -56,14 +60,17 @@ public class PlayerController : MonoBehaviour, IDamage
             jumpCount = 0;
             playerVel = Vector3.zero;
         }
-        cameraToggle();
-
+        CameraToggle();
+        if (Input.GetButtonDown("Interact"))
+        {
+            Interact();
+        }
     }
-    void cameraToggle()
+    void CameraToggle()
     {
         if (Input.GetButtonDown("ToggleCamera"))
         {
-            if(isFirstPerson == true)
+            if (isFirstPerson)
             {
                 weaponPos.transform.Rotate(-4, 4, 0);
                 thirdPersonCamera.SetActive(true);
@@ -78,8 +85,9 @@ public class PlayerController : MonoBehaviour, IDamage
                 isFirstPerson = true;
             }
         }
+        
     }
-    void jump()
+    void Jump()
     {
         if(Input.GetButtonDown("Jump") && jumpCount < jumpMax)
         {
@@ -87,7 +95,7 @@ public class PlayerController : MonoBehaviour, IDamage
             jumpCount++;
         }
     }
-    void sprint()
+    void Sprint()
     {
         if (Input.GetButtonDown("Sprint"))
         {
@@ -97,20 +105,84 @@ public class PlayerController : MonoBehaviour, IDamage
             speed /= sprintMod;
         }
     }
-    public void takeDamage(int ammount)
-    {
-        HP -= ammount; 
-    }
-    void weaponRotate()
+
+    void WeaponRotate()
     {
         if (isFirstPerson)
         {
             activeItem.transform.localRotation = firstPersonCamera.transform.localRotation;
+            interactDis = 3;
         }
         else
         {
             activeItem.transform.localRotation = thirdPersonCamera.transform.localRotation;
+            interactDis = 5;
         }
+    }
+    void Interact()
+    {
+        Debug.DrawRay(Camera.main.transform.position, Camera.main.transform.forward * interactDis, Color.red);
+
+        RaycastHit interact;
+        if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out interact, interactDis, ~ignoreLayer))
+        {
+            if (interact.collider.gameObject.CompareTag("Door") == true)
+            {
+                if (interact.collider.gameObject.GetComponent<Collider>().isTrigger == false)
+                {
+                    interact.collider.gameObject.GetComponent<Collider>().isTrigger = true;
+                    interact.collider.gameObject.GetComponent<MeshRenderer>().enabled = false;
+                }
+                else if (interact.collider.isTrigger)
+                {
+                    interact.collider.gameObject.GetComponent<Collider>().isTrigger = false;
+                    interact.collider.gameObject.GetComponent<MeshRenderer>().enabled = true;
+                }
+            }
+            if (interact.collider.gameObject.CompareTag("Objective") == true)
+            {
+                GameManager.instance.objectiveCheck();
+            }
+                if (interact.collider.gameObject.CompareTag("LevelDoor") == true && GameManager.instance.objectiveCheck())
+            {
+                GameManager.instance.objectiveTimer = 0;
+                sceneIndex += 1;
+                if(sceneIndex > SceneManager.sceneCount)
+                {
+                    GameManager.instance.statePause();
+                    SceneManager.LoadScene(0);
+                }
+                else
+                {
+                    SceneManager.LoadScene(sceneIndex);
+                }
+            }
+        }
+    }
+
+    public void takeDamage(int amount)
+    {
+        HP -= amount;
+        updatePlayerUI();
+        StartCoroutine(flahScreen());
+
+        if (HP <= 0)
+        {
+            GameManager.instance.youLose();
+        }
+
+    }
+
+    IEnumerator flahScreen()
+    {
+        GameManager.instance.playerDamageFlash.SetActive(true);
+        yield return new WaitForSeconds(0.1f);
+        GameManager.instance.playerDamageFlash.SetActive(false);
+    }
+
+    public void updatePlayerUI()
+    {
+        GameManager.instance.PlayerHP_bar.fillAmount = (float)HP / HPOrigin;
     }
 
 }
