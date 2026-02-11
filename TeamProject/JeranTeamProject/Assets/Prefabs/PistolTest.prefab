@@ -44,7 +44,7 @@ GameObject:
   - component: {fileID: 2516107904151654405}
   - component: {fileID: 5027746389824544662}
   - component: {fileID: 7546082912738812999}
-  m_Layer: 6
+  m_Layer: 11
   m_Name: PistolTest
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -160,10 +160,10 @@ MonoBehaviour:
   projectile_type: {fileID: 3189653459911353158, guid: cdc233a2a752d7f4bab4c21b049ae23e, type: 3}
   ignoreLayer:
     serializedVersion: 2
-    m_Bits: 72
+    m_Bits: 2056
   currentAmmo: 15
-  projectileSpeed: 0
+  projectileSpeed: 35
   reloadSpeed: 5
   maxAmmoCount: 15
-  fireRate: 1
+  fireRate: 0.25
   shootPOS: {fileID: 1281545068770081553}
