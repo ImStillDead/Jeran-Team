@@ -9,8 +9,8 @@ public class EnemyAI : MonoBehaviour, IDamage
     [SerializeField] NavMeshAgent agent;
     
     [SerializeField] int Health;
-    [SerializeField] int faceTargetSpeed;
     
+    [SerializeField] int faceTargetSpeed;
 
     Color colorOrg;
 
