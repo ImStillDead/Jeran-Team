@@ -1,7 +1,6 @@
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
-using System.Collections;
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
@@ -9,9 +8,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject menuPause;
     [SerializeField] GameObject menuWin;
     [SerializeField] GameObject menuLose;
-
     [SerializeField] GameObject reticle;
-    [SerializeField] Image reticleImage;
+    [SerializeField] int objectiveTimerDelay;
     [SerializeField] TMP_Text magazine_text;
     [SerializeField] TMP_Text maxMagsize_text;
     public Image PlayerHP_bar;
@@ -20,7 +18,9 @@ public class GameManager : MonoBehaviour
     public GameObject player;
     public PlayerController playerScript;
     public bool isPaused;
+    public bool startTimer;
     float timeScaleOrg;
+    public float objectiveTimer;
     int magsize;
     int maxMagsize;
 
@@ -33,7 +33,6 @@ public class GameManager : MonoBehaviour
         timeScaleOrg = Time.timeScale;
         player = GameObject.FindWithTag("Player");
         playerScript = player.GetComponent<PlayerController>();
-
     }
 
     // Update is called once per frame
@@ -50,6 +49,14 @@ public class GameManager : MonoBehaviour
             else if (menuActive == menuPause)
             {
                 stateUnpause();
+            }
+        }
+        if (startTimer)
+        {
+            objectiveTimer += Time.deltaTime;
+            if(objectiveTimer >= objectiveTimerDelay)
+            {
+                startTimer = false;
             }
         }
 
@@ -103,15 +110,17 @@ public class GameManager : MonoBehaviour
         magazine_text.text = magsize.ToString();
         maxMagsize_text.text = maxMagsize.ToString(); 
     }
-
-    public IEnumerator flashReticleRed()
+    public bool objectiveCheck()
     {
-        Color originColor = reticleImage.color;
-        reticleImage.color = Color.red;
-
-        yield return new WaitForSeconds(0.1f);
-        reticleImage.color = originColor;
-
+        if(objectiveTimer >= objectiveTimerDelay)
+        {
+            return true;
+        }
+        else if (objectiveTimer == 0)
+        {
+            startTimer = true;
+        }
+        return false;
     }
 
 }
