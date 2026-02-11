@@ -1,6 +1,7 @@
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
+using System.Collections;
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
@@ -10,6 +11,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject menuLose;
 
     [SerializeField] GameObject reticle;
+    [SerializeField] Image reticleImage;
     [SerializeField] TMP_Text magazine_text;
     [SerializeField] TMP_Text maxMagsize_text;
     public Image PlayerHP_bar;
@@ -102,5 +104,14 @@ public class GameManager : MonoBehaviour
         maxMagsize_text.text = maxMagsize.ToString(); 
     }
 
+    public IEnumerator flashReticleRed()
+    {
+        Color originColor = reticleImage.color;
+        reticleImage.color = Color.red;
+
+        yield return new WaitForSeconds(0.1f);
+        reticleImage.color = originColor;
+
+    }
 
 }

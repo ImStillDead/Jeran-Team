@@ -145,7 +145,7 @@ public class PlayerController : MonoBehaviour, IDamage
     {
         HP -= amount;
         updatePlayerUI();
-        StartCoroutine(flahScreen());
+        StartCoroutine(flashScreen());
 
         if (HP <= 0)
         {
@@ -154,7 +154,7 @@ public class PlayerController : MonoBehaviour, IDamage
 
     }
 
-    IEnumerator flahScreen()
+    IEnumerator flashScreen()
     {
         GameManager.instance.playerDamageFlash.SetActive(true);
         yield return new WaitForSeconds(0.1f);
