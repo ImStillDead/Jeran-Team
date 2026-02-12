@@ -37,6 +37,7 @@ public class projectileWeapon : MonoBehaviour
     }
     void shoot()
     {
+
         shootTimer = 0;
         Instantiate(projectile_type, shootPOS.position, transform.rotation);
     }
