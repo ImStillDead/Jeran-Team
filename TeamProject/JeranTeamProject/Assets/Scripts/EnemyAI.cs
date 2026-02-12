@@ -142,7 +142,7 @@ public class EnemyAI : MonoBehaviour, IDamage
                 {
                     faceTarget();
                     IDamage playerDamage = hit.collider.GetComponent<IDamage>();
-                    if (damageTimer >= damageRate && agent.remainingDistance <= meleeDist && angleToPlayer <= FOV/2)
+                    if (damageTimer >= damageRate && agent.remainingDistance <= meleeDist)
                     {
                         damageTimer = 0;
                         playerDamage.takeDamage(contactDamage);
