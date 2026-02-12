@@ -10,7 +10,7 @@ public class buttonFunctions : MonoBehaviour
     }
     public void Play()
     {
-        SceneManager.LoadScene("JeranDevScene");
+        
     }
     public void LevelSelect()
     {
@@ -42,8 +42,6 @@ public class buttonFunctions : MonoBehaviour
 
     public void StartGame()
     {
-        int sceneIndex = SceneManager.GetActiveScene().buildIndex + 1;
-        SceneManager.LoadScene(sceneIndex);
-        GameManager.instance.stateUnpause();
+        
     }
 }
