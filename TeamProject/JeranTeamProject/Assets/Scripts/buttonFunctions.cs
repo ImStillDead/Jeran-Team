@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.Windows;
 
 public class buttonFunctions : MonoBehaviour
 {
@@ -38,8 +39,10 @@ public class buttonFunctions : MonoBehaviour
 
     public void StartGame()
     {
-        
 
+        int sceneIndex = SceneManager.GetActiveScene().buildIndex + 1;
+        SceneManager.LoadScene(sceneIndex);
+        GameManager.instance.stateUnpause();
 
     }
 
