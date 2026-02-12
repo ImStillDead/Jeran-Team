@@ -1,7 +1,5 @@
-using System;
-using System.Collections;
-using Unity.Mathematics;
 using UnityEngine;
+using System.Collections;
 using UnityEngine.AI;
 
 
@@ -13,6 +11,8 @@ public class EnemyAI : MonoBehaviour, IDamage
     [SerializeField] int Health;
     [SerializeField] int Speed;
     [SerializeField] int faceTargetSpeed;
+
+    [SerializeField] int FOV;
     [SerializeField] int roamDist;
     [SerializeField] int roamPauseTime;
 
@@ -20,129 +20,147 @@ public class EnemyAI : MonoBehaviour, IDamage
     [SerializeField] float spitRate;
     [SerializeField] Transform spitPos;
 
-    [SerializeField] int contactDamage =10;
-    [SerializeField] float damageRate =1f;
-
+    [SerializeField] int contactDamage;
+    [SerializeField] float damageRate;
+    [SerializeField] int meleeDist;
     Color colorOrg;
-
+    GameObject door;
     float spitTimer;
     float roamTimer;
-    float stoppingDistOrig;
     float damageTimer;
-
+    bool doorHit;
     bool playerInTrigger;
-
-    Vector3 playerDir;
+    float stoppingDistanceOrig;
+    float angleToPlayer;
     Vector3 startingPos;
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    Vector3 playerDir;
     void Start()
     {
         colorOrg = model.material.color;
-        //GameManager.instance.youWin();
-        stoppingDistOrig = agent.stoppingDistance;
+        GameManager.instance.enemyBoardCount(1);
+        stoppingDistanceOrig = agent.stoppingDistance;
         startingPos = transform.position;
-
         agent.speed = Speed;
     }
-
-    // Update is called once per frame
     void Update()
     {
-        spitTimer += Time.deltaTime;
-        roamTimer += Time.deltaTime;
-        damageTimer += Time.deltaTime;
-
-        if (playerInTrigger&& canSeePlayer())
+        if (GameManager.instance.objectiveTimer >= 3)
         {
             agent.SetDestination(GameManager.instance.player.transform.position);
-            agent.stoppingDistance = stoppingDistOrig;
+        }
 
+        if (agent.remainingDistance < 0.5f)
+        {
+            roamTimer += Time.deltaTime;
+        }
+        if (playerInTrigger && !CanSeePlayer())
+        {
+            CheckRoam();
+        }
+        else if (!playerInTrigger)
+        {
+            CheckRoam();
+        }
+        else
+        {
+            spitTimer += Time.deltaTime;
+            damageTimer += Time.deltaTime;
+        }
+       /* if (playerInTrigger && CanSeePlayer())
+        {
+            agent.stoppingDistance = stoppingDistanceOrig;
+            agent.SetDestination(GameManager.instance.player.transform.position);
             if (agent.remainingDistance < agent.stoppingDistance)
             {
                 faceTarget();
 
-                if (spitTimer >= 1f)
+                if (spitTimer >= spitRate)
                 {
+                    spitTimer = 0;
                     shoot();
                 }
 
-                if(damageTimer >= damageRate)
+                if (damageTimer >= damageRate)
                 {
                     damagePlayer();
                 }
             }
         }
-        else
+        if (agent.remainingDistance < 0.01f)
+        {
+            roamTimer += Time.deltaTime;
+        }
+        if (playerInTrigger && !CanSeePlayer())
+        {
+            CheckRoam();
+        }
+        else if (!playerInTrigger)
         {
             agent.stoppingDistance = 0;
-            checkRoam();
-        }
+            CheckRoam();
+        }*/
     }
-    void damagePlayer()
-    {
-        damageTimer = 0;
-
-        IDamage playerDamage= GameManager.instance.player.GetComponent<IDamage>();
-        if (playerDamage != null)
-        {
-            playerDamage.takeDamage(contactDamage);
-        }
-    }
-
-    void checkRoam() 
-    {
-        if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance+0.01f && roamTimer>= roamPauseTime)
-        {
-            roam();
-        }    
-    }
-
+    
     void roam()
     {
         roamTimer = 0;
         agent.stoppingDistance = 0;
 
-        Vector3 ranPos = UnityEngine.Random.insideUnitSphere * roamDist;
-        ranPos += startingPos;
+        Vector3 randPos = Random.insideUnitSphere * roamDist;
+        randPos += startingPos;
 
         NavMeshHit hit;
-        if (NavMesh.SamplePosition(ranPos, out hit, roamDist, 1))
+        NavMesh.SamplePosition(randPos, out hit, roamDist, 1);
+        agent.SetDestination(hit.position);
+    }
+    void CheckRoam()
+    {
+        if (agent.remainingDistance < 0.5f && roamTimer >= roamPauseTime)
         {
-            agent.SetDestination(hit.position);
+            roam();
         }
     }
-
-    bool canSeePlayer()
+    
+    bool CanSeePlayer()
     {
-        if (GameManager.instance.player == null) return false;
+        playerDir = GameManager.instance.player.transform.position - transform.position;
+        angleToPlayer = Vector3.Angle(playerDir, transform.forward);
 
-        playerDir = (GameManager.instance.player.transform.position - transform.position).normalized;
-
+        Debug.DrawRay(transform.position, playerDir, Color.red);
         RaycastHit hit;
         if (Physics.Raycast(transform.position, playerDir, out hit))
         {
-            Debug.DrawRay(transform.position, playerDir * hit.distance, Color.red);
-
-            if (hit.collider.CompareTag("Player"))
+            agent.stoppingDistance = stoppingDistanceOrig;
+            if (angleToPlayer <= FOV && hit.collider.CompareTag("Player"))
             {
-                Debug.DrawRay(transform.position, playerDir * hit.distance, Color.green);
+                agent.SetDestination(GameManager.instance.player.transform.position);
+                if (spitTimer >= spitRate && agent.remainingDistance >= meleeDist)
+                {
+                    shoot();
+                }
+                if (agent.remainingDistance <= agent.stoppingDistance)
+                {
+                    faceTarget();
+                    IDamage playerDamage = hit.collider.GetComponent<IDamage>();
+                    if (damageTimer >= damageRate && agent.remainingDistance <= meleeDist)
+                    {
+                        damageTimer = 0;
+                        playerDamage.takeDamage(contactDamage);
+                    }
+                }
                 return true;
             }
-            else
-            {
-                return false;
-            }
         }
-
+        agent.stoppingDistance = 0;
         return false;
-    }
 
+    }
     void faceTarget()
     {
-        Quaternion rot= Quaternion.LookRotation(playerDir);
+        Quaternion rot = Quaternion.LookRotation(playerDir);
         transform.rotation = Quaternion.Lerp(transform.rotation, rot, Time.deltaTime * faceTargetSpeed);
     }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
@@ -150,14 +168,12 @@ public class EnemyAI : MonoBehaviour, IDamage
             playerInTrigger = true;
         }
     }
-
     private void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("Player"))
         {
             playerInTrigger = false;
             agent.stoppingDistance = 0;
-            roamTimer = roamPauseTime;
         }
     }
 
@@ -165,13 +181,11 @@ public class EnemyAI : MonoBehaviour, IDamage
     {
         spitTimer = 0;
         Instantiate(spit, spitPos.position, transform.rotation);
+        if (spitTimer >= spitRate)
+        {
+            shoot();
+        }
     }
-
-    private void Instantiate(GameObject spit, object position, Quaternion rotation)
-    {
-        throw new NotImplementedException();
-    }
-
     public void takeDamage(int amount)
     {
         Health -= amount;
@@ -179,15 +193,15 @@ public class EnemyAI : MonoBehaviour, IDamage
 
         if (Health <= 0)
         {
-            //GameManager.instance.updateGameGoal(-1);
+            GameManager.instance.enemyBoardCount(-1);
             Destroy(gameObject);
+            GameManager.instance.killCount++;
         }
         else
         {
             StartCoroutine(FlashRed());
         }
     }
-
     IEnumerator FlashRed()
     {
         model.material.color = Color.red;
