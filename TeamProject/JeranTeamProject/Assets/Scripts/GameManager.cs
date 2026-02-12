@@ -15,6 +15,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] int objectiveTimerDelay;
     [SerializeField] TMP_Text magazine_text;
     [SerializeField] TMP_Text maxMagsize_text;
+    [SerializeField] TMP_Text killCount_text;
     public Image PlayerHP_bar;
     public GameObject playerDamageFlash;
 
@@ -22,6 +23,7 @@ public class GameManager : MonoBehaviour
     public PlayerController playerScript;
     int sceneIndex;
     public int enemyCount;
+    public int killCount;
     public bool canSpawn;
     public bool isPaused;
     public bool startTimer;
@@ -36,6 +38,7 @@ public class GameManager : MonoBehaviour
         sceneIndex = SceneManager.GetActiveScene().buildIndex;
         player = GameObject.FindWithTag("Player");
         playerScript = player.GetComponent<PlayerController>();
+        canSpawn = true;
     }
     void Update()
     {
@@ -91,6 +94,7 @@ public class GameManager : MonoBehaviour
     {
         statePause();
         menuActive = menuWin;
+        killCount_text.text = killCount.ToString();
         menuActive.SetActive(true);
     }
     public void youLose()
@@ -99,19 +103,26 @@ public class GameManager : MonoBehaviour
          menuActive = menuLose;
          menuActive.SetActive(true);
     }
+    public void loadMain()
+    {
+        SceneManager.LoadScene(0);
+    }
     public void loadNextScene()
     {
         objectiveTimer = 0;
         sceneIndex += 1;
         if (sceneIndex > SceneManager.sceneCount)
         {
-            statePause();
-            SceneManager.LoadScene(0);
+            loadMain();
         }
         else
         {
             SceneManager.LoadScene(sceneIndex);
         }
+    }
+    public void levelSelect(int index)
+    {
+        SceneManager.LoadScene(index);
     }
     public void ammocount(int mag, int max_mag)
     {

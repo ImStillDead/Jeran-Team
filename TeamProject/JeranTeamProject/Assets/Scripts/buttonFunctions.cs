@@ -7,13 +7,9 @@ public class buttonFunctions : MonoBehaviour
     {
         GameManager.instance.stateUnpause();
     }
-    public void Play()
-    {
-        
-    }
     public void LevelSelect()
     {
-
+        GameManager.instance.levelSelect(1);
     }
     public void Settings()
     {
@@ -21,9 +17,8 @@ public class buttonFunctions : MonoBehaviour
     }
     public void MainMenu()
     {
-        
+        GameManager.instance.loadMain();
     }
-
     public void Restart()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
@@ -39,6 +34,22 @@ public class buttonFunctions : MonoBehaviour
     }
     public void StartGame()
     {
-        
+        GameManager.instance.levelSelect(2);
+    }
+    public void levelOne()
+    {
+        GameManager.instance.levelSelect(2);
+    }
+    public void levelTwo()
+    {
+        GameManager.instance.levelSelect(3);
+    }
+    public void levelThree()
+    {
+        GameManager.instance.levelSelect(4);
+    }
+    public void levelFour()
+    {
+        GameManager.instance.levelSelect(5);
     }
 }

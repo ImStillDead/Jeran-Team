@@ -48,6 +48,7 @@ public class PlayerController : MonoBehaviour, IDamage
         moveDir = Input.GetAxis("Horizontal") * transform.right + (Input.GetAxis("Vertical") * transform.forward);
         playerController.Move(moveDir * speed * Time.deltaTime);
         Jump();
+        SwitchWeapon();
         playerController.Move(playerVel * Time.deltaTime);
         playerVel.y -= gravity * Time.deltaTime;
         if (playerController.isGrounded)
@@ -101,6 +102,33 @@ public class PlayerController : MonoBehaviour, IDamage
             speed /= sprintMod;
         }
     }
+    void SwitchWeapon()
+    {
+        if (Input.GetButtonDown("Weapon1"))
+        {
+            if (activeItem != null)
+            {
+                Destroy(activeItem);
+            }
+            activeItem = Instantiate(inventory1, weaponPos);
+        }
+        else if (Input.GetButtonDown("Weapon2"))
+        {
+            if (activeItem != null)
+            {
+                Destroy(activeItem);
+            }
+            activeItem = Instantiate(inventory2, weaponPos);
+        }
+        else if (Input.GetButtonDown("Weapon3"))
+        {
+            if (activeItem != null)
+            {
+                Destroy(activeItem);
+            }
+            activeItem = Instantiate(inventory3, weaponPos);
+        }
+    }
     void WeaponRotate()
     {
         if (isFirstPerson)
@@ -139,7 +167,7 @@ public class PlayerController : MonoBehaviour, IDamage
             }
             if (interact.collider.gameObject.CompareTag("LevelDoor") == true && GameManager.instance.objectiveCheck())
             {
-                GameManager.instance.loadNextScene();
+                GameManager.instance.youWin();
             }
         }
     }

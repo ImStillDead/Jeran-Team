@@ -22,14 +22,14 @@ public class EnemyAI : MonoBehaviour, IDamage
 
     [SerializeField] int contactDamage;
     [SerializeField] float damageRate;
+    [SerializeField] int meleeDist;
     Color colorOrg;
-
+    GameObject door;
     float spitTimer;
     float roamTimer;
     float damageTimer;
-
+    bool doorHit;
     bool playerInTrigger;
-    float roamTimer;
     float stoppingDistanceOrig;
     float angleToPlayer;
     Vector3 startingPos;
@@ -44,18 +44,47 @@ public class EnemyAI : MonoBehaviour, IDamage
     }
     void Update()
     {
-        playerDir = GameManager.instance.player.transform.position - transform.position;
-        if (GameManager.instance.objectiveTimer > 0)
+        if (GameManager.instance.objectiveTimer >= 3)
         {
             agent.SetDestination(GameManager.instance.player.transform.position);
         }
-        spitTimer += Time.deltaTime;
-        roamTimer += Time.deltaTime;
-        damageTimer += Time.deltaTime;
-        if (playerInTrigger&& canSeePlayer())
+
+        if (agent.remainingDistance < 0.5f)
+        {
+            roamTimer += Time.deltaTime;
+        }
+        if (playerInTrigger && !CanSeePlayer())
+        {
+            CheckRoam();
+        }
+        else if (!playerInTrigger)
+        {
+            CheckRoam();
+        }
+        else
+        {
+            spitTimer += Time.deltaTime;
+            damageTimer += Time.deltaTime;
+        }
+       /* if (playerInTrigger && CanSeePlayer())
         {
             agent.stoppingDistance = stoppingDistanceOrig;
             agent.SetDestination(GameManager.instance.player.transform.position);
+            if (agent.remainingDistance < agent.stoppingDistance)
+            {
+                faceTarget();
+
+                if (spitTimer >= spitRate)
+                {
+                    spitTimer = 0;
+                    shoot();
+                }
+
+                if (damageTimer >= damageRate)
+                {
+                    damagePlayer();
+                }
+            }
         }
         if (agent.remainingDistance < 0.01f)
         {
@@ -67,50 +96,11 @@ public class EnemyAI : MonoBehaviour, IDamage
         }
         else if (!playerInTrigger)
         {
-            CheckRoam();
-            agent.stoppingDistance = stoppingDistOrig;
-
-            if (agent.remainingDistance < agent.stoppingDistance)
-            {
-                faceTarget();
-
-                if (spitTimer >= spitRate)
-                {
-                    spitTimer = 0;
-                    shoot();
-                }
-
-                if(damageTimer >= damageRate)
-                {
-                    damagePlayer();
-                }
-            }
-        }
-        else
-        {
             agent.stoppingDistance = 0;
-            checkRoam();
-        }
+            CheckRoam();
+        }*/
     }
-    void damagePlayer()
-    {
-        damageTimer = 0;
-
-        IDamage playerDamage = GameManager.instance.player.GetComponent<IDamage>();
-        if (playerDamage != null)
-        {
-            playerDamage.takeDamage(contactDamage);
-        }
-    }
-
-    /*void checkRoam() 
-    {
-        if (!agent.pathPending && agent.remainingDistance <= agent.stoppingDistance+0.01f && roamTimer>= roamPauseTime)
-        {
-            roam();
-        }    
-    }*/
-
+    
     void roam()
     {
         roamTimer = 0;
@@ -123,37 +113,11 @@ public class EnemyAI : MonoBehaviour, IDamage
         NavMesh.SamplePosition(randPos, out hit, roamDist, 1);
         agent.SetDestination(hit.position);
     }
-
-    /*bool canSeePlayer()
-    {
-        if (GameManager.instance.player == null) return false;
-
-        playerDir = (GameManager.instance.player.transform.position - transform.position).normalized;
-
-        RaycastHit hit;
-        if (Physics.Raycast(transform.position, playerDir, out hit))
-        {
-            Debug.DrawRay(transform.position, playerDir * hit.distance, Color.red);
-
-            if (hit.collider.CompareTag("Player"))
-            {
-                Debug.DrawRay(transform.position, playerDir * hit.distance, Color.green);
-                return true;
-            }
-            else
-            {
-                return false;
-            }
-        }
-
-        return false;
-    }*/
-    
     void CheckRoam()
     {
-        if (agent.remainingDistance < 0.01f && roamTimer >= roamPauseTime)
+        if (agent.remainingDistance < 0.5f && roamTimer >= roamPauseTime)
         {
-            Roam();
+            roam();
         }
     }
     
@@ -170,11 +134,19 @@ public class EnemyAI : MonoBehaviour, IDamage
             if (angleToPlayer <= FOV && hit.collider.CompareTag("Player"))
             {
                 agent.SetDestination(GameManager.instance.player.transform.position);
-                
-
-                if (agent.remainingDistance < agent.stoppingDistance)
+                if (spitTimer >= spitRate && agent.remainingDistance >= meleeDist)
+                {
+                    shoot();
+                }
+                if (agent.remainingDistance <= agent.stoppingDistance)
                 {
                     faceTarget();
+                    IDamage playerDamage = hit.collider.GetComponent<IDamage>();
+                    if (damageTimer >= damageRate && agent.remainingDistance <= meleeDist && angleToPlayer <= FOV/2)
+                    {
+                        damageTimer = 0;
+                        playerDamage.takeDamage(contactDamage);
+                    }
                 }
                 return true;
             }
@@ -185,7 +157,7 @@ public class EnemyAI : MonoBehaviour, IDamage
     }
     void faceTarget()
     {
-        Quaternion rot= Quaternion.LookRotation(playerDir);
+        Quaternion rot = Quaternion.LookRotation(playerDir);
         transform.rotation = Quaternion.Lerp(transform.rotation, rot, Time.deltaTime * faceTargetSpeed);
     }
 
@@ -209,6 +181,10 @@ public class EnemyAI : MonoBehaviour, IDamage
     {
         spitTimer = 0;
         Instantiate(spit, spitPos.position, transform.rotation);
+        if (spitTimer >= spitRate)
+        {
+            shoot();
+        }
     }
     public void takeDamage(int amount)
     {
@@ -219,6 +195,7 @@ public class EnemyAI : MonoBehaviour, IDamage
         {
             GameManager.instance.enemyBoardCount(-1);
             Destroy(gameObject);
+            GameManager.instance.killCount++;
         }
         else
         {
