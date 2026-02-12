@@ -8,7 +8,6 @@ public class Shooting : MonoBehaviour
     public static Shooting instance;
     
     // [SerializeFields] for variables that we want to edit in Unity
-    [SerializeField] int shootDamage;
     [SerializeField] LayerMask ignoreLayer;
     [SerializeField] float shootRate;
     [SerializeField] int magSizeMax;
