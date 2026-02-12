@@ -30,6 +30,7 @@ public class Shooting : MonoBehaviour
         instance = this;
         maxAmmo = magSizeMax;   // Sets maxAmmo to the maximum mag size
         currentAmmo = maxAmmo;  // Sets currentAmmo equal to the maxAmmo
+        GameManager.instance.ammocount(currentAmmo, magSizeMax);
     }
 
     // Update is called once per frame
@@ -63,6 +64,7 @@ public class Shooting : MonoBehaviour
             shootTimer = 0;
             Instantiate(bullet, shootPos.position, transform.rotation);
             currentAmmo = currentAmmo - 1;
+            GameManager.instance.ammocount(currentAmmo, magSizeMax);
         }
 
     }
