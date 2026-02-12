@@ -3,18 +3,13 @@ using UnityEngine.SceneManagement;
 
 public class buttonFunctions : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     public void resume()
     {
         GameManager.instance.stateUnpause();
     }
-    public void Play()
-    {
-        
-    }
     public void LevelSelect()
     {
-
+        GameManager.instance.levelSelect(1);
     }
     public void Settings()
     {
@@ -22,10 +17,8 @@ public class buttonFunctions : MonoBehaviour
     }
     public void MainMenu()
     {
-        
+        GameManager.instance.loadMain();
     }
-
-    // Update is called once per frame
     public void Restart()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
@@ -39,9 +32,24 @@ public class buttonFunctions : MonoBehaviour
         Application.Quit();
         #endif
     }
-
     public void StartGame()
     {
-        
+        GameManager.instance.levelSelect(2);
+    }
+    public void levelOne()
+    {
+        GameManager.instance.levelSelect(2);
+    }
+    public void levelTwo()
+    {
+        GameManager.instance.levelSelect(3);
+    }
+    public void levelThree()
+    {
+        GameManager.instance.levelSelect(4);
+    }
+    public void levelFour()
+    {
+        GameManager.instance.levelSelect(5);
     }
 }
