@@ -109,7 +109,7 @@ public class GameManager : MonoBehaviour
         magsize = mag;
         maxMagsize = max_mag;
 
-        magazine_text.text = magsize.ToString();
+        magazine_text.text = magsize.ToString(); // its getting a error here in unity
         maxMagsize_text.text = maxMagsize.ToString(); 
     }
     public bool objectiveCheck()
