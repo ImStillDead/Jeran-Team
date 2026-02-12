@@ -36,6 +36,10 @@ public class buttonFunctions : MonoBehaviour
     {
         GameManager.instance.levelSelect(2);
     }
+    public void nextLevel()
+    {
+        GameManager.instance.loadNextScene();
+    }
     public void levelOne()
     {
         GameManager.instance.levelSelect(2);
