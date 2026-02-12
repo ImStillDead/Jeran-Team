@@ -101,6 +101,7 @@ MonoBehaviour:
   menuWin: {fileID: 0}
   menuLose: {fileID: 0}
   reticle: {fileID: 8843003007540835084}
+  objectiveTimerDelay: 30
   magazine_text: {fileID: 5765798503774629887}
   maxMagsize_text: {fileID: 3926703161668546565}
   PlayerHP_bar: {fileID: 211221783427435726}
@@ -108,6 +109,8 @@ MonoBehaviour:
   player: {fileID: 0}
   playerScript: {fileID: 0}
   isPaused: 0
+  startTimer: 0
+  objectiveTimer: 0
 --- !u!1 &2909262839069648083
 GameObject:
   m_ObjectHideFlags: 0

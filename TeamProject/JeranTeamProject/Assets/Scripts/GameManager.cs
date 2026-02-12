@@ -1,5 +1,6 @@
-using UnityEngine;
 using TMPro;
+using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 public class GameManager : MonoBehaviour
 {
@@ -8,6 +9,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject menuPause;
     [SerializeField] GameObject menuWin;
     [SerializeField] GameObject menuLose;
+
     [SerializeField] GameObject reticle;
     [SerializeField] int objectiveTimerDelay;
     [SerializeField] TMP_Text magazine_text;
@@ -17,25 +19,23 @@ public class GameManager : MonoBehaviour
 
     public GameObject player;
     public PlayerController playerScript;
+    int sceneIndex;
+    public int enemyCount;
+    public bool canSpawn;
     public bool isPaused;
     public bool startTimer;
     float timeScaleOrg;
     public float objectiveTimer;
     int magsize;
     int maxMagsize;
-
-    
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
     {
         instance = this;
         timeScaleOrg = Time.timeScale;
+        sceneIndex = SceneManager.GetActiveScene().buildIndex;
         player = GameObject.FindWithTag("Player");
         playerScript = player.GetComponent<PlayerController>();
     }
-
-    // Update is called once per frame
     void Update()
     {
         if (Input.GetButtonDown("Cancel"))
@@ -51,6 +51,7 @@ public class GameManager : MonoBehaviour
                 stateUnpause();
             }
         }
+
         if (startTimer)
         {
             objectiveTimer += Time.deltaTime;
@@ -72,6 +73,7 @@ public class GameManager : MonoBehaviour
     }
     public void stateUnpause()
     {
+        reticle.SetActive(true);
         isPaused = false;
         Time.timeScale = timeScaleOrg;
         Cursor.visible = false;
@@ -84,24 +86,32 @@ public class GameManager : MonoBehaviour
         maxMagsize += ammo;
         maxMagsize_text.text = maxMagsize_text.ToString();
     }
-
     public void youWin()
     {
-        // You Win!
         statePause();
         menuActive = menuWin;
         menuActive.SetActive(true);
-        
     }
     public void youLose()
     {
-         // You Lose!
          statePause();
          menuActive = menuLose;
          menuActive.SetActive(true);
-
     }
-
+    public void loadNextScene()
+    {
+        objectiveTimer = 0;
+        sceneIndex += 1;
+        if (sceneIndex > SceneManager.sceneCount)
+        {
+            statePause();
+            SceneManager.LoadScene(0);
+        }
+        else
+        {
+            SceneManager.LoadScene(sceneIndex);
+        }
+    }
     public void ammocount(int mag, int max_mag)
     {
         magsize = mag;
@@ -122,5 +132,15 @@ public class GameManager : MonoBehaviour
         }
         return false;
     }
-
+    public void enemyBoardCount(int count)
+    {   
+        enemyCount += count;
+        if(enemyCount >= 20)
+        {
+            canSpawn = false;
+        }else if(enemyCount <= 20)
+        {
+            canSpawn = true;
+        }
+    }
 }

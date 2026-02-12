@@ -35,32 +35,30 @@ public class PlayerController : MonoBehaviour, IDamage
         activeItem = Instantiate(inventory1, weaponPos);
         isFirstPerson = true;
         updatePlayerUI();
-        sceneIndex = SceneManager.GetActiveScene().buildIndex;
     }
 
     void Update()
     {
         Movement();
         WeaponRotate();
+        Sprint();
     }
     void Movement()
     {
-       
-        //directional input
         moveDir = Input.GetAxis("Horizontal") * transform.right + (Input.GetAxis("Vertical") * transform.forward);
         playerController.Move(moveDir * speed * Time.deltaTime);
-        //jump method
         Jump();
         playerController.Move(playerVel * Time.deltaTime);
-        //gravity
         playerVel.y -= gravity * Time.deltaTime;
-        //jumpCheck
         if (playerController.isGrounded)
         {
             jumpCount = 0;
             playerVel = Vector3.zero;
         }
-        CameraToggle();
+        if (Input.GetButtonDown("ToggleCamera"))
+        {
+            CameraToggle();
+        }
         if (Input.GetButtonDown("Interact"))
         {
             Interact();
@@ -68,22 +66,20 @@ public class PlayerController : MonoBehaviour, IDamage
     }
     void CameraToggle()
     {
-        if (Input.GetButtonDown("ToggleCamera"))
+
+        if (isFirstPerson)
         {
-            if (isFirstPerson)
-            {
-                weaponPos.transform.Rotate(-4, 4, 0);
-                thirdPersonCamera.SetActive(true);
-                firstPersonCamera.SetActive(false);
-                isFirstPerson = false;
-            }
-            else
-            {
-                weaponPos.transform.Rotate(4, -4, 0);
-                firstPersonCamera.SetActive(true);
-                thirdPersonCamera.SetActive(false);
-                isFirstPerson = true;
-            }
+            weaponPos.transform.Rotate(-4, 4, 0);
+            thirdPersonCamera.SetActive(true);
+            firstPersonCamera.SetActive(false);
+            isFirstPerson = false;
+        }
+        else
+        {
+            weaponPos.transform.Rotate(4, -4, 0);
+            firstPersonCamera.SetActive(true);
+            thirdPersonCamera.SetActive(false);
+            isFirstPerson = true;
         }
         
     }
@@ -105,7 +101,6 @@ public class PlayerController : MonoBehaviour, IDamage
             speed /= sprintMod;
         }
     }
-
     void WeaponRotate()
     {
         if (isFirstPerson)
@@ -122,7 +117,6 @@ public class PlayerController : MonoBehaviour, IDamage
     void Interact()
     {
         Debug.DrawRay(Camera.main.transform.position, Camera.main.transform.forward * interactDis, Color.red);
-
         RaycastHit interact;
         if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out interact, interactDis, ~ignoreLayer))
         {
@@ -143,46 +137,31 @@ public class PlayerController : MonoBehaviour, IDamage
             {
                 GameManager.instance.objectiveCheck();
             }
-                if (interact.collider.gameObject.CompareTag("LevelDoor") == true && GameManager.instance.objectiveCheck())
+            if (interact.collider.gameObject.CompareTag("LevelDoor") == true && GameManager.instance.objectiveCheck())
             {
-                GameManager.instance.objectiveTimer = 0;
-                sceneIndex += 1;
-                if(sceneIndex > SceneManager.sceneCount)
-                {
-                    GameManager.instance.statePause();
-                    SceneManager.LoadScene(0);
-                }
-                else
-                {
-                    SceneManager.LoadScene(sceneIndex);
-                }
+                GameManager.instance.loadNextScene();
             }
         }
     }
-
     public void takeDamage(int amount)
     {
         HP -= amount;
         updatePlayerUI();
         StartCoroutine(flahScreen());
-
         if (HP <= 0)
         {
             GameManager.instance.youLose();
         }
 
     }
-
     IEnumerator flahScreen()
     {
         GameManager.instance.playerDamageFlash.SetActive(true);
         yield return new WaitForSeconds(0.1f);
         GameManager.instance.playerDamageFlash.SetActive(false);
     }
-
     public void updatePlayerUI()
     {
         GameManager.instance.PlayerHP_bar.fillAmount = (float)HP / HPOrigin;
     }
-
 }

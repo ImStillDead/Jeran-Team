@@ -3,13 +3,10 @@ using UnityEngine.SceneManagement;
 
 public class buttonFunctions : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     public void resume()
     {
         GameManager.instance.stateUnpause();
     }
-
-    // Update is called once per frame
     public void Restart()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
@@ -23,7 +20,6 @@ public class buttonFunctions : MonoBehaviour
         Application.Quit();
         #endif
     }
-
     public void StartGame()
     {
         int sceneIndex = SceneManager.GetActiveScene().buildIndex + 1;
