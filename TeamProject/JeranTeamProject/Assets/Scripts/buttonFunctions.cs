@@ -12,10 +12,6 @@ public class buttonFunctions : MonoBehaviour
     {
         
     }
-    public void LevelSelect()
-    {
-
-    }
     public void Settings()
     {
         
@@ -43,6 +39,8 @@ public class buttonFunctions : MonoBehaviour
     public void StartGame()
     {
         
+
+
     }
 
     public void SelectLevel(int input)
