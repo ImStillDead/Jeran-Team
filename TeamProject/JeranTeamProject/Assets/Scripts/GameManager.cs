@@ -72,6 +72,7 @@ public class GameManager : MonoBehaviour
     }
     public void stateUnpause()
     {
+        reticle.SetActive(true);
         isPaused = false;
         Time.timeScale = timeScaleOrg;
         Cursor.visible = false;
