@@ -30,4 +30,20 @@ public class buttonFunctions : MonoBehaviour
         SceneManager.LoadScene(sceneIndex);
         GameManager.instance.stateUnpause();
     }
+
+    public void SelectLevel(int input)
+    {
+        if(input != 0)
+        {
+            int sceneIndex = SceneManager.GetActiveScene().buildIndex + input;
+            SceneManager.LoadScene(sceneIndex);
+            GameManager.instance.stateUnpause();
+        }
+
+
+    }
+
+
+
+
 }
