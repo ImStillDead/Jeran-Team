@@ -7,6 +7,23 @@ public class buttonFunctions : MonoBehaviour
     {
         GameManager.instance.stateUnpause();
     }
+    public void Play()
+    {
+        
+    }
+    public void LevelSelect()
+    {
+
+    }
+    public void Settings()
+    {
+        
+    }
+    public void MainMenu()
+    {
+        
+    }
+
     public void Restart()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
@@ -22,8 +39,6 @@ public class buttonFunctions : MonoBehaviour
     }
     public void StartGame()
     {
-        int sceneIndex = SceneManager.GetActiveScene().buildIndex + 1;
-        SceneManager.LoadScene(sceneIndex);
-        GameManager.instance.stateUnpause();
+        
     }
 }
