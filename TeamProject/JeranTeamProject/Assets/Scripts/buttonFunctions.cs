@@ -8,6 +8,22 @@ public class buttonFunctions : MonoBehaviour
     {
         GameManager.instance.stateUnpause();
     }
+    public void Play()
+    {
+        
+    }
+    public void LevelSelect()
+    {
+
+    }
+    public void Settings()
+    {
+        
+    }
+    public void MainMenu()
+    {
+        
+    }
 
     // Update is called once per frame
     public void Restart()
@@ -26,9 +42,7 @@ public class buttonFunctions : MonoBehaviour
 
     public void StartGame()
     {
-        int sceneIndex = SceneManager.GetActiveScene().buildIndex + 1;
-        SceneManager.LoadScene(sceneIndex);
-        GameManager.instance.stateUnpause();
+        
     }
 
     public void SelectLevel(int input)
