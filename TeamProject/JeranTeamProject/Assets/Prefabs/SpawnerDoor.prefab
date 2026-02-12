@@ -134,7 +134,7 @@ BoxCollider:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 8
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -250,10 +250,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Spawner
   HP: 3
-  model: {fileID: 4787022869701283443}
   spawn: {fileID: 7001594022869001215}
   enemy: {fileID: 2553612289123517612, guid: 460364e8c48127e4896fcb2d65a2d11d, type: 3}
-  door: {fileID: 1023960706494045707}
   spawnRate: 10
 --- !u!135 &8566103547417183252
 SphereCollider:
@@ -279,10 +277,5 @@ SphereCollider:
 --- !u!4 &3808981822755465822 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8506944027833182566, guid: 453cc337346bae743b6b105ccfe5e25b, type: 3}
-  m_PrefabInstance: {fileID: 4815056417631421240}
-  m_PrefabAsset: {fileID: 0}
---- !u!23 &4787022869701283443 stripped
-MeshRenderer:
-  m_CorrespondingSourceObject: {fileID: 53040041531116875, guid: 453cc337346bae743b6b105ccfe5e25b, type: 3}
   m_PrefabInstance: {fileID: 4815056417631421240}
   m_PrefabAsset: {fileID: 0}
