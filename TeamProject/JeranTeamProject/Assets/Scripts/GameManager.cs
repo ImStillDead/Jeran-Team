@@ -10,6 +10,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject menuPause;
     [SerializeField] GameObject menuWin;
     [SerializeField] GameObject menuLose;
+    [SerializeField] GameObject settingsMenu;
 
     [SerializeField] GameObject reticle;
     [SerializeField] int objectiveTimerDelay;
@@ -31,6 +32,7 @@ public class GameManager : MonoBehaviour
     public float objectiveTimer;
     int magsize;
     int maxMagsize;
+    
     void Awake()
     {
         instance = this;
@@ -68,7 +70,7 @@ public class GameManager : MonoBehaviour
     }
     public void statePause()
     {
-        reticle.SetActive(false); 
+        if(reticle != null) reticle.SetActive(false); //
         isPaused = true;
         Time.timeScale = 0;
         Cursor.visible = true;
@@ -77,13 +79,16 @@ public class GameManager : MonoBehaviour
     }
     public void stateUnpause()
     {
-        reticle.SetActive(true);
+        if (reticle != null) reticle.SetActive(true); //
         isPaused = false;
         Time.timeScale = timeScaleOrg;
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
+
         menuActive.SetActive(false);
         menuActive = null;
+
+        menuActive = null; //
     }
     public void update_ammoCount(int ammo)
     {
@@ -103,6 +108,24 @@ public class GameManager : MonoBehaviour
          menuActive = menuLose;
          menuActive.SetActive(true);
     }
+    public void OpenSettings()
+    {
+        statePause();
+
+        if (menuActive != null)
+            menuActive.SetActive(false);
+
+        menuActive = settingsMenu;
+        menuActive.SetActive(true);
+    }
+    public void CloseSettings()
+    {
+        if (settingsMenu != null) settingsMenu.SetActive(false);
+
+        menuActive = menuPause;
+        if (menuPause != null) menuPause.SetActive(true);
+    }
+
     public void loadMain()
     {
         SceneManager.LoadScene(0);
