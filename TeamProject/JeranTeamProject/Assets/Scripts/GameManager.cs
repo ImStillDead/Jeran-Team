@@ -27,7 +27,7 @@ public class GameManager : MonoBehaviour
     public bool canSpawn;
     public bool isPaused;
     public bool startTimer;
-    float timeScaleOrg;
+    public float timeScaleOrg;
     public float objectiveTimer;
     int magsize;
     int maxMagsize;

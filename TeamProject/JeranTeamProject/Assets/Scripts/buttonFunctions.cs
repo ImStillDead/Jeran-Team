@@ -38,7 +38,9 @@ public class buttonFunctions : MonoBehaviour
     }
     public void nextLevel()
     {
-        GameManager.instance.loadNextScene();
+        int index = SceneManager.GetActiveScene().buildIndex;
+        index += 1;
+        SceneManager.LoadScene(index);
     }
     public void levelOne()
     {
