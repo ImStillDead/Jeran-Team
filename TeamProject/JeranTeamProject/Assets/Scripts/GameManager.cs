@@ -123,23 +123,7 @@ public class GameManager : MonoBehaviour
          menuActive = menuLose;
          menuActive.SetActive(true);
     }
-    public void OpenSettings()
-    {
-        statePause();
-
-        if (menuActive != null)
-            menuActive.SetActive(false);
-
-        menuActive = settingsMenu;
-        menuActive.SetActive(true);
-    }
-    public void CloseSettings()
-    {
-        if (settingsMenu != null) settingsMenu.SetActive(false);
-
-        menuActive = menuPause;
-        if (menuPause != null) menuPause.SetActive(true);
-    }
+    
 
     public void loadMain()
     {

@@ -13,7 +13,7 @@ public class buttonFunctions : MonoBehaviour
     }
     public void Settings()
     {
-        GameManager.instance.OpenSettings();
+        
     }
     public void MainMenu()
     {
