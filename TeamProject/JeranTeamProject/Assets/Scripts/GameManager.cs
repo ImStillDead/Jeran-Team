@@ -1,3 +1,4 @@
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -17,6 +18,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] TMP_Text magazine_text;
     [SerializeField] TMP_Text maxMagsize_text;
     [SerializeField] TMP_Text killCount_text;
+    [SerializeField] TMP_Text Objective_timer_text;
+    [SerializeField] TMP_Text Objective_text;
     public Image PlayerHP_bar;
     public GameObject playerDamageFlash;
 
@@ -28,6 +31,7 @@ public class GameManager : MonoBehaviour
     public bool canSpawn;
     public bool isPaused;
     public bool startTimer;
+    public bool objectiveCompleted;
     float timeScaleOrg;
     public float objectiveTimer;
     int magsize;
@@ -41,7 +45,11 @@ public class GameManager : MonoBehaviour
         player = GameObject.FindWithTag("Player");
         playerScript = player.GetComponent<PlayerController>();
         canSpawn = true;
+
     }
+
+
+
     void Update()
     {
         if (Input.GetButtonDown("Cancel"))
@@ -58,16 +66,28 @@ public class GameManager : MonoBehaviour
             }
         }
 
+        if (startTimer || objectiveCompleted) 
+        { 
+            Objective_timer_text.gameObject.SetActive(true); 
+            Objective_text.gameObject.SetActive(true);
+        }
+        else
+        {
+            Objective_timer_text.gameObject.SetActive(false);
+            Objective_text.gameObject.SetActive(false);
+        }
+
+
+
         if (startTimer)
         {
-            objectiveTimer += Time.deltaTime;
-            if(objectiveTimer >= objectiveTimerDelay)
-            {
-                startTimer = false;
-            }
+
+            objectiveStartTimer();
         }
 
     }
+
+
     public void statePause()
     {
         if(reticle != null) reticle.SetActive(false); //
@@ -89,11 +109,6 @@ public class GameManager : MonoBehaviour
         menuActive = null;
 
         menuActive = null; //
-    }
-    public void update_ammoCount(int ammo)
-    {
-        maxMagsize += ammo;
-        maxMagsize_text.text = maxMagsize_text.ToString();
     }
     public void youWin()
     {
@@ -157,15 +172,13 @@ public class GameManager : MonoBehaviour
     }
     public bool objectiveCheck()
     {
-        if(objectiveTimer >= objectiveTimerDelay)
+        if (!startTimer && objectiveTimer <= 0f)
         {
-            return true;
-        }
-        else if (objectiveTimer == 0)
-        {
+            objectiveTimer = objectiveTimerDelay;
             startTimer = true;
         }
-        return false;
+
+        return objectiveTimer <= 0f;
     }
     public void enemyBoardCount(int count)
     {   
@@ -178,4 +191,70 @@ public class GameManager : MonoBehaviour
             canSpawn = true;
         }
     }
+
+    void objectiveStartTimer()
+    {
+
+
+        Objective_timer_text.gameObject.SetActive(true);
+        Objective_text.gameObject.SetActive(true);
+
+        objectiveTimer -= Time.deltaTime;
+
+
+        if (objectiveTimer < 0f) objectiveTimer = 0f;
+
+        int minutes = Mathf.FloorToInt(objectiveTimer / 60);
+        int seconds = Mathf.FloorToInt(objectiveTimer % 60);
+
+        Objective_timer_text.text = string.Format("{0:00}: {1:00}", minutes, seconds);
+        Objective_text.text = "survive";
+
+        if (objectiveTimer <= 5f)
+        {
+
+            float alpha = Mathf.Abs(Mathf.Sin(Time.time * 8f));
+            Color c = Color.red;
+            c.a = alpha;
+            Objective_timer_text.color = c;
+
+
+        }
+        else
+        {
+            Color c = Color.white;
+            c.a = 1f;
+            Objective_timer_text.color = c;
+
+        }
+
+
+
+        if (objectiveTimer <= 0f)
+        {
+            startTimer = false;
+            objectiveCompleted = true;
+
+            Objective_timer_text.color = Color.white;
+            Objective_text.text = "get to the exit!";
+
+        }
+
+    }
+    public void StartObjective()
+    {
+        if (!startTimer && !objectiveCompleted)
+        {
+            objectiveTimer = objectiveTimerDelay;
+            startTimer = true;
+            objectiveCompleted = false;
+        }
+    }
+
+    public bool IsObjectiveComplete()
+    {
+        return objectiveCompleted;
+    }
+
+
 }
