@@ -20,6 +20,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] TMP_Text killCount_text;
     [SerializeField] TMP_Text Objective_timer_text;
     [SerializeField] TMP_Text Objective_text;
+    [SerializeField] TMP_Text dialog_text;
     public Image PlayerHP_bar;
     public GameObject playerDamageFlash;
 
@@ -65,16 +66,17 @@ public class GameManager : MonoBehaviour
                 stateUnpause();
             }
         }
+        Objective_text.gameObject.SetActive(true);
 
         if (startTimer || objectiveCompleted) 
         { 
             Objective_timer_text.gameObject.SetActive(true); 
-            Objective_text.gameObject.SetActive(true);
+            //Objective_text.gameObject.SetActive(true);
         }
         else
         {
             Objective_timer_text.gameObject.SetActive(false);
-            Objective_text.gameObject.SetActive(false);
+            //Objective_text.gameObject.SetActive(false);
         }
 
 
@@ -176,9 +178,19 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    public string obj_text(string mes)
+    {
+       return Objective_text.text = mes;
+    }
+
+    public string dialogText(string mes)
+    {
+        return dialog_text.text = mes;
+    }
+
     void objectiveStartTimer()
     {
-
+        float remaintime = objectiveTimerDelay * 0.40f;
 
         Objective_timer_text.gameObject.SetActive(true);
         Objective_text.gameObject.SetActive(true);
@@ -194,7 +206,9 @@ public class GameManager : MonoBehaviour
         Objective_timer_text.text = string.Format("{0:00}: {1:00}", minutes, seconds);
         Objective_text.text = "survive";
 
-        if (objectiveTimer <= 5f)
+
+
+        if (objectiveTimer <= remaintime)
         {
 
             float alpha = Mathf.Abs(Mathf.Sin(Time.time * 8f));

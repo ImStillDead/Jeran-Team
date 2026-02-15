@@ -6,11 +6,19 @@ public class CameraController : MonoBehaviour
     [SerializeField] int sens;
     [SerializeField] int lockVertMin, lockVertMax;
     [SerializeField] bool invertY;
+
+    public Transform interactorSorce;
+    public float interactRange;
+
     public float camRotX;
     void Start()
     {
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
+
+        if (interactorSorce == null)
+            interactorSorce = transform;
+
     }
     void Update()
     {
@@ -27,7 +35,20 @@ public class CameraController : MonoBehaviour
         camRotX = Mathf.Clamp(camRotX, lockVertMin, lockVertMax);
         transform.localRotation = Quaternion.Euler(camRotX, 0, 0);
         transform.parent.Rotate(Vector3.up * mouseX);
-        
+
+        if (Input.GetKeyUp(KeyCode.E))
+        {
+            Ray R = new Ray(interactorSorce.position, interactorSorce.forward);
+            if (Physics.Raycast(R, out RaycastHit hitInf, interactRange))
+            {
+                if (hitInf.collider.gameObject.TryGetComponent(out iInteract interactObj))
+                {
+                    interactObj.Interacted();
+                    Debug.DrawRay(interactorSorce.position, interactorSorce.forward * interactRange, Color.red);
+                }
+            }
+        }
+
     }
    
 }
