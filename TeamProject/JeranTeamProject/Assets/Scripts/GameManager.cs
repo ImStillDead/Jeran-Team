@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject menuWin;
     [SerializeField] GameObject menuLose;
     [SerializeField] GameObject settingsMenu;
+    [SerializeField] GameObject VolumeSlider;
 
     [SerializeField] GameObject reticle;
     [SerializeField] int objectiveTimerDelay;
