@@ -161,11 +161,11 @@ public class PlayerController : MonoBehaviour, IDamage
                     interact.collider.gameObject.GetComponent<MeshRenderer>().enabled = true;
                 }
             }
-            if (interact.collider.gameObject.CompareTag("Objective") == true)
+            if (interact.collider.gameObject.CompareTag("Objective"))
             {
-                GameManager.instance.objectiveCheck();
+                GameManager.instance.StartObjective();
             }
-            if (interact.collider.gameObject.CompareTag("LevelDoor") == true && GameManager.instance.objectiveCheck())
+            if (interact.collider.gameObject.CompareTag("LevelDoor")&& GameManager.instance.IsObjectiveComplete())
             {
                 GameManager.instance.youWin();
             }

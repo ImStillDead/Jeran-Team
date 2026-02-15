@@ -1,3 +1,4 @@
+using System.Collections;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -10,12 +11,16 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject menuPause;
     [SerializeField] GameObject menuWin;
     [SerializeField] GameObject menuLose;
+    [SerializeField] GameObject settingsMenu;
 
     [SerializeField] GameObject reticle;
     [SerializeField] int objectiveTimerDelay;
     [SerializeField] TMP_Text magazine_text;
     [SerializeField] TMP_Text maxMagsize_text;
     [SerializeField] TMP_Text killCount_text;
+    [SerializeField] TMP_Text Objective_timer_text;
+    [SerializeField] TMP_Text Objective_text;
+    [SerializeField] TMP_Text dialog_text;
     public Image PlayerHP_bar;
     public GameObject playerDamageFlash;
 
@@ -27,10 +32,12 @@ public class GameManager : MonoBehaviour
     public bool canSpawn;
     public bool isPaused;
     public bool startTimer;
+    public bool objectiveCompleted;
     float timeScaleOrg;
     public float objectiveTimer;
     int magsize;
     int maxMagsize;
+    
     void Awake()
     {
         instance = this;
@@ -39,7 +46,11 @@ public class GameManager : MonoBehaviour
         player = GameObject.FindWithTag("Player");
         playerScript = player.GetComponent<PlayerController>();
         canSpawn = true;
+
     }
+
+
+
     void Update()
     {
         if (Input.GetButtonDown("Cancel"))
@@ -55,20 +66,33 @@ public class GameManager : MonoBehaviour
                 stateUnpause();
             }
         }
+        Objective_text.gameObject.SetActive(true);
+
+        if (startTimer || objectiveCompleted) 
+        { 
+            Objective_timer_text.gameObject.SetActive(true); 
+            //Objective_text.gameObject.SetActive(true);
+        }
+        else
+        {
+            Objective_timer_text.gameObject.SetActive(false);
+            //Objective_text.gameObject.SetActive(false);
+        }
+
+
 
         if (startTimer)
         {
-            objectiveTimer += Time.deltaTime;
-            if(objectiveTimer >= objectiveTimerDelay)
-            {
-                startTimer = false;
-            }
+
+            objectiveStartTimer();
         }
 
     }
+
+
     public void statePause()
     {
-        reticle.SetActive(false); 
+        if(reticle != null) reticle.SetActive(false); //
         isPaused = true;
         Time.timeScale = 0;
         Cursor.visible = true;
@@ -77,18 +101,16 @@ public class GameManager : MonoBehaviour
     }
     public void stateUnpause()
     {
-        reticle.SetActive(true);
+        if (reticle != null) reticle.SetActive(true); //
         isPaused = false;
         Time.timeScale = timeScaleOrg;
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
+
         menuActive.SetActive(false);
         menuActive = null;
-    }
-    public void update_ammoCount(int ammo)
-    {
-        maxMagsize += ammo;
-        maxMagsize_text.text = maxMagsize_text.ToString();
+
+        menuActive = null; //
     }
     public void youWin()
     {
@@ -103,6 +125,8 @@ public class GameManager : MonoBehaviour
          menuActive = menuLose;
          menuActive.SetActive(true);
     }
+    
+
     public void loadMain()
     {
         SceneManager.LoadScene(0);
@@ -134,15 +158,13 @@ public class GameManager : MonoBehaviour
     }
     public bool objectiveCheck()
     {
-        if(objectiveTimer >= objectiveTimerDelay)
+        if (!startTimer && objectiveTimer <= 0f)
         {
-            return true;
-        }
-        else if (objectiveTimer == 0)
-        {
+            objectiveTimer = objectiveTimerDelay;
             startTimer = true;
         }
-        return false;
+
+        return objectiveTimer <= 0f;
     }
     public void enemyBoardCount(int count)
     {   
@@ -155,4 +177,82 @@ public class GameManager : MonoBehaviour
             canSpawn = true;
         }
     }
+
+    public string obj_text(string mes)
+    {
+       return Objective_text.text = mes;
+    }
+
+    public string dialogText(string mes)
+    {
+        return dialog_text.text = mes;
+    }
+
+    void objectiveStartTimer()
+    {
+        float remaintime = objectiveTimerDelay * 0.40f;
+
+        Objective_timer_text.gameObject.SetActive(true);
+        Objective_text.gameObject.SetActive(true);
+
+        objectiveTimer -= Time.deltaTime;
+
+
+        if (objectiveTimer < 0f) objectiveTimer = 0f;
+
+        int minutes = Mathf.FloorToInt(objectiveTimer / 60);
+        int seconds = Mathf.FloorToInt(objectiveTimer % 60);
+
+        Objective_timer_text.text = string.Format("{0:00}: {1:00}", minutes, seconds);
+        Objective_text.text = "survive";
+
+
+
+        if (objectiveTimer <= remaintime)
+        {
+
+            float alpha = Mathf.Abs(Mathf.Sin(Time.time * 8f));
+            Color c = Color.red;
+            c.a = alpha;
+            Objective_timer_text.color = c;
+
+
+        }
+        else
+        {
+            Color c = Color.white;
+            c.a = 1f;
+            Objective_timer_text.color = c;
+
+        }
+
+
+
+        if (objectiveTimer <= 0f)
+        {
+            startTimer = false;
+            objectiveCompleted = true;
+
+            Objective_timer_text.color = Color.white;
+            Objective_text.text = "get to the exit!";
+
+        }
+
+    }
+    public void StartObjective()
+    {
+        if (!startTimer && !objectiveCompleted)
+        {
+            objectiveTimer = objectiveTimerDelay;
+            startTimer = true;
+            objectiveCompleted = false;
+        }
+    }
+
+    public bool IsObjectiveComplete()
+    {
+        return objectiveCompleted;
+    }
+
+
 }
