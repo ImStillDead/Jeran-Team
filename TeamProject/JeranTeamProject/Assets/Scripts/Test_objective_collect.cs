@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 
 public class Test_objective_collect : MonoBehaviour, iInteract
@@ -17,9 +18,11 @@ public class Test_objective_collect : MonoBehaviour, iInteract
     public void Interacted()
     {
 
-        gamemanager.obj_text(objective1);
+        gamemanager.addMission(objective1);
 
-        gamemanager.dialogText(dialog);
+        gamemanager.addDialog(dialog);
+
+        Destroy(gameObject);
 
     }
 

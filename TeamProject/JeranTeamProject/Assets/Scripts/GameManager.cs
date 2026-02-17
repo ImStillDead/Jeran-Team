@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using UnityEngine.ProBuilder.MeshOperations;
 
 
 public class GameManager : MonoBehaviour
@@ -24,14 +25,18 @@ public class GameManager : MonoBehaviour
     [SerializeField] TMP_Text killCount_text;
     [SerializeField] TMP_Text Objective_timer_text;
 
+    [SerializeField] Color activeColor = Color.white;
+    [SerializeField] Color oldColor = Color.gray;
 
-    [SerializeField] TMP_Text dialog_text;
-    [SerializeField] List<TMP_Text> listofDialog = new List<TMP_Text> { }; //wip
-    int listofDialogpos;
 
-    [SerializeField] TMP_Text Objective_text;
-    [SerializeField] List<TMP_Text> missions = new List<TMP_Text> {}; //wip
-    int missionPos;
+    [SerializeField] GameObject dialog_prefab;
+    [SerializeField] Transform dialogParent;
+    public List<TMP_Text> listofDialog = new List<TMP_Text> { }; //wip
+
+    [SerializeField] GameObject Objective_prefab;
+    [SerializeField] Transform missonParent;
+    public List<TMP_Text> missions = new List<TMP_Text> {}; //wip
+    int maxTextprefabs = 5;
 
 
     public Image PlayerHP_bar;
@@ -139,7 +144,6 @@ public class GameManager : MonoBehaviour
          menuActive.SetActive(true);
     }
     
-
     public void loadMain()
     {
         SceneManager.LoadScene(0);
@@ -191,22 +195,12 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public string obj_text(string mes)
-    {
-       return Objective_text.text = mes;
-    }
-
-    public string dialogText(string mes)
-    {
-        return dialog_text.text = mes;
-    }
-
     void objectiveStartTimer()
     {
         float remaintime = objectiveTimerDelay * 0.40f;
 
         Objective_timer_text.gameObject.SetActive(true);
-        Objective_text.gameObject.SetActive(true);
+
 
         objectiveTimer -= Time.deltaTime;
 
@@ -217,7 +211,6 @@ public class GameManager : MonoBehaviour
         int seconds = Mathf.FloorToInt(objectiveTimer % 60);
 
         Objective_timer_text.text = string.Format("{0:00}: {1:00}", minutes, seconds);
-        Objective_text.text = "survive";
 
 
 
@@ -247,7 +240,7 @@ public class GameManager : MonoBehaviour
             objectiveCompleted = true;
 
             Objective_timer_text.color = Color.white;
-            Objective_text.text = "get to the exit!";
+            addMission("RUN TO THE EXIT");
 
         }
 
@@ -267,5 +260,82 @@ public class GameManager : MonoBehaviour
         return objectiveCompleted;
     }
 
+    public void addMission(string msg)
+    {
+
+        foreach (TMP_Text oldMission in missions)
+        {
+            oldMission.color = oldColor;
+            oldMission.fontSize = 40;
+        }
+
+        GameObject obj = Instantiate(Objective_prefab, missonParent);
+        TMP_Text text = obj.GetComponent<TMP_Text>();
+        text.text = msg;
+        text.color = activeColor;
+        text.fontSize = 60;
+        obj.transform.SetAsFirstSibling();
+
+        missions.Add(text);
+
+
+        while (missions.Count > maxTextprefabs)
+        {   
+            TMP_Text oldest = missions[0];
+            Destroy(oldest);
+            missions.RemoveAt(0);
+        }
+
+    }
+
+    public void addDialog(string msg)
+    {
+        foreach (TMP_Text oldDialog in listofDialog)
+        {
+            oldDialog.color = oldColor;
+            oldDialog.fontSize = 40;
+            StartCoroutine(fadeText(oldDialog, 3));
+        }
+
+        GameObject obj = Instantiate(dialog_prefab, dialogParent);
+        TMP_Text text = obj.GetComponent<TMP_Text>();
+        text.text = msg;
+        text.color = activeColor;
+        text.fontSize = 60;
+        obj.transform.SetAsLastSibling();
+        StartCoroutine(fadeText(text, 9));
+
+        listofDialog.Add(text);
+
+        while (listofDialog.Count < 1)
+        {
+            TMP_Text oldest = listofDialog[0];
+            Destroy(oldest.gameObject);
+            listofDialog.RemoveAt(0);
+        }
+
+
+    }
+
+    IEnumerator fadeText(TMP_Text Text, float duration)
+    {
+        if (Text == null) yield break;
+
+        float elapsed = 0f;
+
+        Color original = Color.white;
+        Color target = Color.clear;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            Text.color = Color.Lerp(original, target, elapsed / duration);
+            yield return null;
+        }
+
+
+        if(Text != null)
+        Destroy(Text.gameObject);
+    }
 
 }

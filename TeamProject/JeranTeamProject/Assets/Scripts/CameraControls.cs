@@ -36,7 +36,7 @@ public class CameraController : MonoBehaviour
         transform.localRotation = Quaternion.Euler(camRotX, 0, 0);
         transform.parent.Rotate(Vector3.up * mouseX);
 
-        if (Input.GetKeyUp(KeyCode.E))
+        if (Input.GetButtonDown("Interact"))
         {
             Ray R = new Ray(interactorSorce.position, interactorSorce.forward);
             if (Physics.Raycast(R, out RaycastHit hitInf, interactRange))
