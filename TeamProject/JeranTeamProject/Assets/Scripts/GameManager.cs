@@ -3,6 +3,9 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using System.Collections.Generic;
+
+
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
@@ -20,11 +23,21 @@ public class GameManager : MonoBehaviour
     [SerializeField] TMP_Text maxMagsize_text;
     [SerializeField] TMP_Text killCount_text;
     [SerializeField] TMP_Text Objective_timer_text;
-    [SerializeField] TMP_Text Objective_text;
+
+
     [SerializeField] TMP_Text dialog_text;
+    [SerializeField] List<TMP_Text> listofDialog = new List<TMP_Text> { }; //wip
+    int listofDialogpos;
+
+    [SerializeField] TMP_Text Objective_text;
+    [SerializeField] List<TMP_Text> missions = new List<TMP_Text> {}; //wip
+    int missionPos;
+
+
     public Image PlayerHP_bar;
     public GameObject playerDamageFlash;
 
+    
     public GameObject player;
     public PlayerController playerScript;
     int sceneIndex;
@@ -67,7 +80,6 @@ public class GameManager : MonoBehaviour
                 stateUnpause();
             }
         }
-        Objective_text.gameObject.SetActive(true);
 
         if (startTimer || objectiveCompleted) 
         { 
