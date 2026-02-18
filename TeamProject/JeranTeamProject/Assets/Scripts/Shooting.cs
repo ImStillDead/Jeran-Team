@@ -52,6 +52,11 @@ public class Shooting : MonoBehaviour
             StartCoroutine(Reload());       
         }
 
+        if(Input.GetButton("Reload") && !reloading)
+        {
+            StartCoroutine(Reload());
+        }
+
     }
 
     // Called in Update if the Fire1 button (Left Click) is pressed
