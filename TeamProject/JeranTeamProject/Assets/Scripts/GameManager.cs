@@ -59,11 +59,21 @@ public class GameManager : MonoBehaviour
     
     void Awake()
     {
+        if(Time.timeScale == 0)
+        {
+            Time.timeScale = 1f;
+        }
+
+
         instance = this;
-        timeScaleOrg = Time.timeScale;
+        timeScaleOrg += Time.timeScale;
+
         sceneIndex = SceneManager.GetActiveScene().buildIndex;
+
         player = GameObject.FindWithTag("Player");
+
         playerScript = player.GetComponent<PlayerController>();
+
         canSpawn = true;
 
     }
@@ -80,33 +90,21 @@ public class GameManager : MonoBehaviour
                 menuActive = menuPause;
                 menuActive.SetActive(true);
             }
-            else if (menuActive == menuPause)
-            {
-                stateUnpause();
-            }
+            else if (menuActive == menuPause) stateUnpause();
         }
 
-        if (startTimer || objectiveCompleted) 
-        { 
-            Objective_timer_text.gameObject.SetActive(true); 
-            //Objective_text.gameObject.SetActive(true);
-        }
-        else
-        {
-            Objective_timer_text.gameObject.SetActive(false);
-            //Objective_text.gameObject.SetActive(false);
-        }
+        startMission();
 
-
-
-        if (startTimer)
-        {
-
-            objectiveStartTimer();
-        }
 
     }
+    private void startMission()
+    {
+        if (startTimer || objectiveCompleted) Objective_timer_text.gameObject.SetActive(true); 
 
+        else Objective_timer_text.gameObject.SetActive(false);
+        
+        if (startTimer)objectiveStartTimer();
+    }
 
     public void statePause()
     {
@@ -170,7 +168,7 @@ public class GameManager : MonoBehaviour
         magsize = mag;
         maxMagsize = max_mag;
 
-        magazine_text.text = magsize.ToString(); // its getting a error here in unity
+        magazine_text.text = magsize.ToString();
         maxMagsize_text.text = maxMagsize.ToString(); 
     }
     public bool objectiveCheck()
