@@ -5,6 +5,8 @@ using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour, IDamage
 {
+    public PlayerController instancePlayer;
+
     [SerializeField] CharacterController playerController;
     [SerializeField] LayerMask ignoreLayer;
 
@@ -14,6 +16,7 @@ public class PlayerController : MonoBehaviour, IDamage
     [SerializeField] int jumpSpeed;
     [SerializeField] int jumpMax;
     [SerializeField] int interactDis;
+    [SerializeField] int enemyViewDis;
     [SerializeField] int gravity;
     [SerializeField] Transform weaponPos;
     [SerializeField] GameObject firstPersonCamera;
