@@ -37,6 +37,8 @@ public class EnemyAI : MonoBehaviour, IDamage
     float angleToPlayer;
     Vector3 startingPos;
     Vector3 playerDir;
+
+    EnemyHealthBar healthBar;
     void Start()
     {
         colorOrg = model.material.color;
@@ -44,6 +46,13 @@ public class EnemyAI : MonoBehaviour, IDamage
         stoppingDistanceOrig = agent.stoppingDistance;
         startingPos = transform.position;
         agent.speed = Speed;
+
+        healthBar = GetComponentInChildren<EnemyHealthBar>();
+        if(healthBar != null)
+        {
+            healthBar.Setup(Health);
+        }
+
     }
     void Update()
     {
@@ -195,6 +204,13 @@ public class EnemyAI : MonoBehaviour, IDamage
     public void takeDamage(int amount)
     {
         Health -= amount;
+
+        if(healthBar != null)
+        {
+            healthBar.UpdateHealth(Health);
+        }
+
+
         agent.SetDestination(GameManager.instance.player.transform.position);
 
         if (Health <= 0)
@@ -214,6 +230,7 @@ public class EnemyAI : MonoBehaviour, IDamage
         yield return new WaitForSeconds(0.1f);
         model.material.color= colorOrg;
     }
+
 
     void neckRotate()
     {
