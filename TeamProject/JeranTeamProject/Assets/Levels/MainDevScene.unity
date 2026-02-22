@@ -383,6 +383,11 @@ MonoBehaviour:
   m_ShadowLayerMask: 1
   m_RenderingLayers: 1
   m_ShadowRenderingLayers: 1
+--- !u!1 &690036467 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 38751014115887188, guid: 734cd4afb6bdf4049abc924a0d1f06aa, type: 3}
+  m_PrefabInstance: {fileID: 3391113650616589487}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
@@ -479,7 +484,7 @@ PrefabInstance:
     - target: {fileID: 4135899220322659221, guid: 734cd4afb6bdf4049abc924a0d1f06aa, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_Target
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 690036467}
     - target: {fileID: 4135899220322659221, guid: 734cd4afb6bdf4049abc924a0d1f06aa, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
       value: 2
@@ -509,6 +514,10 @@ PrefabInstance:
       value: UnityEngine.GameObject, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 4135899220322659221, guid: 734cd4afb6bdf4049abc924a0d1f06aa, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_BoolArgument
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4135899220322659221, guid: 734cd4afb6bdf4049abc924a0d1f06aa, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_BoolArgument
       value: 0
       objectReference: {fileID: 0}
@@ -527,6 +536,10 @@ PrefabInstance:
     - target: {fileID: 5441922806447242413, guid: 734cd4afb6bdf4049abc924a0d1f06aa, type: 3}
       propertyPath: m_Name
       value: MainMenu
+      objectReference: {fileID: 0}
+    - target: {fileID: 5441922806447242413, guid: 734cd4afb6bdf4049abc924a0d1f06aa, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 8034655292340855440, guid: 734cd4afb6bdf4049abc924a0d1f06aa, type: 3}
       propertyPath: m_Pivot.x
