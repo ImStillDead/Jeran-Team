@@ -54,9 +54,12 @@ MonoBehaviour:
   lockVertMax: 30
   invertY: 0
   focusedObject: {fileID: 0}
+  focusedEnemy: {fileID: 0}
   prefabFloatingUi: {fileID: 0}
   prefabEnemyHealth: {fileID: 0}
+  listofEnemyHealthbars: []
   interactorSorce: {fileID: 0}
+  enemyViewRange: 0
   interactRange: 0
   camRotX: 0
 --- !u!20 &1568530778354278207
@@ -227,7 +230,6 @@ GameObject:
   - component: {fileID: 7198869795535415850}
   - component: {fileID: 4792696095426430230}
   - component: {fileID: 7159772785686402321}
-  - component: {fileID: 5896044639970512363}
   m_Layer: 16
   m_Name: FirstPerson
   m_TagString: MainCamera
@@ -268,9 +270,12 @@ MonoBehaviour:
   lockVertMax: 45
   invertY: 0
   focusedObject: {fileID: 0}
+  focusedEnemy: {fileID: 0}
   prefabFloatingUi: {fileID: 1633699046482481510, guid: 141aa0e344e41b44fa09b6fb68ea5f7e, type: 3}
-  prefabEnemyHealth: {fileID: 0}
+  prefabEnemyHealth: {fileID: 534128539535626836, guid: c6e74abb718bc5745afb97da110030ba, type: 3}
+  listofEnemyHealthbars: []
   interactorSorce: {fileID: 0}
+  enemyViewRange: 9
   interactRange: 3
   camRotX: 0
 --- !u!20 &7198869795535415850
@@ -376,27 +381,6 @@ MonoBehaviour:
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
   m_Version: 2
---- !u!135 &5896044639970512363
-SphereCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8269506281394273731}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Radius: 2.12
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &8621472841112053527
 GameObject:
   m_ObjectHideFlags: 0
@@ -449,6 +433,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 702bea551e769674e8677faba3484417, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
+  instancePlayer: {fileID: 0}
   playerController: {fileID: 7136655406761469723}
   ignoreLayer:
     serializedVersion: 2
@@ -459,6 +444,7 @@ MonoBehaviour:
   jumpSpeed: 10
   jumpMax: 1
   interactDis: 3
+  enemyViewDis: 0
   gravity: 35
   weaponPos: {fileID: 2322056319581036704}
   firstPersonCamera: {fileID: 8269506281394273731}
