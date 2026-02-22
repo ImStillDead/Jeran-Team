@@ -1,5 +1,7 @@
+using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+
 
 public class CameraController : MonoBehaviour
 {
@@ -8,12 +10,17 @@ public class CameraController : MonoBehaviour
     [SerializeField] int lockVertMin, lockVertMax;
     [SerializeField] bool invertY;
     [SerializeField] Transform focusedObject;
+    [SerializeField] Transform focusedEnemy;
     [SerializeField] GameObject prefabFloatingUi;
     [SerializeField] GameObject prefabEnemyHealth;
 
+    public List<GameObject> listofEnemyHealthbars;
+
     private GameObject obj;
+    private GameObject ene;
 
     public Transform interactorSorce;
+    public float enemyViewRange;
     public float interactRange;
 
     public float camRotX;
@@ -34,6 +41,7 @@ public class CameraController : MonoBehaviour
         InteractButton();
         DetectFocusedObject();
         make_FLoatingUi();
+        make_HealthBar();
     }
 
     void mouseControl()
@@ -71,36 +79,41 @@ public class CameraController : MonoBehaviour
     void DetectFocusedObject()
     {
         Ray ray = new Ray(interactorSorce.position, interactorSorce.forward);
+        Ray Eray = new Ray(interactorSorce.position, interactorSorce.forward);
+
+        focusedObject = null;
+        focusedEnemy = null;
 
         if (Physics.Raycast(ray, out RaycastHit hit, interactRange))
         {
-            if (hit.collider.TryGetComponent(out iInteract _) || hit.collider.gameObject.CompareTag("Door") 
-                || hit.collider.gameObject.CompareTag("Objective") || hit.collider.gameObject.CompareTag("LevelDoor"))
-                focusedObject = hit.collider.transform;
-            else
-            {
-                focusedObject = null;
 
+            if (hit.collider.TryGetComponent(out iInteract _) || hit.collider.gameObject.CompareTag("Door")
+                || hit.collider.gameObject.CompareTag("Objective") 
+                || hit.collider.gameObject.CompareTag("LevelDoor"))
+            {
+                focusedObject = hit.collider.transform;
             }
 
         }
-        else
+
+        if (Physics.Raycast(Eray, out RaycastHit enemyHits, enemyViewRange))
         {
-            focusedObject = null;
-  
+            if (enemyHits.collider.gameObject.CompareTag("Enemy"))
+            {
+                focusedEnemy = enemyHits.collider.transform;
+                
+               
+            }  
         }
     }
 
     void make_FLoatingUi()
     {
-
-        
-        
         if (focusedObject != null)
         {
             if (obj == null)
             {
-               Vector3 offset = new Vector3(0, .5f, 0);
+               Vector3 offset = new Vector3(0, .6f, 0);
 
                 Vector3 dirtoplayer = (GameManager.instance.player.transform.position - focusedObject.position).normalized;
                 dirtoplayer.y = 0f;
@@ -114,6 +127,7 @@ public class CameraController : MonoBehaviour
 
             prefabFacePlayer(obj);
         }
+
         else
         {
             if (obj != null)
@@ -121,14 +135,45 @@ public class CameraController : MonoBehaviour
         }
     }
 
-    private void prefabFacePlayer(GameObject obj)
+    void make_HealthBar()
+    {            
+        Vector3 offset = new Vector3(0, 1.5f, 0);
+
+        if (focusedEnemy != null)
+        {
+
+                if (listofEnemyHealthbars.Count <= 0)
+                {
+                    ene = GameObject.Instantiate(prefabEnemyHealth, focusedEnemy);
+                    listofEnemyHealthbars.Add(ene);
+                }
+
+                for (int index = 0; index < listofEnemyHealthbars.Count; index++)
+                {
+
+                    prefabFacePlayer(listofEnemyHealthbars[index]);
+                    listofEnemyHealthbars[index].transform.position = focusedEnemy.position + offset;
+
+            
+                    if (focusedEnemy == null || listofEnemyHealthbars[index] == null)
+                    {
+                        Destroy(listofEnemyHealthbars[index]);
+                        listofEnemyHealthbars[index] = null;
+                        continue;                
+                    }
+
+                }
+        }
+    }
+
+    private void prefabFacePlayer(GameObject obje)
     {
         Vector3 playDir = GameManager.instance.player.transform.position - transform.position;
 
         playDir.y = 0;
 
         Quaternion rot = Quaternion.LookRotation(playDir);
-        obj.transform.rotation = Quaternion.Slerp(transform.rotation, rot, 2f * Time.deltaTime);
+        obje.transform.rotation = Quaternion.Slerp(transform.rotation, rot, 2f * Time.deltaTime);
     }
 
 
