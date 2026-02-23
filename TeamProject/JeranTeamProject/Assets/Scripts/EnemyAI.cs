@@ -19,10 +19,13 @@ public class EnemyAI : MonoBehaviour, IDamage
     [SerializeField] GameObject spit;
     [SerializeField] float spitRate;
     [SerializeField] Transform spitPos;
+    [SerializeField] Transform neckPivot;
+    [SerializeField] int neckRotationSpeed;
 
     [SerializeField] int contactDamage;
     [SerializeField] float damageRate;
     [SerializeField] int meleeDist;
+    
     Color colorOrg;
     GameObject door;
     float spitTimer;
@@ -34,6 +37,8 @@ public class EnemyAI : MonoBehaviour, IDamage
     float angleToPlayer;
     Vector3 startingPos;
     Vector3 playerDir;
+
+    EnemyHealthBar healthBar;
     void Start()
     {
         colorOrg = model.material.color;
@@ -41,6 +46,13 @@ public class EnemyAI : MonoBehaviour, IDamage
         stoppingDistanceOrig = agent.stoppingDistance;
         startingPos = transform.position;
         agent.speed = Speed;
+
+        healthBar = GetComponentInChildren<EnemyHealthBar>();
+        if(healthBar != null)
+        {
+            healthBar.Setup(Health);
+        }
+
     }
     void Update()
     {
@@ -138,6 +150,9 @@ public class EnemyAI : MonoBehaviour, IDamage
                 {
                     shoot();
                 }
+
+                neckRotate();
+
                 if (agent.remainingDistance <= agent.stoppingDistance)
                 {
                     faceTarget();
@@ -180,7 +195,7 @@ public class EnemyAI : MonoBehaviour, IDamage
     void shoot()
     {
         spitTimer = 0;
-        Instantiate(spit, spitPos.position, transform.rotation);
+        Instantiate(spit, spitPos.position, neckPivot.rotation);
         if (spitTimer >= spitRate)
         {
             shoot();
@@ -189,6 +204,13 @@ public class EnemyAI : MonoBehaviour, IDamage
     public void takeDamage(int amount)
     {
         Health -= amount;
+
+        if(healthBar != null)
+        {
+            healthBar.UpdateHealth(Health);
+        }
+
+
         agent.SetDestination(GameManager.instance.player.transform.position);
 
         if (Health <= 0)
@@ -209,5 +231,17 @@ public class EnemyAI : MonoBehaviour, IDamage
         model.material.color= colorOrg;
     }
 
+
+    void neckRotate()
+    {
+        Vector3 directionToPlayer = GameManager.instance.player.transform.position - neckPivot.position;
+
+        float horizontalAngel= Mathf.Atan2(directionToPlayer.x, directionToPlayer.z)*Mathf.Rad2Deg;
+
+        float verticalAngle = -Mathf.Atan2(directionToPlayer.y, new Vector3(directionToPlayer.x, 0, directionToPlayer.z).magnitude) * Mathf.Rad2Deg;
+
+        Quaternion targetRotation = Quaternion.Euler(verticalAngle, horizontalAngel, 0);
+        neckPivot.rotation=Quaternion.RotateTowards(neckPivot.rotation, targetRotation, neckRotationSpeed* Time.deltaTime);
+    }
   
 }

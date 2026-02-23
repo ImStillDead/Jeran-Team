@@ -5,6 +5,8 @@ using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour, IDamage
 {
+    public PlayerController instancePlayer;
+
     [SerializeField] CharacterController playerController;
     [SerializeField] LayerMask ignoreLayer;
 
@@ -14,6 +16,7 @@ public class PlayerController : MonoBehaviour, IDamage
     [SerializeField] int jumpSpeed;
     [SerializeField] int jumpMax;
     [SerializeField] int interactDis;
+    [SerializeField] int enemyViewDis;
     [SerializeField] int gravity;
     [SerializeField] Transform weaponPos;
     [SerializeField] GameObject firstPersonCamera;
@@ -161,11 +164,11 @@ public class PlayerController : MonoBehaviour, IDamage
                     interact.collider.gameObject.GetComponent<MeshRenderer>().enabled = true;
                 }
             }
-            if (interact.collider.gameObject.CompareTag("Objective") == true)
+            if (interact.collider.gameObject.CompareTag("Objective"))
             {
-                GameManager.instance.objectiveCheck();
+                GameManager.instance.StartObjective();
             }
-            if (interact.collider.gameObject.CompareTag("LevelDoor") == true && GameManager.instance.objectiveCheck())
+            if (interact.collider.gameObject.CompareTag("LevelDoor")&& GameManager.instance.IsObjectiveComplete())
             {
                 GameManager.instance.youWin();
             }
@@ -191,5 +194,15 @@ public class PlayerController : MonoBehaviour, IDamage
     public void updatePlayerUI()
     {
         GameManager.instance.PlayerHP_bar.fillAmount = (float)HP / HPOrigin;
+    }
+
+    public void Heal(int amount)
+    {
+        HP += amount;
+        if (HP > HPOrigin)
+        {
+            HP = HPOrigin;
+        }
+        updatePlayerUI();
     }
 }
