@@ -195,4 +195,14 @@ public class PlayerController : MonoBehaviour, IDamage
     {
         GameManager.instance.PlayerHP_bar.fillAmount = (float)HP / HPOrigin;
     }
+
+    public void Heal(int amount)
+    {
+        HP += amount;
+        if (HP > HPOrigin)
+        {
+            HP = HPOrigin;
+        }
+        updatePlayerUI();
+    }
 }
