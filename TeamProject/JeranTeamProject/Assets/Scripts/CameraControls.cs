@@ -102,8 +102,13 @@ public class CameraController : MonoBehaviour
             {
                 focusedEnemy = enemyHits.collider.transform;
                 
-               
-            }  
+            }
+
+            else
+            {
+                focusedEnemy = null;
+            }
+
         }
     }
 
@@ -174,6 +179,9 @@ public class CameraController : MonoBehaviour
 
         Quaternion rot = Quaternion.LookRotation(playDir);
         obje.transform.rotation = Quaternion.Slerp(transform.rotation, rot, 2f * Time.deltaTime);
+
+        if (obje == null) return;
+
     }
 
 

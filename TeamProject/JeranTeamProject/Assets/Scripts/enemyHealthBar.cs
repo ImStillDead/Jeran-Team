@@ -16,5 +16,11 @@ public class EnemyHealthBar : MonoBehaviour
     public void UpdateHealth(int currentHP)
     {
         fillImage.fillAmount = (float)currentHP / maxHealth;
+
+        if(maxHealth > 0)
+        {
+            Debug.Log("health has not changed");
+        }
+
     }
 }
