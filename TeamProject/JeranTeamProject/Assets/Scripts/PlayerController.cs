@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 
@@ -21,13 +22,13 @@ public class PlayerController : MonoBehaviour, IDamage
     [SerializeField] Transform weaponPos;
     [SerializeField] GameObject firstPersonCamera;
     [SerializeField] GameObject thirdPersonCamera;
-    [SerializeField] GameObject inventory1;
-    [SerializeField] GameObject inventory2;
-    [SerializeField] GameObject inventory3;
+    [SerializeField] List<GameObject> inventoryList = new List<GameObject>();
+    
 
     GameObject activeItem;
     int HPOrigin;
     int jumpCount;
+    int invPos;
     bool isFirstPerson;
     Vector3 moveDir;
     Vector3 playerVel;
@@ -35,9 +36,10 @@ public class PlayerController : MonoBehaviour, IDamage
     void Start()
     {
         HPOrigin = HP;
-        activeItem = Instantiate(inventory1, weaponPos);
         isFirstPerson = true;
         updatePlayerUI();
+        invPos = 0;
+        swapWeapon();
     }
 
     void Update()
@@ -105,31 +107,37 @@ public class PlayerController : MonoBehaviour, IDamage
             speed /= sprintMod;
         }
     }
+    void swapWeapon()
+    {
+        Destroy(activeItem);
+        activeItem = Instantiate(inventoryList[invPos], weaponPos);
+    }
     void SwitchWeapon()
     {
-        if (Input.GetButtonDown("Weapon1"))
+        if (Input.GetAxis("Mouse ScrollWheel") > 0 && invPos < inventoryList.Count - 1)
         {
-            if (activeItem != null)
-            {
-                Destroy(activeItem);
-            }
-            activeItem = Instantiate(inventory1, weaponPos);
+            invPos++;
+            swapWeapon();
+        }
+        else if (Input.GetAxis("Mouse ScrollWheel") < 0 && invPos > 0)
+        {
+            invPos--;
+            swapWeapon();
+        }
+            if (Input.GetButtonDown("Weapon1"))
+        {
+            invPos = 0;
+            swapWeapon();
         }
         else if (Input.GetButtonDown("Weapon2"))
         {
-            if (activeItem != null)
-            {
-                Destroy(activeItem);
-            }
-            activeItem = Instantiate(inventory2, weaponPos);
+            invPos = 1;
+            swapWeapon();
         }
         else if (Input.GetButtonDown("Weapon3"))
         {
-            if (activeItem != null)
-            {
-                Destroy(activeItem);
-            }
-            activeItem = Instantiate(inventory3, weaponPos);
+            invPos = 2;
+            swapWeapon();
         }
     }
     void WeaponRotate()
@@ -151,27 +159,7 @@ public class PlayerController : MonoBehaviour, IDamage
         RaycastHit interact;
         if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out interact, interactDis, ~ignoreLayer))
         {
-            if (interact.collider.gameObject.CompareTag("Door") == true)
-            {
-                if (interact.collider.gameObject.GetComponent<Collider>().isTrigger == false)
-                {
-                    interact.collider.gameObject.GetComponent<Collider>().isTrigger = true;
-                    interact.collider.gameObject.GetComponent<MeshRenderer>().enabled = false;
-                }
-                else if (interact.collider.isTrigger)
-                {
-                    interact.collider.gameObject.GetComponent<Collider>().isTrigger = false;
-                    interact.collider.gameObject.GetComponent<MeshRenderer>().enabled = true;
-                }
-            }
-            if (interact.collider.gameObject.CompareTag("Objective"))
-            {
-                GameManager.instance.StartObjective();
-            }
-            if (interact.collider.gameObject.CompareTag("LevelDoor")&& GameManager.instance.IsObjectiveComplete())
-            {
-                GameManager.instance.youWin();
-            }
+            
         }
     }
     public void takeDamage(int amount)

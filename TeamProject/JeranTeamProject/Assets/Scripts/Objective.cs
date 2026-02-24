@@ -1,0 +1,37 @@
+using UnityEngine;
+
+public class Objective : MonoBehaviour
+{
+    [SerializeField] GameObject button;
+    bool playerInTrigger;
+    bool start;
+    void Start()
+    {
+        start = false;
+    }
+    void Update()
+    {
+        
+        if (Input.GetButtonDown("Interact") && playerInTrigger && !start)
+        {
+            GameManager.instance.StartObjective();
+            start = true;
+        }
+    }
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            playerInTrigger = true;
+            button.SetActive(true);
+        }
+    }
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            playerInTrigger = false;
+            button.SetActive(false);
+        }
+    }
+}

@@ -1,75 +1,61 @@
-using UnityEngine;
 using System.Collections;
+using UnityEngine;
+using UnityEngine.AI;
 
 public class Spawner : MonoBehaviour
 {
-    [SerializeField] int HP;
-    //[SerializeField] Renderer model;
-    [SerializeField] Transform spawn;
-    [SerializeField] GameObject enemy;
-    //[SerializeField] GameObject door;
+    [SerializeField] GameObject spawnObject;
+    [SerializeField] int spawnAmmount;
     [SerializeField] int spawnRate;
-    //Color colorOrg;
-    int HPOrg;
+    [SerializeField] int spawnDist;
+
+    int spawnCount;
     float spawnTimer;
-    bool playerInTrigger;
-    /*public void takeDamage(int ammount)
-    {
-        HP -= ammount;
-        if (HP > 0) { 
-            door.GetComponent<MeshRenderer>().enabled = false;
-            door.GetComponent<Collider>().isTrigger = true;
-        }
-        else
-        {
-            StartCoroutine(FlashRed());
-        }
-    }
-    IEnumerator FlashRed()
-    {
-        model.material.color = Color.red;
-        yield return new WaitForSeconds(0.1f);
-        model.material.color = colorOrg;
-    }*/
+    bool startSpawner;
     void Start()
     {
-        HPOrg = HP;
 
     }
     void Update()
     {
-        if (playerInTrigger)
+        if (startSpawner)
         {
             spawnTimer += Time.deltaTime;
+            if (spawnCount < spawnAmmount && spawnTimer > spawnRate)
+            {
+                spawn();
+            }
         }
-        if (GameManager.instance.canSpawn && spawnTimer >= spawnRate)
-        {
-            spawnTimer = 0;
-            spawnEnemy();
-        }
-    }
-    private GameObject spawnEnemy()
-    {
-        return Instantiate(enemy, spawn.position, transform.rotation);
     }
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
-            playerInTrigger = true;
+            if(GameManager.instance.enemyCount == 0)
+            {
+                GameManager.instance.enemyBoardCount(spawnAmmount);
+                startSpawner = true;
+            }
+            if (GameManager.instance.canSpawn == true && spawnCount <= spawnAmmount)
+            {
+                GameManager.instance.enemyBoardCount(spawnAmmount);
+                spawnCount = 0;
+                startSpawner = true;
+            }
         }
     }
-    private void OnTriggerExit(Collider other)
+    void spawn()
     {
-        if (other.CompareTag("Player"))
-        {
-            playerInTrigger = false;
-        }
+        spawnTimer = 0;
+        spawnCount++;
+
+        Vector3 randPos = Random.insideUnitSphere * spawnDist;
+        randPos += transform.position;
+
+        NavMeshHit hit;
+        NavMesh.SamplePosition(randPos, out hit, spawnDist, 1);
+
+        Instantiate(spawnObject, hit.position, Quaternion.Euler(0f, Random.Range(0f, 360f), 0f));
     }
-    /*public void fixDoor()
-    {
-        HP = HPOrg;
-        door.GetComponent<MeshRenderer>().enabled = true;
-        door.GetComponent<Collider>().isTrigger = false;
-    }*/
+
 }
