@@ -552,11 +552,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6279823610682781954, guid: 970a0e0414fa8be4695cbe8c3d95afd7, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.09
+      value: 0.08
       objectReference: {fileID: 0}
     - target: {fileID: 6279823610682781954, guid: 970a0e0414fa8be4695cbe8c3d95afd7, type: 3}
       propertyPath: m_LocalPosition.z
-      value: 6.35
+      value: 5.45
       objectReference: {fileID: 0}
     - target: {fileID: 6279823610682781954, guid: 970a0e0414fa8be4695cbe8c3d95afd7, type: 3}
       propertyPath: m_LocalRotation.w
@@ -1420,6 +1420,8 @@ MonoBehaviour:
   spit: {fileID: 7398234212651272795, guid: 229986870f567754283d079147199970, type: 3}
   spitRate: 3
   spitPos: {fileID: 734261845}
+  neckPivot: {fileID: 0}
+  neckRotationSpeed: 0
   contactDamage: 5
   damageRate: 1
   meleeDist: 3
