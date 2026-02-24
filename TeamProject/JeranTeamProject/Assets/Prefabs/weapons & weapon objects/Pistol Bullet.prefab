@@ -51,10 +51,10 @@ MonoBehaviour:
   rb: {fileID: 5362188895160297448}
   ignoreLayer:
     serializedVersion: 2
-    m_Bits: 2048
+    m_Bits: 520
   damageAmount: 2
   damageRate: 0
-  speed: 35
+  speed: 25
   destroyTime: 0.5
   hitEffect: {fileID: 0}
 --- !u!135 &4912889407408669173
@@ -97,7 +97,7 @@ Rigidbody:
     m_Bits: 0
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 520
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 0
@@ -154,7 +154,7 @@ TrailRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Time: 0.3
+  m_Time: 0.025
   m_PreviewTimeScale: 1
   m_Parameters:
     serializedVersion: 3

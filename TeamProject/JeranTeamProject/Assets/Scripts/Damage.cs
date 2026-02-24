@@ -14,11 +14,8 @@ public class Damage : MonoBehaviour
     [SerializeField] int speed;
     [SerializeField] float destroyTime;
     [SerializeField] ParticleSystem hitEffect;
-
     // other variables
     bool isDamaging;
-
-
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -30,7 +27,6 @@ public class Damage : MonoBehaviour
             Destroy(gameObject, destroyTime);
         }
     }
-
     private void OnTriggerEnter(Collider other)
     {
         /*  Case for triggers to ignore other triggers*/
@@ -56,7 +52,6 @@ public class Damage : MonoBehaviour
             Destroy(gameObject);
         }
     }
-
     private void OnTriggerStay(Collider other)
     {
         if (other.isTrigger)
@@ -70,7 +65,6 @@ public class Damage : MonoBehaviour
             StartCoroutine(damageOther(dmg));
         }
     }
-
     IEnumerator damageOther(IDamage d)
     {
         isDamaging = true;
@@ -78,5 +72,4 @@ public class Damage : MonoBehaviour
         yield return new WaitForSeconds(damageRate);
         isDamaging = false;
     }
-
 }

@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using UnityEngine.AI;
+using UnityEngine.UI;
 
 
 public class EnemyAI : MonoBehaviour, IDamage
@@ -8,7 +9,7 @@ public class EnemyAI : MonoBehaviour, IDamage
     [SerializeField] Renderer model;
     [SerializeField] NavMeshAgent agent;
     
-    [SerializeField] int Health;
+    [SerializeField] int HP;
     [SerializeField] int Speed;
     [SerializeField] int faceTargetSpeed;
 
@@ -25,42 +26,40 @@ public class EnemyAI : MonoBehaviour, IDamage
     [SerializeField] int contactDamage;
     [SerializeField] float damageRate;
     [SerializeField] int meleeDist;
-    
+    [SerializeField] int maxLifeTimer;
+    [SerializeField] GameObject enemyHPBar;
+    public Image enemyHealth;
+
+    float inUseTimer;
     Color colorOrg;
-    GameObject door;
+    int HPOrigin;
+
     float spitTimer;
     float roamTimer;
     float damageTimer;
-    bool doorHit;
+
     bool playerInTrigger;
     float stoppingDistanceOrig;
     float angleToPlayer;
     Vector3 startingPos;
     Vector3 playerDir;
 
-    EnemyHealthBar healthBar;
     void Start()
     {
         colorOrg = model.material.color;
-        GameManager.instance.enemyBoardCount(1);
+        HPOrigin = HP;
         stoppingDistanceOrig = agent.stoppingDistance;
         startingPos = transform.position;
         agent.speed = Speed;
-
-        healthBar = GetComponentInChildren<EnemyHealthBar>();
-        if(healthBar != null)
-        {
-            healthBar.Setup(Health);
-        }
-
+        agent.SetDestination(GameManager.instance.player.transform.position);
     }
     void Update()
     {
+
         if (GameManager.instance.objectiveTimer >= 3)
         {
             agent.SetDestination(GameManager.instance.player.transform.position);
         }
-
         if (agent.remainingDistance < 0.5f)
         {
             roamTimer += Time.deltaTime;
@@ -72,45 +71,19 @@ public class EnemyAI : MonoBehaviour, IDamage
         else if (!playerInTrigger)
         {
             CheckRoam();
+            inUseTimer += Time.deltaTime;
         }
         else
         {
             spitTimer += Time.deltaTime;
             damageTimer += Time.deltaTime;
+            inUseTimer = 0;
         }
-       /* if (playerInTrigger && CanSeePlayer())
+        if (inUseTimer > maxLifeTimer)
         {
-            agent.stoppingDistance = stoppingDistanceOrig;
-            agent.SetDestination(GameManager.instance.player.transform.position);
-            if (agent.remainingDistance < agent.stoppingDistance)
-            {
-                faceTarget();
-
-                if (spitTimer >= spitRate)
-                {
-                    spitTimer = 0;
-                    shoot();
-                }
-
-                if (damageTimer >= damageRate)
-                {
-                    damagePlayer();
-                }
-            }
+            GameManager.instance.enemyBoardCount(-1);
+            Destroy(gameObject);
         }
-        if (agent.remainingDistance < 0.01f)
-        {
-            roamTimer += Time.deltaTime;
-        }
-        if (playerInTrigger && !CanSeePlayer())
-        {
-            CheckRoam();
-        }
-        else if (!playerInTrigger)
-        {
-            agent.stoppingDistance = 0;
-            CheckRoam();
-        }*/
     }
     
     void roam()
@@ -151,7 +124,7 @@ public class EnemyAI : MonoBehaviour, IDamage
                     shoot();
                 }
 
-                neckRotate();
+               // neckRotate();
 
                 if (agent.remainingDistance <= agent.stoppingDistance)
                 {
@@ -181,6 +154,7 @@ public class EnemyAI : MonoBehaviour, IDamage
         if (other.CompareTag("Player"))
         {
             playerInTrigger = true;
+            enemyHPBar.SetActive(true);
         }
     }
     private void OnTriggerExit(Collider other)
@@ -188,6 +162,7 @@ public class EnemyAI : MonoBehaviour, IDamage
         if (other.CompareTag("Player"))
         {
             playerInTrigger = false;
+            enemyHPBar.SetActive(false);
             agent.stoppingDistance = 0;
         }
     }
@@ -203,17 +178,14 @@ public class EnemyAI : MonoBehaviour, IDamage
     }
     public void takeDamage(int amount)
     {
-        Health -= amount;
-
-        if(healthBar != null)
-        {
-            healthBar.UpdateHealth(Health);
-        }
-
+        HP -= amount;
+        
+        enemyHealth.fillAmount = (float)HP / HPOrigin;
+       
 
         agent.SetDestination(GameManager.instance.player.transform.position);
 
-        if (Health <= 0)
+        if (HP <= 0)
         {
             GameManager.instance.enemyBoardCount(-1);
             Destroy(gameObject);
@@ -232,7 +204,7 @@ public class EnemyAI : MonoBehaviour, IDamage
     }
 
 
-    void neckRotate()
+   /* void neckRotate()
     {
         Vector3 directionToPlayer = GameManager.instance.player.transform.position - neckPivot.position;
 
@@ -242,6 +214,7 @@ public class EnemyAI : MonoBehaviour, IDamage
 
         Quaternion targetRotation = Quaternion.Euler(verticalAngle, horizontalAngel, 0);
         neckPivot.rotation=Quaternion.RotateTowards(neckPivot.rotation, targetRotation, neckRotationSpeed* Time.deltaTime);
-    }
+    }*/
+
   
 }
