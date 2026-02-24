@@ -53,14 +53,6 @@ MonoBehaviour:
   lockVertMin: -15
   lockVertMax: 30
   invertY: 0
-  focusedObject: {fileID: 0}
-  focusedEnemy: {fileID: 0}
-  prefabFloatingUi: {fileID: 0}
-  prefabEnemyHealth: {fileID: 0}
-  listofEnemyHealthbars: []
-  interactorSorce: {fileID: 0}
-  enemyViewRange: 0
-  interactRange: 0
   camRotX: 0
 --- !u!20 &1568530778354278207
 Camera:
@@ -269,14 +261,6 @@ MonoBehaviour:
   lockVertMin: -45
   lockVertMax: 45
   invertY: 0
-  focusedObject: {fileID: 0}
-  focusedEnemy: {fileID: 0}
-  prefabFloatingUi: {fileID: 1633699046482481510, guid: 141aa0e344e41b44fa09b6fb68ea5f7e, type: 3}
-  prefabEnemyHealth: {fileID: 534128539535626836, guid: c6e74abb718bc5745afb97da110030ba, type: 3}
-  listofEnemyHealthbars: []
-  interactorSorce: {fileID: 0}
-  enemyViewRange: 9
-  interactRange: 3
   camRotX: 0
 --- !u!20 &7198869795535415850
 Camera:
@@ -437,7 +421,7 @@ MonoBehaviour:
   playerController: {fileID: 7136655406761469723}
   ignoreLayer:
     serializedVersion: 2
-    m_Bits: 7159
+    m_Bits: 3063
   HP: 100
   speed: 8
   sprintMod: 2
@@ -449,9 +433,7 @@ MonoBehaviour:
   weaponPos: {fileID: 2322056319581036704}
   firstPersonCamera: {fileID: 8269506281394273731}
   thirdPersonCamera: {fileID: 3433218060911350080}
-  inventory1: {fileID: 8733110271342190919, guid: 1c3052424b573554eb0183e8b6a666cc, type: 3}
-  inventory2: {fileID: 1091011872325104427, guid: ec51d9d19824cfc48930be8030c478a2, type: 3}
-  inventory3: {fileID: 8733110271342190919, guid: eb100d8062b7f6943bf6be63d284075b, type: 3}
+  inventoryList: []
 --- !u!33 &6094603833308852184
 MeshFilter:
   m_ObjectHideFlags: 0

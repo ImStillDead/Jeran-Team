@@ -1,10 +1,14 @@
-using System.Collections;
+using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Spawner : MonoBehaviour
+public class SpawnerDoor : MonoBehaviour
 {
+    [SerializeField] GameObject model;
+    bool enemyInTrigger;
+
     [SerializeField] GameObject spawnObject;
+    [SerializeField] Transform spawnPos;
     [SerializeField] int spawnAmmount;
     [SerializeField] int spawnRate;
     [SerializeField] int spawnDist;
@@ -18,6 +22,10 @@ public class Spawner : MonoBehaviour
     }
     void Update()
     {
+        if (enemyInTrigger)
+        {
+            model.SetActive(false);
+        }
         if (startSpawner)
         {
             spawnTimer += Time.deltaTime;
@@ -27,16 +35,20 @@ public class Spawner : MonoBehaviour
             }
         }
     }
+
     private void OnTriggerEnter(Collider other)
     {
+        if (other.CompareTag("Enemy"))
+        {
+            enemyInTrigger = true;
+        }
         if (other.CompareTag("Player"))
         {
-            if(GameManager.instance.enemyCount == 0)
+            if (GameManager.instance.enemyCount == 0)
             {
                 GameManager.instance.enemyBoardCount(spawnAmmount);
                 startSpawner = true;
-            }
-            if (GameManager.instance.canSpawn == true && spawnCount <= spawnAmmount)
+            } else if (GameManager.instance.canSpawn == true && spawnCount <= spawnAmmount)
             {
                 GameManager.instance.enemyBoardCount(spawnAmmount);
                 spawnCount = 0;
@@ -50,12 +62,20 @@ public class Spawner : MonoBehaviour
         spawnCount++;
 
         Vector3 randPos = Random.insideUnitSphere * spawnDist;
-        randPos += transform.position;
+        randPos += spawnPos.transform.position;
 
         NavMeshHit hit;
         NavMesh.SamplePosition(randPos, out hit, spawnDist, 1);
 
-        Instantiate(spawnObject, hit.position, Quaternion.Euler(0f, Random.Range(0f, 360f), 0f));
+        Instantiate(spawnObject, spawnPos.transform.position, Quaternion.Euler(0f, Random.Range(0f, 360f), 0f));
     }
-
+ 
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Enemy"))
+        {
+            model.SetActive(true);
+            enemyInTrigger = false;
+        }
+    }
 }

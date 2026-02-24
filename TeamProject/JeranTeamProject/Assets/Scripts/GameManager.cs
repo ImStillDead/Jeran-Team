@@ -16,10 +16,13 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject menuWin;
     [SerializeField] GameObject menuLose;
     [SerializeField] GameObject settingsMenu;
-    [SerializeField] GameObject VolumeSlider;
 
+    [SerializeField] GameObject VolumeSlider;
     [SerializeField] GameObject reticle;
+
     [SerializeField] int objectiveTimerDelay;
+    [SerializeField] int maxSpawn;
+
     [SerializeField] TMP_Text magazine_text;
     [SerializeField] TMP_Text maxMagsize_text;
     [SerializeField] TMP_Text killCount_text;
@@ -73,9 +76,6 @@ public class GameManager : MonoBehaviour
         player = GameObject.FindWithTag("Player");
 
         playerScript = player.GetComponent<PlayerController>();
-
-        canSpawn = true;
-
     }
 
 
@@ -117,7 +117,7 @@ public class GameManager : MonoBehaviour
     }
     public void stateUnpause()
     {
-        if (reticle != null) reticle.SetActive(true); //
+        if (reticle != null) reticle.SetActive(true); 
         isPaused = false;
         Time.timeScale = timeScaleOrg;
         Cursor.visible = false;
@@ -126,7 +126,6 @@ public class GameManager : MonoBehaviour
         menuActive.SetActive(false);
         menuActive = null;
 
-        menuActive = null; //
     }
     public void youWin()
     {
@@ -184,10 +183,10 @@ public class GameManager : MonoBehaviour
     public void enemyBoardCount(int count)
     {   
         enemyCount += count;
-        if(enemyCount >= 20)
+        if(enemyCount >= maxSpawn)
         {
             canSpawn = false;
-        }else if(enemyCount <= 20)
+        }else if(enemyCount < maxSpawn)
         {
             canSpawn = true;
         }
