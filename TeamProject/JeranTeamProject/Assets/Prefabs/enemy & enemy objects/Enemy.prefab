@@ -349,13 +349,13 @@ MonoBehaviour:
   model: {fileID: 3286630283137833765}
   agent: {fileID: 5672984400017759591}
   HP: 10
-  Speed: 7
+  Speed: 6
   faceTargetSpeed: 45
   FOV: 65
   roamDist: 15
   roamPauseTime: 3
   spit: {fileID: 7398234212651272795, guid: 229986870f567754283d079147199970, type: 3}
-  spitRate: 0
+  spitRate: 3
   spitPos: {fileID: 5653870359010455776}
   neckPivot: {fileID: 0}
   neckRotationSpeed: 0
@@ -365,6 +365,7 @@ MonoBehaviour:
   maxLifeTimer: 25
   enemyHPBar: {fileID: 377361693646402854}
   enemyHealth: {fileID: 6783692953872592994}
+  isRoaming: 0
 --- !u!195 &5672984400017759591
 NavMeshAgent:
   m_ObjectHideFlags: 0

@@ -9,7 +9,7 @@ public class Damage : MonoBehaviour
     [SerializeField] damageType type;
     [SerializeField] Rigidbody rb;
     [SerializeField] LayerMask ignoreLayer;
-    [SerializeField] int damageAmount;
+    [SerializeField] public int damageAmount;
     [SerializeField] float damageRate;
     [SerializeField] int speed;
     [SerializeField] float destroyTime;

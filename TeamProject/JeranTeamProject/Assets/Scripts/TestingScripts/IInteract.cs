@@ -2,5 +2,8 @@ using UnityEngine;
 
 interface iInteract 
 {
-    void Interacted();
+    public void Interacted()
+    {
+
+    }
 }
