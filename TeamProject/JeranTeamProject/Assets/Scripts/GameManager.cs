@@ -249,6 +249,8 @@ public class GameManager : MonoBehaviour
             objectiveTimer = objectiveTimerDelay;
             startTimer = true;
             objectiveCompleted = false;
+            addMission("survive");
+
         }
     }
 
