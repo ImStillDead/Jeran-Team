@@ -1,7 +1,8 @@
 using UnityEngine;
 using System.Collections;
 using Unity.VisualScripting;
-
+using System.Collections.Generic;
+using UnityEngine.InputSystem.Processors;
 
 public class Shooting : MonoBehaviour
 {
@@ -15,11 +16,16 @@ public class Shooting : MonoBehaviour
     [SerializeField] float reloadTime;
     [SerializeField] public GameObject bullet;
     [SerializeField] Transform shootPos;
+    [SerializeField] AudioClip[] aud;
+    [SerializeField] List<GunStats> inventoryList = new List<GunStats>();
+    [SerializeField] GameObject Gun;
 
     //Public variables
     public int currentAmmo;
     public int maxAmmo;
     public static float shootTimer;
+    GunStats activeItem;
+    int invPos;
 
     // Other Variables
     bool reloading;
@@ -74,6 +80,10 @@ public class Shooting : MonoBehaviour
             callAmmo();
         }
 
+
+
+        //aud.PlayOneShot()
+
     }
 
     // Called in Update if the currentAmmo is less than or equal to 0 and the player is not reloading
@@ -111,5 +121,39 @@ public class Shooting : MonoBehaviour
         }
         callAmmo();
         reloading = false;                              // Sets reloading back to false so the player can shoot again
+    }
+
+    void swapWeapon()
+    {
+        Destroy(activeItem);
+        activeItem = Instantiate(inventoryList[invPos]);
+    }
+    void SwitchWeapon()
+    {
+        if (Input.GetAxis("Mouse ScrollWheel") > 0 && invPos < inventoryList.Count - 1)
+        {
+            invPos++;
+            swapWeapon();
+        }
+        else if (Input.GetAxis("Mouse ScrollWheel") < 0 && invPos > 0)
+        {
+            invPos--;
+            swapWeapon();
+        }
+        if (Input.GetButtonDown("Weapon1"))
+        {
+            invPos = 0;
+            swapWeapon();
+        }
+        else if (Input.GetButtonDown("Weapon2"))
+        {
+            invPos = 1;
+            swapWeapon();
+        }
+        else if (Input.GetButtonDown("Weapon3"))
+        {
+            invPos = 2;
+            swapWeapon();
+        }
     }
 }
