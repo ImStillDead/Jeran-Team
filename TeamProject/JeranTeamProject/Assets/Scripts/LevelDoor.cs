@@ -3,10 +3,11 @@ using UnityEngine;
 public class LevelDoor : MonoBehaviour
 {
     [SerializeField] GameObject button;
+    [SerializeField] GameObject Lights;
     bool playerInTrigger;
     void Start()
     {
-
+        GameManager.instance.doorLights = Lights;
     }
     void Update()
     {

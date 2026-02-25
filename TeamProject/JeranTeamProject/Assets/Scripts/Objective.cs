@@ -3,6 +3,7 @@ using UnityEngine;
 public class Objective : MonoBehaviour
 {
     [SerializeField] GameObject button;
+    public Light buttonLight;
     bool playerInTrigger;
     bool start;
     void Start()
@@ -15,6 +16,7 @@ public class Objective : MonoBehaviour
         if (Input.GetButtonDown("Interact") && playerInTrigger && !start)
         {
             GameManager.instance.StartObjective();
+            GameManager.instance.objectiveLight = buttonLight;
             start = true;
         }
     }

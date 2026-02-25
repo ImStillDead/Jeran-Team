@@ -16,6 +16,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] GameObject menuWin;
     [SerializeField] GameObject menuLose;
     [SerializeField] GameObject settingsMenu;
+    [SerializeField] List<GameObject> itemsCase;
 
     [SerializeField] GameObject VolumeSlider;
     [SerializeField] GameObject reticle;
@@ -25,6 +26,7 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] TMP_Text magazine_text;
     [SerializeField] TMP_Text maxMagsize_text;
+    [SerializeField] TMP_Text maxAmmo_text;
     [SerializeField] TMP_Text killCount_text;
     [SerializeField] TMP_Text Objective_timer_text;
 
@@ -48,7 +50,10 @@ public class GameManager : MonoBehaviour
     
     public GameObject player;
     public PlayerController playerScript;
+    public Light objectiveLight;
+    public GameObject doorLights;
     int sceneIndex;
+    int itemIndex;
     public int enemyCount;
     public int killCount;
     public bool canSpawn;
@@ -57,8 +62,9 @@ public class GameManager : MonoBehaviour
     public bool objectiveCompleted;
     float timeScaleOrg;
     public float objectiveTimer;
-    int magsize;
-    int maxMagsize;
+    int maxAmmoSize;
+    int magSize;
+    int maxMagSize;
     
     void Awake()
     {
@@ -162,13 +168,16 @@ public class GameManager : MonoBehaviour
     {
         SceneManager.LoadScene(index);
     }
-    public void ammocount(int mag, int max_mag)
+    public void ammocount(int mag, int maxMag, int maxAmmo)
     {
-        magsize = mag;
-        maxMagsize = max_mag;
+        magSize = mag;
+        maxMagSize = maxMag;
+        maxAmmoSize = maxAmmo;
 
-        magazine_text.text = magsize.ToString();
-        maxMagsize_text.text = maxMagsize.ToString(); 
+        magazine_text.text = magSize.ToString();
+        maxMagsize_text.text = maxMagSize.ToString();
+        maxAmmo_text.text = maxAmmoSize.ToString();
+
     }
     public bool objectiveCheck()
     {
@@ -194,6 +203,9 @@ public class GameManager : MonoBehaviour
 
     void objectiveStartTimer()
     {
+        Color green = Color.green;
+        green.a = 1f;
+        objectiveLight.color = green;
         float remaintime = objectiveTimerDelay * 0.40f;
 
         Objective_timer_text.gameObject.SetActive(true);
@@ -219,7 +231,6 @@ public class GameManager : MonoBehaviour
             c.a = alpha;
             Objective_timer_text.color = c;
 
-
         }
         else
         {
@@ -235,10 +246,11 @@ public class GameManager : MonoBehaviour
         {
             startTimer = false;
             objectiveCompleted = true;
+            doorLights.SetActive(true);
 
             Objective_timer_text.color = Color.white;
             addMission("RUN TO THE EXIT");
-
+            
         }
 
     }
@@ -335,6 +347,12 @@ public class GameManager : MonoBehaviour
 
         if(Text != null)
         Destroy(Text.gameObject);
+    }
+    public void updateItem(int index)
+    {
+        itemsCase[itemIndex].SetActive(false);
+        itemIndex = index;
+        itemsCase[index].SetActive(true);
     }
 
 }

@@ -47,7 +47,7 @@ public class SpawnerDoor : MonoBehaviour
             {
                 GameManager.instance.enemyBoardCount(spawnAmmount);
                 startSpawner = true;
-            } else if (GameManager.instance.canSpawn == true && spawnCount <= spawnAmmount)
+            } else if (GameManager.instance.canSpawn && spawnCount <= spawnAmmount)
             {
                 GameManager.instance.enemyBoardCount(spawnAmmount);
                 spawnCount = 0;

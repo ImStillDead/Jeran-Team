@@ -211,6 +211,10 @@ PrefabInstance:
       value: -24.146
       objectReference: {fileID: 0}
     - target: {fileID: 5285626837206032121, guid: 460364e8c48127e4896fcb2d65a2d11d, type: 3}
+      propertyPath: Speed
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 5285626837206032121, guid: 460364e8c48127e4896fcb2d65a2d11d, type: 3}
       propertyPath: spitRate
       value: 1
       objectReference: {fileID: 0}
@@ -225,7 +229,7 @@ PrefabInstance:
     - target: {fileID: 5285626837206032121, guid: 460364e8c48127e4896fcb2d65a2d11d, type: 3}
       propertyPath: enemyHPBar
       value: 
-      objectReference: {fileID: 2783651971037976710}
+      objectReference: {fileID: 0}
     - target: {fileID: 5285626837206032121, guid: 460364e8c48127e4896fcb2d65a2d11d, type: 3}
       propertyPath: maxLifeTimer
       value: 25
@@ -286,11 +290,6 @@ PrefabInstance:
       addedObject: {fileID: 7742189099381967547}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 460364e8c48127e4896fcb2d65a2d11d, type: 3}
---- !u!1 &2783651971037976710 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5854016442475961132, guid: 460364e8c48127e4896fcb2d65a2d11d, type: 3}
-  m_PrefabInstance: {fileID: 8618799282152768426}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &9094761717419096441 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 696709738729945811, guid: 460364e8c48127e4896fcb2d65a2d11d, type: 3}
