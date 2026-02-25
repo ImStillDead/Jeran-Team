@@ -13,7 +13,7 @@ public class Shooting : MonoBehaviour
     [SerializeField] float shootRate;
     [SerializeField] int magSizeMax;
     [SerializeField] float reloadTime;
-    [SerializeField] GameObject bullet;
+    [SerializeField] public GameObject bullet;
     [SerializeField] Transform shootPos;
 
     //Public variables
@@ -28,7 +28,6 @@ public class Shooting : MonoBehaviour
     void Start()
     {
         instance = this;
-        maxAmmo = magSizeMax;   // Sets maxAmmo to the maximum mag size
         currentAmmo = magSizeMax;  // Sets currentAmmo equal to the maxAmmo
         callAmmo();
     }

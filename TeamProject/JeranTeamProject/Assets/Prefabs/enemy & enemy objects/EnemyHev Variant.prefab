@@ -8235,11 +8235,11 @@ PrefabInstance:
     - target: {fileID: 5285626837206032121, guid: 460364e8c48127e4896fcb2d65a2d11d, type: 3}
       propertyPath: enemyHPBar
       value: 
-      objectReference: {fileID: 5591994652470131638}
+      objectReference: {fileID: 4481301525941680455}
     - target: {fileID: 5285626837206032121, guid: 460364e8c48127e4896fcb2d65a2d11d, type: 3}
       propertyPath: enemyHealth
       value: 
-      objectReference: {fileID: 8246736926832411403}
+      objectReference: {fileID: 3933384923228086339}
     - target: {fileID: 5285626837206032121, guid: 460364e8c48127e4896fcb2d65a2d11d, type: 3}
       propertyPath: maxLifeTimer
       value: 25
@@ -8298,14 +8298,9 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 696709738729945811, guid: 460364e8c48127e4896fcb2d65a2d11d, type: 3}
   m_PrefabInstance: {fileID: 2064730496575660186}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &5591994652470131638 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5854016442475961132, guid: 460364e8c48127e4896fcb2d65a2d11d, type: 3}
-  m_PrefabInstance: {fileID: 2064730496575660186}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &8246736926832411403 stripped
+--- !u!114 &3933384923228086339 stripped
 MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 7986341160299766673, guid: 460364e8c48127e4896fcb2d65a2d11d, type: 3}
+  m_CorrespondingSourceObject: {fileID: 3040305562755383513, guid: 460364e8c48127e4896fcb2d65a2d11d, type: 3}
   m_PrefabInstance: {fileID: 2064730496575660186}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 0}
@@ -8314,3 +8309,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Image
+--- !u!1 &4481301525941680455 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2492639644381190621, guid: 460364e8c48127e4896fcb2d65a2d11d, type: 3}
+  m_PrefabInstance: {fileID: 2064730496575660186}
+  m_PrefabAsset: {fileID: 0}
