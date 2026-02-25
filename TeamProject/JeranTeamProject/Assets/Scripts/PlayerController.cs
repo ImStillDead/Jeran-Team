@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 
-public class PlayerController : MonoBehaviour, IDamage
+public class PlayerController : MonoBehaviour, IDamage, iInteract
 {
     public PlayerController instancePlayer;
 
@@ -23,8 +23,8 @@ public class PlayerController : MonoBehaviour, IDamage
     [SerializeField] GameObject firstPersonCamera;
     [SerializeField] GameObject thirdPersonCamera;
     [SerializeField] List<GameObject> inventoryList = new List<GameObject>();
-    
-
+    [SerializeField] List<Pickups> itemPickup = new List<Pickups>();
+    Pickups activePick;
     GameObject activeItem;
     int HPOrigin;
     int jumpCount;
@@ -32,14 +32,13 @@ public class PlayerController : MonoBehaviour, IDamage
     bool isFirstPerson;
     Vector3 moveDir;
     Vector3 playerVel;
-    int sceneIndex;
     void Start()
     {
         HPOrigin = HP;
         isFirstPerson = true;
         updatePlayerUI();
         invPos = 0;
-        swapWeapon();
+        swapWeapon(0);
     }
 
     void Update()
@@ -69,6 +68,7 @@ public class PlayerController : MonoBehaviour, IDamage
         {
             Interact();
         }
+        useItem();
     }
     void CameraToggle()
     {
@@ -107,37 +107,61 @@ public class PlayerController : MonoBehaviour, IDamage
             speed /= sprintMod;
         }
     }
-    void swapWeapon()
+    void pickUpObject(Pickups item)
+    {
+
+        if (itemPickup.Contains(item))
+        {
+            invPos = itemPickup.IndexOf(item);
+            itemPickup[invPos].uesage++;
+        }
+        else
+        {
+            itemPickup.Add(item);
+            invPos = itemPickup.Count - 1;
+        }
+    }
+    void changeItem(int pos)
+    {
+        activePick = itemPickup[pos];
+    }
+    void useItem()
+    {
+        if (activePick != null && Input.GetButtonDown("Use"))
+        {
+            HP += activePick.healing;
+            activeItem.GetComponent<Shooting>().currentAmmo += activePick.ammo;
+            
+        }
+    }
+    void swapWeapon(int gun)
     {
         Destroy(activeItem);
-        activeItem = Instantiate(inventoryList[invPos], weaponPos);
+        activeItem = Instantiate(inventoryList[gun], weaponPos);
     }
     void SwitchWeapon()
     {
         if (Input.GetAxis("Mouse ScrollWheel") > 0 && invPos < inventoryList.Count - 1)
         {
             invPos++;
-            swapWeapon();
+            changeItem(invPos);
         }
         else if (Input.GetAxis("Mouse ScrollWheel") < 0 && invPos > 0)
         {
             invPos--;
-            swapWeapon();
+            changeItem(invPos);
         }
             if (Input.GetButtonDown("Weapon1"))
         {
-            invPos = 0;
-            swapWeapon();
+            swapWeapon(0);
         }
         else if (Input.GetButtonDown("Weapon2"))
         {
-            invPos = 1;
-            swapWeapon();
+            swapWeapon(1);
         }
         else if (Input.GetButtonDown("Weapon3"))
         {
-            invPos = 2;
-            swapWeapon();
+            swapWeapon(2);
         }
     }
     void WeaponRotate()

@@ -2,5 +2,10 @@ using UnityEngine;
 
 interface iInteract 
 {
-    void Interacted();
+    //void Interacted();
+
+    public void pickUpObject(Pickups item)
+    {
+
+    }
 }
