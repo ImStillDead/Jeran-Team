@@ -16,12 +16,10 @@ public class Shooting : MonoBehaviour
     [SerializeField] float reloadTime;
     [SerializeField] public GameObject bullet;
     [SerializeField] Transform shootPos;
-<<<<<<< Updated upstream
-=======
+
     [SerializeField] AudioClip[] aud;
     [SerializeField] Bullet bulletScript;
     [SerializeField] GameObject Gun;
->>>>>>> Stashed changes
 
     //Public variables
     public int currentAmmo;

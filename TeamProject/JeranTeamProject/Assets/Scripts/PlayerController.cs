@@ -26,10 +26,10 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup
     [SerializeField] List<GunStats> gunList = new List<GunStats>();
     [SerializeField] List<Pickups> itemPickup = new List<Pickups>();
     Pickups activePick;
-    GameObject activeItem;
     int HPOrigin;
     int jumpCount;
     int invPos;
+    int gunPos;
     int itemIndex;
     float boostTime;
     int tempOrginDmg;
@@ -169,7 +169,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup
         //add to max ammo
         if(activePick.ammo > 0)
         {
-            activeItem.GetComponent<Shooting>().maxAmmo += activePick.ammo;
+            gunList[gunPos].maxAmmo += activePick.ammo;
         }
         if(activePick.dmgBoost > 0)
         {
@@ -200,7 +200,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup
     {
         if (dmgBoosting)
         {
-            activeItem.GetComponent<Shooting>().bullet.GetComponent<Damage>().damageAmount = tempOrginDmg;
+            gunList[gunPos].bullet.damageAmount = tempOrginDmg;
             dmgBoosting = false;
         }
         
@@ -224,15 +224,18 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup
         }
         if (Input.GetButtonDown("Weapon1"))
         {
-            changeGun(gunList[0]);
+            gunPos = 0;
+            changeGun(gunList[gunPos]);
         }
         else if (Input.GetButtonDown("Weapon2"))
         {
-            changeGun(gunList[1]);
+            gunPos = 1;
+            changeGun(gunList[gunPos]);
         }
         else if (Input.GetButtonDown("Weapon3"))
         {
-            changeGun(gunList[2]);
+            gunPos = 2;
+            changeGun(gunList[gunPos]);
         }
     }
     void WeaponRotate()
@@ -290,12 +293,12 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup
     }
     IEnumerator dmgBoost() 
     {
-        tempOrginDmg = activeItem.GetComponent<Shooting>().bullet.GetComponent<Damage>().damageAmount;
-        activeItem.GetComponent<Shooting>().bullet.GetComponent<Damage>().damageAmount *= (int)activePick.dmgBoost;
+        tempOrginDmg = gunList[gunPos].bullet.damageAmount;
+        gunList[gunPos].bullet.damageAmount *= (int)activePick.dmgBoost;
         boostTime = activePick.boostDur;
         dmgBoosting = true;
         yield return new WaitForSeconds(boostTime);
-        activeItem.GetComponent<Shooting>().bullet.GetComponent<Damage>().damageAmount = tempOrginDmg;
+        gunList[gunPos].bullet.damageAmount = tempOrginDmg;
         dmgBoosting = false;
     }
     IEnumerator speedBoost()
