@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class Objective : MonoBehaviour
 {
+    GameManager gamemanger = GameManager.instance;
+
     [SerializeField] GameObject button;
     public Light buttonLight;
     bool playerInTrigger;
@@ -26,6 +28,7 @@ public class Objective : MonoBehaviour
         {
             playerInTrigger = true;
             button.SetActive(true);
+
         }
     }
     private void OnTriggerExit(Collider other)
