@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 
-public class PlayerController : MonoBehaviour, IDamage, IPickup
+public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
 {
     public PlayerController instancePlayer;
 
@@ -23,13 +23,14 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup
     [SerializeField] GameObject firstPersonCamera;
     [SerializeField] GameObject thirdPersonCamera;
     [SerializeField] GameObject torch;
-    [SerializeField] List<GameObject> inventoryList = new List<GameObject>();
+    [SerializeField] List<GunStats> gunInventory = new List<GunStats>();
     [SerializeField] List<Pickups> itemPickup = new List<Pickups>();
     Pickups activePick;
-    GameObject activeItem;
+    GunStats activeGun;
     int HPOrigin;
     int jumpCount;
     int invPos;
+    int gunInventoryPos;
     int itemIndex;
     float boostTime;
     int tempOrginDmg;
@@ -63,7 +64,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup
         moveDir = Input.GetAxis("Horizontal") * transform.right + (Input.GetAxis("Vertical") * transform.forward);
         playerController.Move(moveDir * speed * Time.deltaTime);
         Jump();
-        SwitchWeapon();
+        SwitchInventory();
         playerController.Move(playerVel * Time.deltaTime);
         playerVel.y -= gravity * Time.deltaTime;
         if (playerController.isGrounded)
@@ -159,6 +160,14 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup
         activePick = itemPickup[pos];
         GameManager.instance.updateItem(activePick.itemIndex);
     }
+
+   public void GetGunStats(GunStats gun)
+    {
+        gunInventory.Add(gun);
+        gunInventoryPos = gunInventory.Count - 1;
+
+        activeGun = gunInventory[gunInventoryPos];
+    }
     void useItem()
     {
         activePick.uesage--;
@@ -171,8 +180,8 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup
         //add to max ammo
         if(activePick.ammo > 0)
         {
-            activeItem.GetComponent<Shooting>().maxAmmo += activePick.ammo;
-            activeItem.GetComponent<Shooting>().callAmmo();
+            activeGun.maxAmmo += activePick.ammo;
+            
         }
         if(activePick.dmgBoost > 0)
         {
@@ -199,19 +208,19 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup
             }
         }
     }
-    void swapWeapon(int gun)
+    public void swapWeapon(int gun)
     {
         if (dmgBoosting)
         {
-            activeItem.GetComponent<Shooting>().bullet.GetComponent<Damage>().damageAmount = tempOrginDmg;
+            activeGun.bullet.GetComponent<Damage>().damageAmount = tempOrginDmg;
             dmgBoosting = false;
         }
-        Destroy(activeItem);
-        activeItem = Instantiate(inventoryList[gun], weaponPos);
+        Destroy(activeGun);
+        activeGun = Instantiate(gunInventory[gun], weaponPos);
     }
-    void SwitchWeapon()
+    public void SwitchInventory()
     {
-        if (Input.GetAxis("Mouse ScrollWheel") > 0 && invPos < inventoryList.Count)
+        if (Input.GetAxis("Mouse ScrollWheel") > 0 && invPos < gunInventory.Count)
         {
             invPos++;
             changeItem(invPos);
@@ -240,12 +249,12 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup
     {
         if (isFirstPerson)
         {
-            activeItem.transform.localRotation = firstPersonCamera.transform.localRotation;
+            activeGun.gunModel.transform.localRotation = firstPersonCamera.transform.localRotation;
             interactDis = 3;
         }
         else
         {
-            activeItem.transform.localRotation = thirdPersonCamera.transform.localRotation;
+            activeGun.gunModel.transform.localRotation = thirdPersonCamera.transform.localRotation;
             interactDis = 5;
         }
     }
@@ -291,12 +300,12 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup
     }
     IEnumerator dmgBoost() 
     {
-        tempOrginDmg = activeItem.GetComponent<Shooting>().bullet.GetComponent<Damage>().damageAmount;
-        activeItem.GetComponent<Shooting>().bullet.GetComponent<Damage>().damageAmount *= (int)activePick.dmgBoost;
+        tempOrginDmg = activeGun.bullet.GetComponent<Damage>().damageAmount;
+        activeGun.bullet.GetComponent<Damage>().damageAmount *= (int)activePick.dmgBoost;
         boostTime = activePick.boostDur;
         dmgBoosting = true;
         yield return new WaitForSeconds(boostTime);
-        activeItem.GetComponent<Shooting>().bullet.GetComponent<Damage>().damageAmount = tempOrginDmg;
+        activeGun.bullet.GetComponent<Damage>().damageAmount = tempOrginDmg;
         dmgBoosting = false;
     }
     IEnumerator speedBoost()

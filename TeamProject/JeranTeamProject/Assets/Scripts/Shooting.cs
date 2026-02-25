@@ -17,8 +17,8 @@ public class Shooting : MonoBehaviour
     [SerializeField] public GameObject bullet;
     [SerializeField] Transform shootPos;
     [SerializeField] AudioClip[] aud;
-    [SerializeField] List<GunStats> inventoryList = new List<GunStats>();
     [SerializeField] GameObject Gun;
+    [SerializeField] Bullet bulletScript;
 
     //Public variables
     public int currentAmmo;
@@ -123,37 +123,4 @@ public class Shooting : MonoBehaviour
         reloading = false;                              // Sets reloading back to false so the player can shoot again
     }
 
-    void swapWeapon()
-    {
-        Destroy(activeItem);
-        activeItem = Instantiate(inventoryList[invPos]);
-    }
-    void SwitchWeapon()
-    {
-        if (Input.GetAxis("Mouse ScrollWheel") > 0 && invPos < inventoryList.Count - 1)
-        {
-            invPos++;
-            swapWeapon();
-        }
-        else if (Input.GetAxis("Mouse ScrollWheel") < 0 && invPos > 0)
-        {
-            invPos--;
-            swapWeapon();
-        }
-        if (Input.GetButtonDown("Weapon1"))
-        {
-            invPos = 0;
-            swapWeapon();
-        }
-        else if (Input.GetButtonDown("Weapon2"))
-        {
-            invPos = 1;
-            swapWeapon();
-        }
-        else if (Input.GetButtonDown("Weapon3"))
-        {
-            invPos = 2;
-            swapWeapon();
-        }
-    }
 }
