@@ -50,6 +50,8 @@ public class GameManager : MonoBehaviour
     
     public GameObject player;
     public PlayerController playerScript;
+    public Light objectiveLight;
+    public GameObject doorLights;
     int sceneIndex;
     int itemIndex;
     public int enemyCount;
@@ -201,6 +203,9 @@ public class GameManager : MonoBehaviour
 
     void objectiveStartTimer()
     {
+        Color green = Color.green;
+        green.a = 1f;
+        objectiveLight.color = green;
         float remaintime = objectiveTimerDelay * 0.40f;
 
         Objective_timer_text.gameObject.SetActive(true);
@@ -226,7 +231,6 @@ public class GameManager : MonoBehaviour
             c.a = alpha;
             Objective_timer_text.color = c;
 
-
         }
         else
         {
@@ -242,10 +246,11 @@ public class GameManager : MonoBehaviour
         {
             startTimer = false;
             objectiveCompleted = true;
+            doorLights.SetActive(true);
 
             Objective_timer_text.color = Color.white;
             addMission("RUN TO THE EXIT");
-
+            
         }
 
     }
