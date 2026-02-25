@@ -9,11 +9,11 @@ class Damage : MonoBehaviour
     [SerializeField] damageType type;
     [SerializeField] Rigidbody rb;
     [SerializeField] LayerMask ignoreLayer;
-    [SerializeField] public int damageAmount;
-    [SerializeField] float damageRate;
-    [SerializeField] int speed;
-    [SerializeField] float destroyTime;
-    [SerializeField] ParticleSystem hitEffect;
+    public int damageAmount;
+    public float damageRate;
+    public int speed;
+    public float destroyTime;
+    public ParticleSystem hitEffect;
     // other variables
     bool isDamaging;
     // Start is called once before the first execution of Update after the MonoBehaviour is created

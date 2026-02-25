@@ -9,8 +9,7 @@ public class GunStats : ScriptableObject
     [Range(0.5f, 10f)] public float shootRate;
     [Range(1, 500)] public int magSizeMax;
     [Range(0.5f, 10)] public float reloadTime;
-    public GameObject bullet;
-    public Transform shootPos;
+    public Bullet bullet;
     public AudioClip[] aud;
 
     public int currentAmmo;

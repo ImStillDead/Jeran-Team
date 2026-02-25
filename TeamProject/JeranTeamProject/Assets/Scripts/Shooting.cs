@@ -1,31 +1,32 @@
 using UnityEngine;
 using System.Collections;
 using Unity.VisualScripting;
-using System.Collections.Generic;
-using UnityEngine.InputSystem.Processors;
+
 
 public class Shooting : MonoBehaviour
 {
 
     public static Shooting instance;
-    
+
     // [SerializeFields] for variables that we want to edit in Unity
+    [SerializeField] GameObject gunModel;
     [SerializeField] LayerMask ignoreLayer;
     [SerializeField] float shootRate;
     [SerializeField] int magSizeMax;
     [SerializeField] float reloadTime;
     [SerializeField] public GameObject bullet;
     [SerializeField] Transform shootPos;
+<<<<<<< Updated upstream
+=======
     [SerializeField] AudioClip[] aud;
-    [SerializeField] GameObject Gun;
     [SerializeField] Bullet bulletScript;
+    [SerializeField] GameObject Gun;
+>>>>>>> Stashed changes
 
     //Public variables
     public int currentAmmo;
     public int maxAmmo;
     public static float shootTimer;
-    GunStats activeItem;
-    int invPos;
 
     // Other Variables
     bool reloading;
@@ -68,6 +69,24 @@ public class Shooting : MonoBehaviour
         GameManager.instance.ammocount(currentAmmo, magSizeMax, maxAmmo);
     }
     // Called in Update if the Fire1 button (Left Click) is pressed
+    public void changeBullet()
+    {
+        bullet.GetComponent<Damage>().damageAmount = bulletScript.damageAmount;
+        bullet.GetComponent<Damage>().damageRate = bulletScript.damageRate;
+        bullet.GetComponent<Damage>().destroyTime = bulletScript.destroyTime;
+        bullet.GetComponent<Damage>().hitEffect = bulletScript.hitEffect;
+        bullet.GetComponent<Damage>().speed = bulletScript.speed;
+    }
+    public void changeGun(GunStats gunStats)
+    {
+        gunModel = gunStats.gunModel;
+        currentAmmo = gunStats.currentAmmo;
+        magSizeMax = gunStats.magSizeMax;
+        maxAmmo = gunStats.maxAmmo;
+        bulletScript = gunStats.bullet;
+        shootRate = gunStats.shootRate;
+    }
+
     public void Shoot()
     {
         /*  Checks to see if the player is not reloading. If they are not, it fires a projectile
@@ -79,10 +98,6 @@ public class Shooting : MonoBehaviour
             currentAmmo = currentAmmo - 1;
             callAmmo();
         }
-
-
-
-        //aud.PlayOneShot()
 
     }
 
@@ -122,5 +137,4 @@ public class Shooting : MonoBehaviour
         callAmmo();
         reloading = false;                              // Sets reloading back to false so the player can shoot again
     }
-
 }

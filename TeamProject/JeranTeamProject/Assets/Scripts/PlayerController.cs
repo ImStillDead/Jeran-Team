@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 
-public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
+public class PlayerController : MonoBehaviour, IDamage, IPickup
 {
     public PlayerController instancePlayer;
 
@@ -23,14 +23,13 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
     [SerializeField] GameObject firstPersonCamera;
     [SerializeField] GameObject thirdPersonCamera;
     [SerializeField] GameObject torch;
-    [SerializeField] List<GunStats> gunInventory = new List<GunStats>();
+    [SerializeField] List<GunStats> gunList = new List<GunStats>();
     [SerializeField] List<Pickups> itemPickup = new List<Pickups>();
     Pickups activePick;
-    GunStats activeGun;
+    GameObject activeItem;
     int HPOrigin;
     int jumpCount;
     int invPos;
-    int gunInventoryPos;
     int itemIndex;
     float boostTime;
     int tempOrginDmg;
@@ -38,8 +37,6 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
     int tempOrginSpeed;
     bool isFirstPerson;
     bool torchActive;
-    int maxNext;
-    int maxPrevious;
     Vector3 moveDir;
     Vector3 playerVel;
     void Start()
@@ -48,7 +45,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
         isFirstPerson = true;
         updatePlayerUI();
         invPos = 0;
-        swapWeapon(0);
+        changeGun(gunList[0]);
         torch.SetActive(true);
         torchActive = true;
     }
@@ -64,7 +61,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
         moveDir = Input.GetAxis("Horizontal") * transform.right + (Input.GetAxis("Vertical") * transform.forward);
         playerController.Move(moveDir * speed * Time.deltaTime);
         Jump();
-        SwitchInventory();
+        SwitchWeapon();
         playerController.Move(playerVel * Time.deltaTime);
         playerVel.y -= gravity * Time.deltaTime;
         if (playerController.isGrounded)
@@ -160,14 +157,6 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
         activePick = itemPickup[pos];
         GameManager.instance.updateItem(activePick.itemIndex);
     }
-
-   public void GetGunStats(GunStats gun)
-    {
-        gunInventory.Add(gun);
-        gunInventoryPos = gunInventory.Count - 1;
-
-        activeGun = gunInventory[gunInventoryPos];
-    }
     void useItem()
     {
         activePick.uesage--;
@@ -180,8 +169,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
         //add to max ammo
         if(activePick.ammo > 0)
         {
-            activeGun.maxAmmo += activePick.ammo;
-            
+            activeItem.GetComponent<Shooting>().maxAmmo += activePick.ammo;
         }
         if(activePick.dmgBoost > 0)
         {
@@ -208,19 +196,21 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
             }
         }
     }
-    public void swapWeapon(int gun)
+    public void changeGun(GunStats gunStats)
     {
         if (dmgBoosting)
         {
-            activeGun.bullet.GetComponent<Damage>().damageAmount = tempOrginDmg;
+            activeItem.GetComponent<Shooting>().bullet.GetComponent<Damage>().damageAmount = tempOrginDmg;
             dmgBoosting = false;
         }
-        Destroy(activeGun);
-        activeGun = Instantiate(gunInventory[gun], weaponPos);
+        
+        Shooting.instance.changeGun(gunStats);
+        Shooting.instance.changeBullet();
+     
     }
-    public void SwitchInventory()
+    void SwitchWeapon()
     {
-        if (Input.GetAxis("Mouse ScrollWheel") > 0 && invPos < gunInventory.Count)
+        if (Input.GetAxis("Mouse ScrollWheel") > 0 && invPos < itemPickup.Count - 1)
         {
             invPos++;
             changeItem(invPos);
@@ -234,27 +224,27 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
         }
         if (Input.GetButtonDown("Weapon1"))
         {
-            swapWeapon(0);
+            changeGun(gunList[0]);
         }
         else if (Input.GetButtonDown("Weapon2"))
         {
-            swapWeapon(1);
+            changeGun(gunList[1]);
         }
         else if (Input.GetButtonDown("Weapon3"))
         {
-            swapWeapon(2);
+            changeGun(gunList[2]);
         }
     }
     void WeaponRotate()
     {
         if (isFirstPerson)
         {
-            activeGun.gunModel.transform.localRotation = firstPersonCamera.transform.localRotation;
+            weaponPos.transform.localRotation = firstPersonCamera.transform.localRotation;
             interactDis = 3;
         }
         else
         {
-            activeGun.gunModel.transform.localRotation = thirdPersonCamera.transform.localRotation;
+            weaponPos.transform.localRotation = thirdPersonCamera.transform.localRotation;
             interactDis = 5;
         }
     }
@@ -300,12 +290,12 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
     }
     IEnumerator dmgBoost() 
     {
-        tempOrginDmg = activeGun.bullet.GetComponent<Damage>().damageAmount;
-        activeGun.bullet.GetComponent<Damage>().damageAmount *= (int)activePick.dmgBoost;
+        tempOrginDmg = activeItem.GetComponent<Shooting>().bullet.GetComponent<Damage>().damageAmount;
+        activeItem.GetComponent<Shooting>().bullet.GetComponent<Damage>().damageAmount *= (int)activePick.dmgBoost;
         boostTime = activePick.boostDur;
         dmgBoosting = true;
         yield return new WaitForSeconds(boostTime);
-        activeGun.bullet.GetComponent<Damage>().damageAmount = tempOrginDmg;
+        activeItem.GetComponent<Shooting>().bullet.GetComponent<Damage>().damageAmount = tempOrginDmg;
         dmgBoosting = false;
     }
     IEnumerator speedBoost()

@@ -4,10 +4,6 @@ using UnityEngine;
 [CreateAssetMenu]
 public class Bullet : ScriptableObject
 {
-    public GameObject bullet;
-
-    public Rigidbody rb;
-    public LayerMask ignoreLayer;
     [Range(1 , 100)] public int damageAmount;
     [Range(1, 10)] public float damageRate;
     public int speed;
