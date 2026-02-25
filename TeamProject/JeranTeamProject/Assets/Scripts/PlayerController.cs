@@ -257,6 +257,12 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup
         RaycastHit interact;
         if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out interact, interactDis, ~ignoreLayer))
         {
+
+
+            if(interact.transform.TryGetComponent(out iInteract interactable)) //this wouldnt effect the overall code and allow the use of iInteract items.
+            {
+                interactable.Interacted();
+            }
             
         }
     }

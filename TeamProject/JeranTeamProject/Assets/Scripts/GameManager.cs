@@ -261,6 +261,8 @@ public class GameManager : MonoBehaviour
             objectiveTimer = objectiveTimerDelay;
             startTimer = true;
             objectiveCompleted = false;
+            addMission("survive");
+            addDialog("this is a test");
         }
     }
 
@@ -299,31 +301,36 @@ public class GameManager : MonoBehaviour
 
     public void addDialog(string msg)
     {
-        foreach (TMP_Text oldDialog in listofDialog)
+        int amounOfUses = 0;
+
+        amounOfUses++;
+
+        if(amounOfUses  == 1)
         {
-            oldDialog.color = oldColor;
-            oldDialog.fontSize = 40;
-            StartCoroutine(fadeText(oldDialog, 3));
+            foreach (TMP_Text oldDialog in listofDialog)
+            {
+                oldDialog.color = oldColor;
+                oldDialog.fontSize = 40;
+                StartCoroutine(fadeText(oldDialog, 3));
+            }
+
+            GameObject obj = Instantiate(dialog_prefab, dialogParent);
+            TMP_Text text = obj.GetComponent<TMP_Text>();
+            text.text = msg;
+            text.color = activeColor;
+            text.fontSize = 60;
+            obj.transform.SetAsLastSibling();
+            StartCoroutine(fadeText(text, 9));
+
+            listofDialog.Add(text);
+
+            while (listofDialog.Count < 1)
+            {
+                TMP_Text oldest = listofDialog[0];
+                Destroy(oldest.gameObject);
+                listofDialog.RemoveAt(0);
+            }
         }
-
-        GameObject obj = Instantiate(dialog_prefab, dialogParent);
-        TMP_Text text = obj.GetComponent<TMP_Text>();
-        text.text = msg;
-        text.color = activeColor;
-        text.fontSize = 60;
-        obj.transform.SetAsLastSibling();
-        StartCoroutine(fadeText(text, 9));
-
-        listofDialog.Add(text);
-
-        while (listofDialog.Count < 1)
-        {
-            TMP_Text oldest = listofDialog[0];
-            Destroy(oldest.gameObject);
-            listofDialog.RemoveAt(0);
-        }
-
-
     }
 
     IEnumerator fadeText(TMP_Text Text, float duration)
