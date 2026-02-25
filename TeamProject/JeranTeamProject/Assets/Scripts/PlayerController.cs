@@ -29,6 +29,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup
     int HPOrigin;
     int jumpCount;
     int invPos;
+    int itemIndex;
     bool isFirstPerson;
     Vector3 moveDir;
     Vector3 playerVel;
@@ -115,31 +116,60 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup
 
         if (itemPickup.Contains(item))
         {
-            invPos = itemPickup.IndexOf(item);
-            itemPickup[invPos].uesage++;
+            itemIndex = itemPickup.IndexOf(item);
+            itemPickup[itemIndex].uesage++;
 
         }
         else
         {
             itemPickup.Add(item);
-            invPos = itemPickup.Count - 1;
-            itemPickup[invPos].uesage = 1;
+            itemIndex = itemPickup.Count - 1;
+            itemPickup[itemIndex].uesage = 1;
         }
-        activePick = itemPickup[invPos];
+        if(activePick == null)
+        {
+            changeItem(itemIndex);
+        }
     }
     void changeItem(int pos)
     {
         activePick = itemPickup[pos];
+        int index = itemPickup[pos].itemIndex;
+        GameManager.instance.updateItem(index);
     }
     void useItem()
     {
-        if(HP < HPOrigin)
+        activePick.uesage--;
+        if (activePick.uesage <= 0)
+        {
+            itemPickup.Remove(activePick);
+           
+            if (activePick != null)
+            {
+                if (itemPickup.Count != 0)
+                {
+                    activePick = itemPickup[itemPickup.Count - 1];
+                }
+                itemIndex = itemPickup[itemPickup.Count - 1].itemIndex;
+                GameManager.instance.updateItem(itemIndex);
+            }
+        }
+        //Healing if used object has health
+        if (activePick.healing > 0)
         {
             HP += activePick.healing;
-        }
-            activePick.uesage--;
+            if (HP > HPOrigin)
+            {
+                HP = HPOrigin;
+            }
             updatePlayerUI();
-            activeItem.GetComponent<Shooting>().currentAmmo += activePick.ammo;
+        }
+        if(activePick.ammo > 0)
+        {
+            activeItem.GetComponent<Shooting>().maxAmmo += activePick.ammo;
+            activeItem.GetComponent<Shooting>().callAmmo();
+        }
+
     }
     void swapWeapon(int gun)
     {
@@ -152,11 +182,13 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup
         {
             invPos++;
             changeItem(invPos);
+            GameManager.instance.updateItem(activeItem.GetComponent<Pickups>().itemIndex);
         }
         else if (Input.GetAxis("Mouse ScrollWheel") < 0 && invPos > 0)
         {
             invPos--;
             changeItem(invPos);
+            GameManager.instance.updateItem(activeItem.GetComponent<Pickups>().itemIndex);
         }
             if (Input.GetButtonDown("Weapon1"))
         {
