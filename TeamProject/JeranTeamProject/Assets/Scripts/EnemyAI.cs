@@ -8,7 +8,7 @@ public class EnemyAI : MonoBehaviour, IDamage
 {
     [SerializeField] Renderer model;
     [SerializeField] NavMeshAgent agent;
-    
+
     [SerializeField] int HP;
     [SerializeField] int Speed;
     [SerializeField] int faceTargetSpeed;
@@ -33,7 +33,7 @@ public class EnemyAI : MonoBehaviour, IDamage
     float inUseTimer;
     Color colorOrg;
     int HPOrigin;
-
+    public bool isRoaming;
     float spitTimer;
     float roamTimer;
     float damageTimer;
@@ -51,7 +51,10 @@ public class EnemyAI : MonoBehaviour, IDamage
         stoppingDistanceOrig = agent.stoppingDistance;
         startingPos = transform.position;
         agent.speed = Speed;
-        agent.SetDestination(GameManager.instance.player.transform.position);
+        if (!isRoaming)
+        {
+            agent.SetDestination(GameManager.instance.player.transform.position);
+        }
     }
     void Update()
     {
@@ -71,15 +74,21 @@ public class EnemyAI : MonoBehaviour, IDamage
         else if (!playerInTrigger)
         {
             CheckRoam();
-            inUseTimer += Time.deltaTime;
+            if (!isRoaming)
+            {
+                inUseTimer += Time.deltaTime;
+            }
         }
         else
         {
             spitTimer += Time.deltaTime;
             damageTimer += Time.deltaTime;
-            inUseTimer = 0;
+            if (!isRoaming)
+            {
+                inUseTimer = 0;
+            }
         }
-        if (inUseTimer > maxLifeTimer)
+        if (inUseTimer > maxLifeTimer && !isRoaming)
         {
             GameManager.instance.enemyBoardCount(-1);
             Destroy(gameObject);

@@ -1,4 +1,3 @@
-using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -66,7 +65,7 @@ public class SpawnerDoor : MonoBehaviour
 
         NavMeshHit hit;
         NavMesh.SamplePosition(randPos, out hit, spawnDist, 1);
-
+        spawnObject.GetComponent<EnemyAI>().isRoaming = false;
         Instantiate(spawnObject, spawnPos.transform.position, Quaternion.Euler(0f, Random.Range(0f, 360f), 0f));
     }
  

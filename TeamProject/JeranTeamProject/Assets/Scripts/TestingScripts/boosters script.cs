@@ -2,7 +2,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 
 
-[CreateAssetMenu(fileName = "NewBoost", menuName = "Boost/Boost Data")]
+[CreateAssetMenu]
 public class boostscript : ScriptableObject
 {
 
