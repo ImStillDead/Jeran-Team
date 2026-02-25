@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 
-public class PlayerController : MonoBehaviour, IDamage, iInteract
+public class PlayerController : MonoBehaviour, IDamage, IPickup
 {
     public PlayerController instancePlayer;
 
@@ -68,7 +68,10 @@ public class PlayerController : MonoBehaviour, IDamage, iInteract
         {
             Interact();
         }
-        useItem();
+        if (activePick != null && Input.GetButtonDown("Use"))
+        {
+            useItem();
+        }
     }
     void CameraToggle()
     {
@@ -107,19 +110,22 @@ public class PlayerController : MonoBehaviour, IDamage, iInteract
             speed /= sprintMod;
         }
     }
-    void pickUpObject(Pickups item)
+    public void pickUpObject(Pickups item)
     {
 
         if (itemPickup.Contains(item))
         {
             invPos = itemPickup.IndexOf(item);
             itemPickup[invPos].uesage++;
+
         }
         else
         {
             itemPickup.Add(item);
             invPos = itemPickup.Count - 1;
+            itemPickup[invPos].uesage = 1;
         }
+        activePick = itemPickup[invPos];
     }
     void changeItem(int pos)
     {
@@ -127,12 +133,13 @@ public class PlayerController : MonoBehaviour, IDamage, iInteract
     }
     void useItem()
     {
-        if (activePick != null && Input.GetButtonDown("Use"))
+        if(HP < HPOrigin)
         {
             HP += activePick.healing;
-            activeItem.GetComponent<Shooting>().currentAmmo += activePick.ammo;
-            
         }
+            activePick.uesage--;
+            updatePlayerUI();
+            activeItem.GetComponent<Shooting>().currentAmmo += activePick.ammo;
     }
     void swapWeapon(int gun)
     {
