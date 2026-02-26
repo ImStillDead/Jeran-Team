@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 5362188895160297448}
   - component: {fileID: 7944177527369369413}
   m_Layer: 7
-  m_Name: Sniper Bullet
+  m_Name: Bullet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -52,10 +52,10 @@ MonoBehaviour:
   ignoreLayer:
     serializedVersion: 2
     m_Bits: 520
-  damageAmount: 5
-  damageRate: 0
-  speed: 75
-  destroyTime: 0.5
+  damageAmount: 6
+  damageRate: 54
+  speed: 65
+  destroyTime: 76
   hitEffect: {fileID: 0}
 --- !u!135 &4912889407408669173
 SphereCollider:
@@ -154,7 +154,7 @@ TrailRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Time: 0.05
+  m_Time: 0.025
   m_PreviewTimeScale: 1
   m_Parameters:
     serializedVersion: 3
