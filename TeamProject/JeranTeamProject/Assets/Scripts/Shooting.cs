@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using Unity.VisualScripting;
+using UnityEngine.Rendering;
 
 
 public class Shooting : MonoBehaviour
@@ -25,7 +26,7 @@ public class Shooting : MonoBehaviour
     public int currentAmmo;
     public int maxAmmo;
     public static float shootTimer;
-
+    public float volume;
     // Other Variables
     bool reloading;
 
@@ -65,6 +66,7 @@ public class Shooting : MonoBehaviour
     public void callAmmo()
     {
         GameManager.instance.ammocount(currentAmmo, magSizeMax, maxAmmo);
+        GameManager.instance.playerScript.updateGunAmmo();
     }
     // Called in Update if the Fire1 button (Left Click) is pressed
     public void changeBullet()
@@ -84,10 +86,13 @@ public class Shooting : MonoBehaviour
         bulletScript = gunStats.bullet;
         shootRate = gunStats.shootRate;
         reloadTime = gunStats.reloadTime;
-
+        aud = gunStats.aud;
+        volume = gunStats.shotSoundVol;
         gunModel.GetComponent<MeshFilter>().sharedMesh = gunStats.gunModel.GetComponentInChildren<MeshFilter>().sharedMesh;
         gunModel.GetComponent<MeshRenderer>().sharedMaterial = gunStats.gunModel.GetComponentInChildren<MeshRenderer>().sharedMaterial;
-
+        gunModel.transform.localScale = gunStats.scale;
+        gunModel.transform.localPosition = gunStats.postion;
+        gunModel.transform.localRotation = gunStats.rotation;
         changeBullet();
         callAmmo();
     }
@@ -99,6 +104,7 @@ public class Shooting : MonoBehaviour
         if(!reloading)
         {
             shootTimer = 0;
+            GameManager.instance.playerScript.playAudio(aud[0], volume);
             Instantiate(bullet, shootPos.position, transform.rotation);
             currentAmmo = currentAmmo - 1;
             callAmmo();

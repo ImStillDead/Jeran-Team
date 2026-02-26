@@ -11,7 +11,9 @@ public class GunStats : ScriptableObject
     [Range(0.5f, 10)] public float reloadTime;
     public Bullet bullet;
     public AudioClip[] aud;
-
+    public Vector3 scale;
+    public Vector3 postion;
+    public Quaternion rotation;
     public int currentAmmo;
     [Range(1, 500)] public int maxAmmo;
     AudioClip[] shotSound;

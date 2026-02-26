@@ -12,13 +12,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac26794e551912b4db37d6875a3c37b8, type: 3}
   m_Name: Pistol
   m_EditorClassIdentifier: Assembly-CSharp::GunStats
-  gunModel: {fileID: 5279889750194847303, guid: bb20a5c16549b9049a31cfb04fd757ca, type: 3}
+  gunModel: {fileID: 3581542342965293990, guid: 2799829665a07a342b947ee30340934f, type: 3}
   shootRate: 0.5
   magSizeMax: 9
   reloadTime: 1.5
   bullet: {fileID: 11400000, guid: 2fde2798337691c4fa08fd6154e33817, type: 2}
   aud:
   - {fileID: 8300000, guid: 843ca06fe8416504389a564a58521fc9, type: 3}
+  scale: {x: 2, y: 2, z: 2}
+  postion: {x: 0, y: 0, z: 0}
+  rotation: {x: 0, y: 0, z: 0, w: 1}
   currentAmmo: 9
-  maxAmmo: 27
-  shotSoundVol: 0
+  maxAmmo: 1
+  shotSoundVol: 0.03
