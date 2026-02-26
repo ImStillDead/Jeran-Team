@@ -18,11 +18,13 @@ MonoBehaviour:
   magSizeMax: 6
   reloadTime: 3
   bullet: {fileID: 11400000, guid: 31d48277d90124040b710faffdb6bc5b, type: 2}
-  aud: []
+  aud:
+  - {fileID: 8300000, guid: 1328126a7a31589499120f3f3808d014, type: 3}
   scale: {x: 0.25, y: 0.25, z: 0.25}
   postion: {x: 0, y: 0.194, z: 0.294}
   rotation: {x: 0, y: 0, z: 0, w: 0}
   shootRotate: {x: 0, y: 0, z: 0, w: 0}
-  currentAmmo: 6
-  maxAmmo: 24
-  shotSoundVol: 0
+  currentAmmo: 0
+  startingMaxAmmo: 24
+  maxAmmo: 18
+  shotSoundVol: 0.03
