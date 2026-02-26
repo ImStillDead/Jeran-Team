@@ -104,7 +104,7 @@ public class Shooting : MonoBehaviour
         if(!reloading)
         {
             shootTimer = 0;
-            GameManager.instance.playerScript.playAudio(aud[0], volume);
+            //GameManager.instance.playerScript.playAudio(aud[0], volume);
             Instantiate(bullet, shootPos.position, transform.rotation);
             currentAmmo = currentAmmo - 1;
             callAmmo();
