@@ -1,9 +1,9 @@
  using UnityEngine;
 using System.Collections;
 
-public class Damage : MonoBehaviour
+class Damage : MonoBehaviour
 {
-    enum damageType { bullet, stationary, DOT }     // enum for damage types
+    public enum damageType { bullet, stationary, DOT }     // enum for damage types
     
     // [SerializeFields] for variables we to edit in Unity
     [SerializeField] damageType type;
