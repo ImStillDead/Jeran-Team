@@ -42,6 +42,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup
     void Start()
     {
         HPOrigin = HP;
+        spawnPlayer();
         isFirstPerson = true;
         updatePlayerUI();
         invPos = 0;
@@ -131,6 +132,13 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup
         {
             speed /= sprintMod;
         }
+    }
+    public void spawnPlayer()
+    {
+        playerController.transform.position = GameManager.instance.playerSpawn.transform.position;
+        Physics.SyncTransforms();
+        HP = HPOrigin;
+        updatePlayerUI();
     }
     public void pickUpObject(Pickups item)
     {
