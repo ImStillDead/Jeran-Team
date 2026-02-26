@@ -375,6 +375,7 @@ MonoBehaviour:
   menuWin: {fileID: 8021259704864265185}
   menuLose: {fileID: 3545787626654110575}
   settingsMenu: {fileID: 944469809102766024}
+  itemsCase: []
   VolumeSlider: {fileID: 4761292616876445622}
   reticle: {fileID: 8843003007540835084}
   objectiveTimerDelay: 30
@@ -396,6 +397,8 @@ MonoBehaviour:
   playerDamageFlash: {fileID: 5094118734145811325}
   player: {fileID: 0}
   playerScript: {fileID: 0}
+  objectiveLight: {fileID: 0}
+  doorLights: {fileID: 0}
   enemyCount: 0
   killCount: 0
   canSpawn: 0
@@ -2008,11 +2011,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 948017393359243169, guid: d986e6d5f9fd70244a41affb827ea8d6, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 300
+      value: 381.321
       objectReference: {fileID: 0}
     - target: {fileID: 948017393359243169, guid: d986e6d5f9fd70244a41affb827ea8d6, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 300
+      value: 394.6387
       objectReference: {fileID: 0}
     - target: {fileID: 948017393359243169, guid: d986e6d5f9fd70244a41affb827ea8d6, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2044,11 +2047,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 948017393359243169, guid: d986e6d5f9fd70244a41affb827ea8d6, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 0
+      value: 40.660522
       objectReference: {fileID: 0}
     - target: {fileID: 948017393359243169, guid: d986e6d5f9fd70244a41affb827ea8d6, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 0
+      value: 10.8307
       objectReference: {fileID: 0}
     - target: {fileID: 948017393359243169, guid: d986e6d5f9fd70244a41affb827ea8d6, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -2081,6 +2084,10 @@ PrefabInstance:
     - target: {fileID: 8386071530297821541, guid: d986e6d5f9fd70244a41affb827ea8d6, type: 3}
       propertyPath: m_Name
       value: ResolutionScreen
+      objectReference: {fileID: 0}
+    - target: {fileID: 8386071530297821541, guid: d986e6d5f9fd70244a41affb827ea8d6, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 9116675790470907318, guid: d986e6d5f9fd70244a41affb827ea8d6, type: 3}
       propertyPath: m_AnchorMax.y
