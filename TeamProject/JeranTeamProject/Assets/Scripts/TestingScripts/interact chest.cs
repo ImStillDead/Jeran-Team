@@ -28,7 +28,9 @@ public class chest : MonoBehaviour , iInteract
             openChest();
             if (itemsSpawned < amountOfMaxItems)
             {
-                GameObject spawnedItem = Instantiate(item, itemLocation.position, Quaternion.identity);
+                GameObject itemPick = Instantiate(item, itemLocation.position, Quaternion.identity);
+
+                item = itemPick;
 
                 itemsSpawned++;
                 Debug.Log("Item spawned: " + itemsSpawned);
@@ -38,12 +40,14 @@ public class chest : MonoBehaviour , iInteract
                     Debug.Log("Maximum items spawned, no more items will appear.");
                 }
             }
+            if(item != null) 
+            item.gameObject.SetActive(true);
         }
 
         else if (isOpen == true)
         {
             closeChest();
-
+            item.gameObject.SetActive(false);
         }
     }
     void openChest()
