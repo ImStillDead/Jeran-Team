@@ -1,7 +1,9 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class chest : MonoBehaviour , iInteract
 {
+    [SerializeField] GameObject box;
     [SerializeField] Transform targetTrans;
     [SerializeField] Transform hingePoint;
     [SerializeField] Transform itemLocation;
@@ -27,6 +29,7 @@ public class chest : MonoBehaviour , iInteract
             if (itemsSpawned < amountOfMaxItems)
             {
                 GameObject spawnedItem = Instantiate(item, itemLocation.position, Quaternion.identity);
+
                 itemsSpawned++;
                 Debug.Log("Item spawned: " + itemsSpawned);
 

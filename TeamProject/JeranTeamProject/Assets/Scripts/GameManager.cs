@@ -262,7 +262,7 @@ public class GameManager : MonoBehaviour
             startTimer = true;
             objectiveCompleted = false;
             addMission("survive");
-            addDialog("this is a test");
+            addDialog("");
         }
     }
 
