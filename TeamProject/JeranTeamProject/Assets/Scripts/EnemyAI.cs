@@ -133,7 +133,7 @@ public class EnemyAI : MonoBehaviour, IDamage
                     shoot();
                 }
 
-               // neckRotate();
+               neckRotate();
 
                 if (agent.remainingDistance <= agent.stoppingDistance)
                 {
@@ -213,17 +213,19 @@ public class EnemyAI : MonoBehaviour, IDamage
     }
 
 
-   /* void neckRotate()
+    void neckRotate()
     {
+        if (neckPivot == null) return;
+
         Vector3 directionToPlayer = GameManager.instance.player.transform.position - neckPivot.position;
 
-        float horizontalAngel= Mathf.Atan2(directionToPlayer.x, directionToPlayer.z)*Mathf.Rad2Deg;
+        float horizontalAngel = Mathf.Atan2(directionToPlayer.x, directionToPlayer.z) * Mathf.Rad2Deg;
 
         float verticalAngle = -Mathf.Atan2(directionToPlayer.y, new Vector3(directionToPlayer.x, 0, directionToPlayer.z).magnitude) * Mathf.Rad2Deg;
 
         Quaternion targetRotation = Quaternion.Euler(verticalAngle, horizontalAngel, 0);
-        neckPivot.rotation=Quaternion.RotateTowards(neckPivot.rotation, targetRotation, neckRotationSpeed* Time.deltaTime);
-    }*/
+        neckPivot.rotation = Quaternion.RotateTowards(neckPivot.rotation, targetRotation, neckRotationSpeed * Time.deltaTime);
+    }
 
   
 }

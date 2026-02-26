@@ -1315,7 +1315,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 118
+  m_VersionIndex: 130
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -2339,7 +2339,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7391403877321609025}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 16.95, y: 1.9, z: 125.62}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -2367,11 +2367,11 @@ MonoBehaviour:
   HP: 50
   Speed: 3
   faceTargetSpeed: 1
-  FOV: 65
+  FOV: 360
   roamDist: 15
   roamPauseTime: 3
   spit: {fileID: 7398234212651272795, guid: 229986870f567754283d079147199970, type: 3}
-  spitRate: 1
+  spitRate: 1.5
   spitPos: {fileID: 6364869330390085958}
   neckPivot: {fileID: 6926723725406826465}
   neckRotationSpeed: 15

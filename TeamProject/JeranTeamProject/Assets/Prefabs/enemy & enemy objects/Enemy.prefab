@@ -18,7 +18,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &6876376216166315724
 RectTransform:
   m_ObjectHideFlags: 0
@@ -348,10 +348,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyAI
   model: {fileID: 3286630283137833765}
   agent: {fileID: 5672984400017759591}
-  HP: 10
+  HP: 100
   Speed: 6
   faceTargetSpeed: 45
-  FOV: 65
+  FOV: 360
   roamDist: 15
   roamPauseTime: 3
   spit: {fileID: 7398234212651272795, guid: 229986870f567754283d079147199970, type: 3}
