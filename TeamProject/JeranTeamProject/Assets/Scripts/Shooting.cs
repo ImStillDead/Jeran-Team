@@ -7,14 +7,19 @@ public class Shooting : MonoBehaviour
 {
 
     public static Shooting instance;
-    
+
     // [SerializeFields] for variables that we want to edit in Unity
+    [SerializeField] GameObject gunModel;
     [SerializeField] LayerMask ignoreLayer;
     [SerializeField] float shootRate;
     [SerializeField] int magSizeMax;
     [SerializeField] float reloadTime;
     [SerializeField] public GameObject bullet;
     [SerializeField] Transform shootPos;
+
+    [SerializeField] AudioClip[] aud;
+    [SerializeField] Bullet bulletScript;
+    [SerializeField] GameObject Gun;
 
     //Public variables
     public int currentAmmo;
@@ -62,6 +67,24 @@ public class Shooting : MonoBehaviour
         GameManager.instance.ammocount(currentAmmo, magSizeMax, maxAmmo);
     }
     // Called in Update if the Fire1 button (Left Click) is pressed
+    public void changeBullet()
+    {
+        bullet.GetComponent<Damage>().damageAmount = bulletScript.damageAmount;
+        bullet.GetComponent<Damage>().damageRate = bulletScript.damageRate;
+        bullet.GetComponent<Damage>().destroyTime = bulletScript.destroyTime;
+        bullet.GetComponent<Damage>().hitEffect = bulletScript.hitEffect;
+        bullet.GetComponent<Damage>().speed = bulletScript.speed;
+    }
+    public void changeGun(GunStats gunStats)
+    {
+        gunModel = gunStats.gunModel;
+        currentAmmo = gunStats.currentAmmo;
+        magSizeMax = gunStats.magSizeMax;
+        maxAmmo = gunStats.maxAmmo;
+        bulletScript = gunStats.bullet;
+        shootRate = gunStats.shootRate;
+    }
+
     public void Shoot()
     {
         /*  Checks to see if the player is not reloading. If they are not, it fires a projectile
