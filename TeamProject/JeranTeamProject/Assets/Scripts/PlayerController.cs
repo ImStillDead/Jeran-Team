@@ -47,7 +47,6 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
         isFirstPerson = true;
         updatePlayerUI();
         invPos = 0;
-        //changeGun(gunList[0]);
         torch.SetActive(true);
         torchActive = true;
     }
@@ -179,7 +178,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
         //add to max ammo
         if(activePick.ammo > 0)
         {
-            gunList[gunPos].maxAmmo += activePick.ammo;
+            Shooting.instance.maxAmmo += activePick.ammo;
             Shooting.instance.callAmmo();
         }
         if(activePick.dmgBoost > 0)
@@ -214,13 +213,15 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
         {
             invPos++;
             changeItem(invPos);
-            GameManager.instance.updateItem(activePick.itemIndex);
+            itemIndex = activePick.itemIndex;
+            GameManager.instance.updateItem(itemIndex);
         }
         else if (Input.GetAxis("Mouse ScrollWheel") < 0 && invPos > 0)
         {
             invPos--;
             changeItem(invPos);
-            GameManager.instance.updateItem(activePick.itemIndex);
+            itemIndex = activePick.itemIndex;
+            GameManager.instance.updateItem(itemIndex);
         }
         if (Input.GetButtonDown("Weapon1"))
         {
@@ -322,6 +323,8 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
 
     public void GetGunStats(GunStats gun)
     {
+        //gun.rotation = weaponPos.localRotation;
+        //gun.postion = weaponPos.transform.position;
         gunList.Add(gun);
         gunPos = gunList.Count - 1;
         if(gunList.Count == 1)
@@ -332,5 +335,10 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
     public void playAudio(AudioClip clip, float volume)
     {
         aud.PlayOneShot(clip, volume);
+    }
+    public void updateGunAmmo()
+    {
+        gunList[gunPos].currentAmmo = Shooting.instance.currentAmmo;
+        gunList[gunPos].maxAmmo = Shooting.instance.maxAmmo;
     }
 }
