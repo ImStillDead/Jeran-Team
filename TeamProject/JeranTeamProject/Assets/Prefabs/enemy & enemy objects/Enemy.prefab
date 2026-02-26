@@ -18,7 +18,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &6876376216166315724
 RectTransform:
   m_ObjectHideFlags: 0
@@ -365,6 +365,8 @@ MonoBehaviour:
   maxLifeTimer: 25
   enemyHPBar: {fileID: 377361693646402854}
   enemyHealth: {fileID: 6783692953872592994}
+  hearRange: 20
+  investiTime: 10
   isRoaming: 0
 --- !u!195 &5672984400017759591
 NavMeshAgent:

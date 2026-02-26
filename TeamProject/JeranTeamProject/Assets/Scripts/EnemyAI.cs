@@ -128,6 +128,7 @@ public class EnemyAI : MonoBehaviour, IDamage
             if (angleToPlayer <= FOV && hit.collider.CompareTag("Player"))
             {
                 agent.SetDestination(GameManager.instance.player.transform.position);
+               
                 if (spitTimer >= spitRate && agent.remainingDistance >= meleeDist)
                 {
                     shoot();
@@ -175,7 +176,6 @@ public class EnemyAI : MonoBehaviour, IDamage
             agent.stoppingDistance = 0;
         }
     }
-
     void shoot()
     {
         spitTimer = 0;
@@ -190,8 +190,7 @@ public class EnemyAI : MonoBehaviour, IDamage
         HP -= amount;
         
         enemyHealth.fillAmount = (float)HP / HPOrigin;
-       
-
+  
         agent.SetDestination(GameManager.instance.player.transform.position);
 
         if (HP <= 0)
@@ -226,6 +225,4 @@ public class EnemyAI : MonoBehaviour, IDamage
         Quaternion targetRotation = Quaternion.Euler(verticalAngle, horizontalAngel, 0);
         neckPivot.rotation = Quaternion.RotateTowards(neckPivot.rotation, targetRotation, neckRotationSpeed * Time.deltaTime);
     }
-
-  
 }
