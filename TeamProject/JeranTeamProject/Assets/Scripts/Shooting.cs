@@ -88,11 +88,13 @@ public class Shooting : MonoBehaviour
         reloadTime = gunStats.reloadTime;
         aud = gunStats.aud;
         volume = gunStats.shotSoundVol;
-        gunModel.GetComponent<MeshFilter>().sharedMesh = gunStats.gunModel.GetComponentInChildren<MeshFilter>().sharedMesh;
-        gunModel.GetComponent<MeshRenderer>().sharedMaterial = gunStats.gunModel.GetComponentInChildren<MeshRenderer>().sharedMaterial;
+        gunModel.GetComponent<MeshFilter>().sharedMesh = gunStats.gunModel.GetComponent<MeshFilter>().sharedMesh;
+        gunModel.GetComponent<MeshRenderer>().sharedMaterial = gunStats.gunModel.GetComponent<MeshRenderer>().sharedMaterial;
         gunModel.transform.localScale = gunStats.scale;
         gunModel.transform.localPosition = gunStats.postion;
         gunModel.transform.localRotation = gunStats.rotation;
+        shootPos.transform.localPosition = gunStats.shootPos.transform.localPosition;
+        shootPos.transform.localRotation = gunStats.shootRotate;
         changeBullet();
         callAmmo();
     }
@@ -104,8 +106,8 @@ public class Shooting : MonoBehaviour
         if(!reloading)
         {
             shootTimer = 0;
-            //GameManager.instance.playerScript.playAudio(aud[0], volume);
-            Instantiate(bullet, shootPos.position, transform.rotation);
+            GameManager.instance.playerScript.playAudio(aud[0], volume);
+            Instantiate(bullet, shootPos.position, shootPos.transform.rotation);
             currentAmmo = currentAmmo - 1;
             callAmmo();
         }
