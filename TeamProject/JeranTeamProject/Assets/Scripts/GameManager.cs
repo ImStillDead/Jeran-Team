@@ -52,6 +52,8 @@ public class GameManager : MonoBehaviour
     public PlayerController playerScript;
     public Light objectiveLight;
     public GameObject doorLights;
+    public GameObject playerSpawn;
+    public GameObject playerCheckpointPop;
     int sceneIndex;
     int itemIndex;
     public int enemyCount;
@@ -82,6 +84,7 @@ public class GameManager : MonoBehaviour
         player = GameObject.FindWithTag("Player");
 
         playerScript = player.GetComponent<PlayerController>();
+        playerSpawn = GameObject.FindWithTag("PlayerSpawn");
     }
 
 
@@ -262,7 +265,7 @@ public class GameManager : MonoBehaviour
             startTimer = true;
             objectiveCompleted = false;
             addMission("survive");
-            addDialog("this is a test");
+            addDialog("");
         }
     }
 

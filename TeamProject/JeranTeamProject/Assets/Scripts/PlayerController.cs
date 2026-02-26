@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 
-public class PlayerController : MonoBehaviour, IDamage, IPickup
+public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
 {
     public PlayerController instancePlayer;
 
@@ -42,10 +42,11 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup
     void Start()
     {
         HPOrigin = HP;
+        spawnPlayer();
         isFirstPerson = true;
         updatePlayerUI();
         invPos = 0;
-        changeGun(gunList[0]);
+        //changeGun(gunList[0]);
         torch.SetActive(true);
         torchActive = true;
     }
@@ -132,6 +133,13 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup
             speed /= sprintMod;
         }
     }
+    public void spawnPlayer()
+    {
+        playerController.transform.position = GameManager.instance.playerSpawn.transform.position;
+        Physics.SyncTransforms();
+        HP = HPOrigin;
+        updatePlayerUI();
+    }
     public void pickUpObject(Pickups item)
     {
 
@@ -155,7 +163,8 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup
     void changeItem(int pos)
     {
         activePick = itemPickup[pos];
-        GameManager.instance.updateItem(activePick.itemIndex);
+        itemIndex = itemPickup[pos].itemIndex;
+        GameManager.instance.updateItem(itemIndex);
     }
     void useItem()
     {
@@ -170,6 +179,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup
         if(activePick.ammo > 0)
         {
             gunList[gunPos].maxAmmo += activePick.ammo;
+            Shooting.instance.callAmmo();
         }
         if(activePick.dmgBoost > 0)
         {
@@ -196,18 +206,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup
             }
         }
     }
-    public void changeGun(GunStats gunStats)
-    {
-        if (dmgBoosting)
-        {
-            gunList[gunPos].bullet.damageAmount = tempOrginDmg;
-            dmgBoosting = false;
-        }
-        
-        Shooting.instance.changeGun(gunStats);
-        Shooting.instance.changeBullet();
-     
-    }
+   
     void SwitchWeapon()
     {
         if (Input.GetAxis("Mouse ScrollWheel") > 0 && invPos < itemPickup.Count - 1)
@@ -225,17 +224,17 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup
         if (Input.GetButtonDown("Weapon1"))
         {
             gunPos = 0;
-            changeGun(gunList[gunPos]);
+            Shooting.instance.changeGun(gunList[gunPos]);
         }
         else if (Input.GetButtonDown("Weapon2"))
         {
             gunPos = 1;
-            changeGun(gunList[gunPos]);
+            Shooting.instance.changeGun(gunList[gunPos]);
         }
         else if (Input.GetButtonDown("Weapon3"))
         {
             gunPos = 2;
-            changeGun(gunList[gunPos]);
+            Shooting.instance.changeGun(gunList[gunPos]);
         }
     }
     void WeaponRotate()
@@ -253,18 +252,22 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup
     }
     void Interact()
     {
-        Debug.DrawRay(Camera.main.transform.position, Camera.main.transform.forward * interactDis, Color.red);
-        RaycastHit interact;
-        if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out interact, interactDis, ~ignoreLayer))
+
+        Vector3 origin = Camera.main.transform.position;
+        Vector3 direction = Camera.main.transform.forward;
+
+        Debug.DrawRay(origin, direction * interactDis, Color.mediumVioletRed);
+
+        if (Physics.Raycast(origin, direction, out RaycastHit hitInter, interactDis))
         {
-
-
-            if(interact.transform.TryGetComponent(out iInteract interactable)) //this wouldnt effect the overall code and allow the use of iInteract items.
+            if (hitInter.collider.TryGetComponent<iInteract>(out var interactable))
             {
+                Debug.Log($"Interacting with {hitInter.collider.name}");
                 interactable.Interacted();
             }
-            
         }
+  
+
     }
     public void takeDamage(int amount)
     {
@@ -314,5 +317,15 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup
         speed *= (int)activePick.speedBoost;
         yield return new WaitForSeconds((float)boostTime);
         speed = tempOrginSpeed;
+    }
+
+    public void GetGunStats(GunStats gun)
+    {
+        gunList.Add(gun);
+        gunPos = gunList.Count - 1;
+        if(gunList.Count == 1)
+        {
+            Shooting.instance.changeGun(gunList[gunPos]);
+        }
     }
 }
