@@ -178,7 +178,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
         //add to max ammo
         if(activePick.ammo > 0)
         {
-            gunList[gunPos].maxAmmo += activePick.ammo;
+            Shooting.instance.maxAmmo += activePick.ammo;
             Shooting.instance.callAmmo();
         }
         if(activePick.dmgBoost > 0)
