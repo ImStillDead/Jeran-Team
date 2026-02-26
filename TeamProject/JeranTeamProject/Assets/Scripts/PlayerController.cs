@@ -24,7 +24,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
     [SerializeField] GameObject thirdPersonCamera;
     [SerializeField] GameObject torch;
     [SerializeField] List<GunStats> gunList = new List<GunStats>();
-    [SerializeField] List<Pickups> itemPickup = new List<Pickups>();
+    [SerializeField] List<Pickups> itemList = new List<Pickups>();
     [SerializeField] AudioSource aud;
     Pickups activePick;
     int HPOrigin;
@@ -143,17 +143,17 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
     public void pickUpObject(Pickups item)
     {
 
-        if (itemPickup.Contains(item))
+        if (itemList.Contains(item))
         {
-            itemIndex = itemPickup.IndexOf(item);
-            itemPickup[itemIndex].uesage++;
+            itemIndex = itemList.IndexOf(item);
+            itemList[itemIndex].uesage++;
 
         }
         else
         {
-            itemPickup.Add(item);
-            itemIndex = itemPickup.Count - 1;
-            itemPickup[itemIndex].uesage = 1;
+            itemList.Add(item);
+            itemIndex = itemList.Count - 1;
+            itemList[itemIndex].uesage = 1;
         }
         if(activePick == null)
         {
@@ -162,8 +162,8 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
     }
     void changeItem(int pos)
     {
-        activePick = itemPickup[pos];
-        itemIndex = itemPickup[pos].itemIndex;
+        activePick = itemList[pos];
+        itemIndex = itemList[pos].itemIndex;
         GameManager.instance.updateItem(itemIndex);
     }
     void useItem()
@@ -192,11 +192,11 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
         //Check for usage and remove if no more uses
         if (activePick.uesage <= 0)
         {
-            itemPickup.Remove(activePick);
-            if(itemPickup.Count > 0)
+            itemList.Remove(activePick);
+            if(itemList.Count > 0)
             {
-                activePick = itemPickup[itemPickup.Count - 1];
-                itemIndex = itemPickup[itemPickup.Count - 1].itemIndex;
+                activePick = itemList[itemList.Count - 1];
+                itemIndex = itemList[itemList.Count - 1].itemIndex;
                 GameManager.instance.updateItem(itemIndex);
             }
             else
@@ -209,20 +209,64 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
    
     void SwitchWeapon()
     {
-        if (Input.GetAxis("Mouse ScrollWheel") > 0 && invPos < itemPickup.Count - 1)
+
+        if(Input.GetButtonDown("Swap"))
         {
-            invPos++;
-            changeItem(invPos);
-            itemIndex = activePick.itemIndex;
-            GameManager.instance.updateItem(itemIndex);
+            if(invPos >= itemList.Count - 1)
+            {
+                invPos = 0;
+            }
+            else
+            {
+                invPos++;
+            }
+              
+            changeItem(invPos);            
         }
-        else if (Input.GetAxis("Mouse ScrollWheel") < 0 && invPos > 0)
+
+        if(Input.GetAxis("Mouse ScrollWheel") > 0)
         {
-            invPos--;
-            changeItem(invPos);
-            itemIndex = activePick.itemIndex;
-            GameManager.instance.updateItem(itemIndex);
+            if(gunPos >= gunList.Count - 1)
+            {
+                gunPos = 0;
+            }
+            else
+            {
+                gunPos++;
+            }
+
+            Shooting.instance.changeGun(gunList[gunPos]);
         }
+        else if(Input.GetAxis("Mouse ScrollWheel") < 0)
+        {
+            if (gunPos <= 0)
+            {
+                gunPos = gunList.Count - 1;
+            }
+            else
+            {
+                gunPos--;
+            }
+
+            Shooting.instance.changeGun(gunList[gunPos]);
+        }
+
+
+        //if (Input.GetAxis("Mouse ScrollWheel") > 0 && invPos < itemPickup.Count - 1)
+        //{
+        //    invPos++;
+        //    changeItem(invPos);
+        //    itemIndex = activePick.itemIndex;
+        //    GameManager.instance.updateItem(itemIndex);
+        //}
+        //else if (Input.GetAxis("Mouse ScrollWheel") < 0 && invPos > 0)
+        //{
+        //    invPos--;
+        //    changeItem(invPos);
+        //    itemIndex = activePick.itemIndex;
+        //    GameManager.instance.updateItem(itemIndex);
+        //}
+        
         if (Input.GetButtonDown("Weapon1"))
         {
             gunPos = 0;
@@ -236,6 +280,16 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
         else if (Input.GetButtonDown("Weapon3"))
         {
             gunPos = 2;
+            Shooting.instance.changeGun(gunList[gunPos]);
+        }
+        else if (Input.GetButtonDown("Weapon4"))
+        {
+            gunPos = 3;
+            Shooting.instance.changeGun(gunList[gunPos]);
+        }
+        else if (Input.GetButtonDown("Weapon5"))
+        {
+            gunPos = 4;
             Shooting.instance.changeGun(gunList[gunPos]);
         }
     }
