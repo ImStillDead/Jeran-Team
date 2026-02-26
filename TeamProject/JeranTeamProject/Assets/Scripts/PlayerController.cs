@@ -252,18 +252,22 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
     }
     void Interact()
     {
-        Debug.DrawRay(Camera.main.transform.position, Camera.main.transform.forward * interactDis, Color.red);
-        RaycastHit interact;
-        if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out interact, interactDis, ~ignoreLayer))
+
+        Vector3 origin = Camera.main.transform.position;
+        Vector3 direction = Camera.main.transform.forward;
+
+        Debug.DrawRay(origin, direction * interactDis, Color.mediumVioletRed);
+
+        if (Physics.Raycast(origin, direction, out RaycastHit hitInter, interactDis))
         {
-
-
-            if(interact.transform.TryGetComponent(out iInteract interactable)) //this wouldnt effect the overall code and allow the use of iInteract items.
+            if (hitInter.collider.TryGetComponent<iInteract>(out var interactable))
             {
+                Debug.Log($"Interacting with {hitInter.collider.name}");
                 interactable.Interacted();
             }
-            
         }
+  
+
     }
     public void takeDamage(int amount)
     {
