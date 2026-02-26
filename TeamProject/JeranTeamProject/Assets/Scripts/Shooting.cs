@@ -24,6 +24,7 @@ public class Shooting : MonoBehaviour
 
     //Public variables
     public int currentAmmo;
+    public int startingMaxAmmo;
     public int maxAmmo;
     public static float shootTimer;
     public float volume;
@@ -106,7 +107,7 @@ public class Shooting : MonoBehaviour
         if(!reloading)
         {
             shootTimer = 0;
-            GameManager.instance.playerScript.playAudio(aud[0], volume);
+           // GameManager.instance.playerScript.playAudio(aud[0], volume);
             Instantiate(bullet, shootPos.position, shootPos.transform.rotation);
             currentAmmo = currentAmmo - 1;
             callAmmo();

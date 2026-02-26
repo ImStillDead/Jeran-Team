@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac26794e551912b4db37d6875a3c37b8, type: 3}
+  m_Name: Sniper
+  m_EditorClassIdentifier: Assembly-CSharp::GunStats
+  gunModel: {fileID: 6391941817594404342, guid: e4befe794d5f98f488518647af8599eb, type: 3}
+  shootPos: {fileID: 7529497882847126310, guid: 3f63e3b2dde79a44dadc96af98a98d0a, type: 3}
+  shootRate: 2
+  magSizeMax: 5
+  reloadTime: 3
+  bullet: {fileID: 11400000, guid: f3287e45abae1b247846225f74a816d0, type: 2}
+  aud: []
+  scale: {x: 1, y: 1, z: 1}
+  postion: {x: 0.11, y: 0.23, z: 0.54}
+  rotation: {x: 0, y: 0.70710677, z: 0, w: 0.70710677}
+  shootRotate: {x: 0, y: 0.70710677, z: 0, w: -0.70710677}
+  currentAmmo: 5
+  maxAmmo: 24
+  shotSoundVol: 0
