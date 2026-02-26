@@ -13,11 +13,13 @@ MonoBehaviour:
   m_Name: Rifle
   m_EditorClassIdentifier: Assembly-CSharp::GunStats
   gunModel: {fileID: 8733110271342190919, guid: eb100d8062b7f6943bf6be63d284075b, type: 3}
+  magModel: {fileID: 0}
   shootRate: 2
   magSizeMax: 5
   reloadTime: 3
   bullet: {fileID: 11400000, guid: f3287e45abae1b247846225f74a816d0, type: 2}
-  aud: []
+  aud:
+  - {fileID: 8300000, guid: 8c98fcabdfc994c48bd8bff63493ea2f, type: 3}
   currentAmmo: 5
   maxAmmo: 60
   shotSoundVol: 0
