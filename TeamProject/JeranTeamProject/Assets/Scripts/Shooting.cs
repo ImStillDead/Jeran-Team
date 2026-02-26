@@ -25,6 +25,7 @@ public class Shooting : MonoBehaviour
     public int currentAmmo;
     public int maxAmmo;
     public static float shootTimer;
+    public float volume;
 
     // Other Variables
     bool reloading;
@@ -89,6 +90,8 @@ public class Shooting : MonoBehaviour
         bulletScript = gunStats.bullet;
         shootRate = gunStats.shootRate;
         reloadTime = gunStats.reloadTime;
+        aud = gunStats.aud;
+        volume = gunStats.shotSoundVol;
         changeBullet();
         callAmmo();
     }
@@ -101,6 +104,7 @@ public class Shooting : MonoBehaviour
         {
             shootTimer = 0;
             Instantiate(bullet, shootPos.position, transform.rotation);
+            GameManager.instance.playerScript.playAudio(aud[0], volume);
             currentAmmo = currentAmmo - 1;
             callAmmo();
         }
