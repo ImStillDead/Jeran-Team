@@ -297,7 +297,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
     {
         if (isFirstPerson)
         {
-            weaponPos.transform.localRotation = firstPersonCamera.transform.localRotation;
+            weaponPos.transform.rotation = firstPersonCamera.transform.rotation;
             interactDis = 3;
         }
         else
