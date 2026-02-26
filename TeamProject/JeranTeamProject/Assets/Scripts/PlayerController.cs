@@ -1,10 +1,13 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 
-public class PlayerController : MonoBehaviour, IDamage
+public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
 {
+    public PlayerController instancePlayer;
+
     [SerializeField] CharacterController playerController;
     [SerializeField] LayerMask ignoreLayer;
 
@@ -14,27 +17,38 @@ public class PlayerController : MonoBehaviour, IDamage
     [SerializeField] int jumpSpeed;
     [SerializeField] int jumpMax;
     [SerializeField] int interactDis;
+    [SerializeField] int enemyViewDis;
     [SerializeField] int gravity;
     [SerializeField] Transform weaponPos;
     [SerializeField] GameObject firstPersonCamera;
     [SerializeField] GameObject thirdPersonCamera;
-    [SerializeField] GameObject inventory1;
-    [SerializeField] GameObject inventory2;
-    [SerializeField] GameObject inventory3;
-
-    GameObject activeItem;
+    [SerializeField] GameObject torch;
+    [SerializeField] List<GunStats> gunList = new List<GunStats>();
+    [SerializeField] List<Pickups> itemList = new List<Pickups>();
+    [SerializeField] AudioSource aud;
+    Pickups activePick;
     int HPOrigin;
     int jumpCount;
+    int invPos;
+    int gunPos;
+    int itemIndex;
+    float boostTime;
+    int tempOrginDmg;
+    bool dmgBoosting;
+    int tempOrginSpeed;
     bool isFirstPerson;
+    bool torchActive;
     Vector3 moveDir;
     Vector3 playerVel;
-    int sceneIndex;
     void Start()
     {
         HPOrigin = HP;
-        activeItem = Instantiate(inventory1, weaponPos);
+        spawnPlayer();
         isFirstPerson = true;
         updatePlayerUI();
+        invPos = 0;
+        torch.SetActive(true);
+        torchActive = true;
     }
 
     void Update()
@@ -63,6 +77,23 @@ public class PlayerController : MonoBehaviour, IDamage
         if (Input.GetButtonDown("Interact"))
         {
             Interact();
+        }
+        if (activePick != null && Input.GetButtonDown("Use"))
+        {
+            useItem();
+        }
+        if (Input.GetButtonDown("Torch"))
+        {
+            if (torchActive == true)
+            {
+                torch.SetActive(false);
+                torchActive = false;
+            }
+            else
+            {
+                torch.SetActive(true);
+                torchActive = true;
+            }
         }
     }
     void CameraToggle()
@@ -102,74 +133,197 @@ public class PlayerController : MonoBehaviour, IDamage
             speed /= sprintMod;
         }
     }
+    public void spawnPlayer()
+    {
+        playerController.transform.position = GameManager.instance.playerSpawn.transform.position;
+        Physics.SyncTransforms();
+        HP = HPOrigin;
+        updatePlayerUI();
+    }
+    public void pickUpObject(Pickups item)
+    {
+
+        if (itemList.Contains(item))
+        {
+            itemIndex = itemList.IndexOf(item);
+            itemList[itemIndex].uesage++;
+
+        }
+        else
+        {
+            itemList.Add(item);
+            itemIndex = itemList.Count - 1;
+            itemList[itemIndex].uesage = 1;
+        }
+        if(activePick == null)
+        {
+            changeItem(itemIndex);
+        }
+    }
+    void changeItem(int pos)
+    {
+        activePick = itemList[pos];
+        itemIndex = itemList[pos].itemIndex;
+        GameManager.instance.updateItem(itemIndex);
+    }
+    void useItem()
+    {
+        activePick.uesage--;
+        
+        //Healing if used object has health
+        if (activePick.healing > 0)
+        {
+            Heal(activePick.healing);
+        }
+        //add to max ammo
+        if(activePick.ammo > 0)
+        {
+            Shooting.instance.maxAmmo += activePick.ammo;
+            Shooting.instance.callAmmo();
+        }
+        if(activePick.dmgBoost > 0)
+        {
+            StartCoroutine(dmgBoost());
+        }
+        if(activePick.speedBoost > 0)
+        {
+            StartCoroutine(speedBoost());
+        }
+        //Check for usage and remove if no more uses
+        if (activePick.uesage <= 0)
+        {
+            itemList.Remove(activePick);
+            if(itemList.Count > 0)
+            {
+                activePick = itemList[itemList.Count - 1];
+                itemIndex = itemList[itemList.Count - 1].itemIndex;
+                GameManager.instance.updateItem(itemIndex);
+            }
+            else
+            {
+                activePick = null;
+                GameManager.instance.updateItem(0);
+            }
+        }
+    }
+   
     void SwitchWeapon()
     {
+
+        if(Input.GetButtonDown("Swap"))
+        {
+            if(invPos >= itemList.Count - 1)
+            {
+                invPos = 0;
+            }
+            else
+            {
+                invPos++;
+            }
+              
+            changeItem(invPos);            
+        }
+
+        if(Input.GetAxis("Mouse ScrollWheel") > 0)
+        {
+            if(gunPos >= gunList.Count - 1)
+            {
+                gunPos = 0;
+            }
+            else
+            {
+                gunPos++;
+            }
+
+            Shooting.instance.changeGun(gunList[gunPos]);
+        }
+        else if(Input.GetAxis("Mouse ScrollWheel") < 0)
+        {
+            if (gunPos <= 0)
+            {
+                gunPos = gunList.Count - 1;
+            }
+            else
+            {
+                gunPos--;
+            }
+
+            Shooting.instance.changeGun(gunList[gunPos]);
+        }
+
+
+        //if (Input.GetAxis("Mouse ScrollWheel") > 0 && invPos < itemPickup.Count - 1)
+        //{
+        //    invPos++;
+        //    changeItem(invPos);
+        //    itemIndex = activePick.itemIndex;
+        //    GameManager.instance.updateItem(itemIndex);
+        //}
+        //else if (Input.GetAxis("Mouse ScrollWheel") < 0 && invPos > 0)
+        //{
+        //    invPos--;
+        //    changeItem(invPos);
+        //    itemIndex = activePick.itemIndex;
+        //    GameManager.instance.updateItem(itemIndex);
+        //}
+        
         if (Input.GetButtonDown("Weapon1"))
         {
-            if (activeItem != null)
-            {
-                Destroy(activeItem);
-            }
-            activeItem = Instantiate(inventory1, weaponPos);
+            gunPos = 0;
+            Shooting.instance.changeGun(gunList[gunPos]);
         }
         else if (Input.GetButtonDown("Weapon2"))
         {
-            if (activeItem != null)
-            {
-                Destroy(activeItem);
-            }
-            activeItem = Instantiate(inventory2, weaponPos);
+            gunPos = 1;
+            Shooting.instance.changeGun(gunList[gunPos]);
         }
         else if (Input.GetButtonDown("Weapon3"))
         {
-            if (activeItem != null)
-            {
-                Destroy(activeItem);
-            }
-            activeItem = Instantiate(inventory3, weaponPos);
+            gunPos = 2;
+            Shooting.instance.changeGun(gunList[gunPos]);
+        }
+        else if (Input.GetButtonDown("Weapon4"))
+        {
+            gunPos = 3;
+            Shooting.instance.changeGun(gunList[gunPos]);
+        }
+        else if (Input.GetButtonDown("Weapon5"))
+        {
+            gunPos = 4;
+            Shooting.instance.changeGun(gunList[gunPos]);
         }
     }
     void WeaponRotate()
     {
         if (isFirstPerson)
         {
-            activeItem.transform.localRotation = firstPersonCamera.transform.localRotation;
+            weaponPos.transform.rotation = firstPersonCamera.transform.rotation;
             interactDis = 3;
         }
         else
         {
-            activeItem.transform.localRotation = thirdPersonCamera.transform.localRotation;
+            weaponPos.transform.localRotation = thirdPersonCamera.transform.localRotation;
             interactDis = 5;
         }
     }
     void Interact()
     {
-        Debug.DrawRay(Camera.main.transform.position, Camera.main.transform.forward * interactDis, Color.red);
-        RaycastHit interact;
-        if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out interact, interactDis, ~ignoreLayer))
+
+        Vector3 origin = Camera.main.transform.position;
+        Vector3 direction = Camera.main.transform.forward;
+
+        Debug.DrawRay(origin, direction * interactDis, Color.mediumVioletRed);
+
+        if (Physics.Raycast(origin, direction, out RaycastHit hitInter, interactDis))
         {
-            if (interact.collider.gameObject.CompareTag("Door") == true)
+            if (hitInter.collider.TryGetComponent<iInteract>(out var interactable))
             {
-                if (interact.collider.gameObject.GetComponent<Collider>().isTrigger == false)
-                {
-                    interact.collider.gameObject.GetComponent<Collider>().isTrigger = true;
-                    interact.collider.gameObject.GetComponent<MeshRenderer>().enabled = false;
-                }
-                else if (interact.collider.isTrigger)
-                {
-                    interact.collider.gameObject.GetComponent<Collider>().isTrigger = false;
-                    interact.collider.gameObject.GetComponent<MeshRenderer>().enabled = true;
-                }
-            }
-            if (interact.collider.gameObject.CompareTag("Objective") == true)
-            {
-                GameManager.instance.objectiveCheck();
-            }
-            if (interact.collider.gameObject.CompareTag("LevelDoor") == true && GameManager.instance.objectiveCheck())
-            {
-                GameManager.instance.youWin();
+                Debug.Log($"Interacting with {hitInter.collider.name}");
+                interactable.Interacted();
             }
         }
+  
+
     }
     public void takeDamage(int amount)
     {
@@ -191,5 +345,54 @@ public class PlayerController : MonoBehaviour, IDamage
     public void updatePlayerUI()
     {
         GameManager.instance.PlayerHP_bar.fillAmount = (float)HP / HPOrigin;
+    }
+
+    public void Heal(int amount)
+    {
+        HP += amount;
+        if (HP > HPOrigin)
+        {
+            HP = HPOrigin;
+        }
+        updatePlayerUI();
+    }
+    IEnumerator dmgBoost() 
+    {
+        tempOrginDmg = gunList[gunPos].bullet.damageAmount;
+        gunList[gunPos].bullet.damageAmount *= (int)activePick.dmgBoost;
+        boostTime = activePick.boostDur;
+        dmgBoosting = true;
+        yield return new WaitForSeconds(boostTime);
+        gunList[gunPos].bullet.damageAmount = tempOrginDmg;
+        dmgBoosting = false;
+    }
+    IEnumerator speedBoost()
+    {
+        tempOrginSpeed = speed;
+        boostTime = activePick.boostDur;
+        speed *= (int)activePick.speedBoost;
+        yield return new WaitForSeconds((float)boostTime);
+        speed = tempOrginSpeed;
+    }
+
+    public void GetGunStats(GunStats gun)
+    {
+        //gun.rotation = weaponPos.localRotation;
+        //gun.postion = weaponPos.transform.position;
+        gunList.Add(gun);
+        gunPos = gunList.Count - 1;
+        if(gunList.Count == 1)
+        {
+            Shooting.instance.changeGun(gunList[gunPos]);
+        }
+    }
+    public void playAudio(AudioClip clip, float volume)
+    {
+        aud.PlayOneShot(clip, volume);
+    }
+    public void updateGunAmmo()
+    {
+        gunList[gunPos].currentAmmo = Shooting.instance.currentAmmo;
+        gunList[gunPos].maxAmmo = Shooting.instance.maxAmmo;
     }
 }

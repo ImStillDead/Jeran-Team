@@ -1,4 +1,7 @@
+using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+
 
 public class CameraController : MonoBehaviour
 {
@@ -14,6 +17,10 @@ public class CameraController : MonoBehaviour
     }
     void Update()
     {
+        mouseControl();
+    }
+    void mouseControl()
+    {
         float mouseX = Input.GetAxisRaw("Mouse X") * sens * Time.deltaTime;
         float mouseY = Input.GetAxisRaw("Mouse Y") * sens * Time.deltaTime;
         if (invertY)
@@ -27,7 +34,5 @@ public class CameraController : MonoBehaviour
         camRotX = Mathf.Clamp(camRotX, lockVertMin, lockVertMax);
         transform.localRotation = Quaternion.Euler(camRotX, 0, 0);
         transform.parent.Rotate(Vector3.up * mouseX);
-        
     }
-   
 }

@@ -1,24 +1,21 @@
-using UnityEngine;
+ using UnityEngine;
 using System.Collections;
 
-public class Damage : MonoBehaviour
+class Damage : MonoBehaviour
 {
-    enum damageType { bullet, stationary, DOT }     // enum for damage types
+    public enum damageType { bullet, stationary, DOT }     // enum for damage types
     
     // [SerializeFields] for variables we to edit in Unity
     [SerializeField] damageType type;
     [SerializeField] Rigidbody rb;
     [SerializeField] LayerMask ignoreLayer;
-    [SerializeField] int damageAmount;
-    [SerializeField] float damageRate;
-    [SerializeField] int speed;
-    [SerializeField] float destroyTime;
-    [SerializeField] ParticleSystem hitEffect;
-
+    public int damageAmount;
+    public float damageRate;
+    public int speed;
+    public float destroyTime;
+    public ParticleSystem hitEffect;
     // other variables
     bool isDamaging;
-
-
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -30,7 +27,6 @@ public class Damage : MonoBehaviour
             Destroy(gameObject, destroyTime);
         }
     }
-
     private void OnTriggerEnter(Collider other)
     {
         /*  Case for triggers to ignore other triggers*/
@@ -56,7 +52,6 @@ public class Damage : MonoBehaviour
             Destroy(gameObject);
         }
     }
-
     private void OnTriggerStay(Collider other)
     {
         if (other.isTrigger)
@@ -70,7 +65,6 @@ public class Damage : MonoBehaviour
             StartCoroutine(damageOther(dmg));
         }
     }
-
     IEnumerator damageOther(IDamage d)
     {
         isDamaging = true;
@@ -78,5 +72,4 @@ public class Damage : MonoBehaviour
         yield return new WaitForSeconds(damageRate);
         isDamaging = false;
     }
-
 }

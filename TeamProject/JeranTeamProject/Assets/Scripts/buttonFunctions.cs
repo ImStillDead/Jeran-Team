@@ -15,6 +15,11 @@ public class buttonFunctions : MonoBehaviour
     {
         
     }
+    public void respawn()
+    {
+        GameManager.instance.playerScript.spawnPlayer();
+        GameManager.instance.stateUnpause();
+    }
     public void MainMenu()
     {
         GameManager.instance.loadMain();
@@ -38,7 +43,9 @@ public class buttonFunctions : MonoBehaviour
     }
     public void nextLevel()
     {
-        GameManager.instance.loadNextScene();
+        int index = SceneManager.GetActiveScene().buildIndex;
+        index += 1;
+        SceneManager.LoadScene(index);
     }
     public void levelOne()
     {
