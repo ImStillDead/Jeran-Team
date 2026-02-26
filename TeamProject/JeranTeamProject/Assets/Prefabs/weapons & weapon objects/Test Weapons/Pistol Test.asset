@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac26794e551912b4db37d6875a3c37b8, type: 3}
+  m_Name: Pistol Test
+  m_EditorClassIdentifier: Assembly-CSharp::GunStats
+  gunModel: {fileID: 2877827004064009077, guid: 6fa5736f7bb71a347b6ebbb74d166167, type: 3}
+  shootRate: 0.5
+  magSizeMax: 1
+  reloadTime: 0.5
+  bullet: {fileID: 11400000, guid: 2fde2798337691c4fa08fd6154e33817, type: 2}
+  aud: []
+  currentAmmo: 0
+  maxAmmo: 1
+  shotSoundVol: 0

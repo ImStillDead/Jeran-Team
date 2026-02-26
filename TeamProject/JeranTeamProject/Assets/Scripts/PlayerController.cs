@@ -25,6 +25,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
     [SerializeField] GameObject torch;
     [SerializeField] List<GunStats> gunList = new List<GunStats>();
     [SerializeField] List<Pickups> itemPickup = new List<Pickups>();
+    [SerializeField] AudioSource aud;
     Pickups activePick;
     int HPOrigin;
     int jumpCount;
@@ -327,5 +328,9 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
         {
             Shooting.instance.changeGun(gunList[gunPos]);
         }
+    }
+    public void playAudio(AudioClip clip, float volume)
+    {
+        aud.PlayOneShot(clip, volume);
     }
 }
