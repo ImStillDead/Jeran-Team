@@ -12,7 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac26794e551912b4db37d6875a3c37b8, type: 3}
   m_Name: Pistol
   m_EditorClassIdentifier: Assembly-CSharp::GunStats
-  gunModel: {fileID: 3581542342965293990, guid: 2799829665a07a342b947ee30340934f, type: 3}
+  gunModel: {fileID: 6380103997966046280, guid: a5acc46816df5c440afc42724832b9fc, type: 3}
+  shootPos: {fileID: 8508003336259798030, guid: 63797d176e46f924c906959af0c5313e, type: 3}
   shootRate: 0.5
   magSizeMax: 9
   reloadTime: 1.5
@@ -20,8 +21,9 @@ MonoBehaviour:
   aud:
   - {fileID: 8300000, guid: 843ca06fe8416504389a564a58521fc9, type: 3}
   scale: {x: 2, y: 2, z: 2}
-  postion: {x: 0, y: 0, z: 0}
+  postion: {x: 0.011, y: 0.091, z: 0.322}
   rotation: {x: 0, y: 0, z: 0, w: 1}
+  shootRotate: {x: 0, y: 0, z: 0, w: 0}
   currentAmmo: 9
-  maxAmmo: 1
+  maxAmmo: 71
   shotSoundVol: 0.03
