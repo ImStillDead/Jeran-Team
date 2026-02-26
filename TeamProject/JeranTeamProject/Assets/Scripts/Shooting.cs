@@ -10,22 +10,21 @@ public class Shooting : MonoBehaviour
 
     // [SerializeFields] for variables that we want to edit in Unity
     [SerializeField] GameObject gunModel;
-    [SerializeField] GameObject magModel;
     [SerializeField] LayerMask ignoreLayer;
     [SerializeField] float shootRate;
     [SerializeField] int magSizeMax;
     [SerializeField] float reloadTime;
-    [SerializeField] public GameObject bullet;
+    [SerializeField] GameObject bullet;
     [SerializeField] Transform shootPos;
 
     [SerializeField] AudioClip[] aud;
     [SerializeField] Bullet bulletScript;
+    //[SerializeField] GameObject Gun;
 
     //Public variables
     public int currentAmmo;
     public int maxAmmo;
     public static float shootTimer;
-    public float volume;
 
     // Other Variables
     bool reloading;
@@ -78,20 +77,17 @@ public class Shooting : MonoBehaviour
     }
     public void changeGun(GunStats gunStats)
     {
-        gunModel.GetComponent<MeshFilter>().sharedMesh = gunStats.gunModel.GetComponent<MeshFilter>().sharedMesh;
-        gunModel.GetComponent<MeshRenderer>().sharedMaterial = gunStats.gunModel.GetComponent<MeshRenderer>().sharedMaterial;
-
-        magModel.GetComponent<MeshFilter>().sharedMesh = gunStats.magModel.GetComponent<MeshFilter>().sharedMesh;
-        magModel.GetComponent<MeshRenderer>().sharedMaterial = gunStats.magModel.GetComponent<MeshRenderer>().sharedMaterial;
-
+        
         currentAmmo = gunStats.currentAmmo;
         magSizeMax = gunStats.magSizeMax;
         maxAmmo = gunStats.maxAmmo;
         bulletScript = gunStats.bullet;
         shootRate = gunStats.shootRate;
         reloadTime = gunStats.reloadTime;
-        aud = gunStats.aud;
-        volume = gunStats.shotSoundVol;
+
+        gunModel.GetComponent<MeshFilter>().sharedMesh = gunStats.gunModel.GetComponentInChildren<MeshFilter>().sharedMesh;
+        gunModel.GetComponent<MeshRenderer>().sharedMaterial = gunStats.gunModel.GetComponentInChildren<MeshRenderer>().sharedMaterial;
+
         changeBullet();
         callAmmo();
     }
@@ -104,7 +100,6 @@ public class Shooting : MonoBehaviour
         {
             shootTimer = 0;
             Instantiate(bullet, shootPos.position, transform.rotation);
-            GameManager.instance.playerScript.playAudio(aud[0], volume);
             currentAmmo = currentAmmo - 1;
             callAmmo();
         }

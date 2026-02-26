@@ -10,14 +10,14 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ac26794e551912b4db37d6875a3c37b8, type: 3}
-  m_Name: Rifle
+  m_Name: SMG
   m_EditorClassIdentifier: Assembly-CSharp::GunStats
-  gunModel: {fileID: 520891507915252271, guid: e4befe794d5f98f488518647af8599eb, type: 3}
-  shootRate: 2
-  magSizeMax: 5
-  reloadTime: 3
-  bullet: {fileID: 11400000, guid: f3287e45abae1b247846225f74a816d0, type: 2}
+  gunModel: {fileID: 3102865621225901255, guid: 9378a1c2952ddd04f88a0d5b995df5ce, type: 3}
+  shootRate: 0.05
+  magSizeMax: 20
+  reloadTime: 2
+  bullet: {fileID: 11400000, guid: 1ff888524cf329943a86e15029fe4f9c, type: 2}
   aud: []
-  currentAmmo: 5
-  maxAmmo: 20
+  currentAmmo: 20
+  maxAmmo: 100
   shotSoundVol: 0
