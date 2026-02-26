@@ -10,7 +10,7 @@ public class GunPickup : MonoBehaviour
 
         if(pick != null )
         {
-            gun.currentAmmo = gun.maxAmmo;
+            gun.currentAmmo = gun.magSizeMax;
             pick.GetGunStats(gun);
             Destroy(gameObject);
         }

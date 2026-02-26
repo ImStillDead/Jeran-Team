@@ -14,12 +14,12 @@ public class Shooting : MonoBehaviour
     [SerializeField] float shootRate;
     [SerializeField] int magSizeMax;
     [SerializeField] float reloadTime;
-    [SerializeField] public GameObject bullet;
+    [SerializeField] GameObject bullet;
     [SerializeField] Transform shootPos;
 
     [SerializeField] AudioClip[] aud;
     [SerializeField] Bullet bulletScript;
-    [SerializeField] GameObject Gun;
+    //[SerializeField] GameObject Gun;
 
     //Public variables
     public int currentAmmo;
@@ -77,12 +77,19 @@ public class Shooting : MonoBehaviour
     }
     public void changeGun(GunStats gunStats)
     {
-        gunModel = gunStats.gunModel;
+        
         currentAmmo = gunStats.currentAmmo;
         magSizeMax = gunStats.magSizeMax;
         maxAmmo = gunStats.maxAmmo;
         bulletScript = gunStats.bullet;
         shootRate = gunStats.shootRate;
+        reloadTime = gunStats.reloadTime;
+
+        gunModel.GetComponent<MeshFilter>().sharedMesh = gunStats.gunModel.GetComponentInChildren<MeshFilter>().sharedMesh;
+        gunModel.GetComponent<MeshRenderer>().sharedMaterial = gunStats.gunModel.GetComponentInChildren<MeshRenderer>().sharedMaterial;
+
+        changeBullet();
+        callAmmo();
     }
 
     public void Shoot()

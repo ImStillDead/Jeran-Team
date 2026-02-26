@@ -3,8 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
+using UnityEngine.Rendering;
 
-public class PlayerController : MonoBehaviour, IDamage, IPickup
+public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
 {
     public PlayerController instancePlayer;
 
@@ -45,7 +46,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup
         isFirstPerson = true;
         updatePlayerUI();
         invPos = 0;
-        changeGun(gunList[0]);
+        //changeGun(gunList[0]);
         torch.SetActive(true);
         torchActive = true;
     }
@@ -61,6 +62,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup
         moveDir = Input.GetAxis("Horizontal") * transform.right + (Input.GetAxis("Vertical") * transform.forward);
         playerController.Move(moveDir * speed * Time.deltaTime);
         Jump();
+        //Shooting.instance.Shoot();
         SwitchWeapon();
         playerController.Move(playerVel * Time.deltaTime);
         playerVel.y -= gravity * Time.deltaTime;
@@ -196,18 +198,27 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup
             }
         }
     }
-    public void changeGun(GunStats gunStats)
+
+    public void GetGunStats(GunStats gun)
     {
-        if (dmgBoosting)
-        {
-            gunList[gunPos].bullet.damageAmount = tempOrginDmg;
-            dmgBoosting = false;
-        }
-        
-        Shooting.instance.changeGun(gunStats);
-        Shooting.instance.changeBullet();
-     
+        gunList.Add(gun);
+        gunPos = gunList.Count - 1;
+
+        Shooting.instance.changeGun(gunList[gunPos]);
+
     }
+
+    //public void changeGun(GunStats gunStats)
+    //{
+    //    if (dmgBoosting)
+    //    {
+    //        gunList[gunPos].bullet.damageAmount = tempOrginDmg;
+    //        dmgBoosting = false;
+    //    }
+    //    Shooting.instance.changeGun(gunStats);
+    //    Shooting.instance.changeBullet();
+     
+    //}
     void SwitchWeapon()
     {
         if (Input.GetAxis("Mouse ScrollWheel") > 0 && invPos < itemPickup.Count - 1)
@@ -225,17 +236,17 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup
         if (Input.GetButtonDown("Weapon1"))
         {
             gunPos = 0;
-            changeGun(gunList[gunPos]);
+            Shooting.instance.changeGun(gunList[gunPos]);
         }
         else if (Input.GetButtonDown("Weapon2"))
         {
             gunPos = 1;
-            changeGun(gunList[gunPos]);
+            Shooting.instance.changeGun(gunList[gunPos]);
         }
         else if (Input.GetButtonDown("Weapon3"))
         {
             gunPos = 2;
-            changeGun(gunList[gunPos]);
+            Shooting.instance.changeGun(gunList[gunPos]);
         }
     }
     void WeaponRotate()
