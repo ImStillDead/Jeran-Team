@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
-using UnityEngine.Rendering;
 
 public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
 {
@@ -43,6 +42,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
     void Start()
     {
         HPOrigin = HP;
+        spawnPlayer();
         isFirstPerson = true;
         updatePlayerUI();
         invPos = 0;
@@ -62,7 +62,6 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
         moveDir = Input.GetAxis("Horizontal") * transform.right + (Input.GetAxis("Vertical") * transform.forward);
         playerController.Move(moveDir * speed * Time.deltaTime);
         Jump();
-        //Shooting.instance.Shoot();
         SwitchWeapon();
         playerController.Move(playerVel * Time.deltaTime);
         playerVel.y -= gravity * Time.deltaTime;
@@ -134,6 +133,13 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
             speed /= sprintMod;
         }
     }
+    public void spawnPlayer()
+    {
+        playerController.transform.position = GameManager.instance.playerSpawn.transform.position;
+        Physics.SyncTransforms();
+        HP = HPOrigin;
+        updatePlayerUI();
+    }
     public void pickUpObject(Pickups item)
     {
 
@@ -157,7 +163,8 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
     void changeItem(int pos)
     {
         activePick = itemPickup[pos];
-        GameManager.instance.updateItem(activePick.itemIndex);
+        itemIndex = itemPickup[pos].itemIndex;
+        GameManager.instance.updateItem(itemIndex);
     }
     void useItem()
     {
@@ -172,6 +179,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
         if(activePick.ammo > 0)
         {
             gunList[gunPos].maxAmmo += activePick.ammo;
+            Shooting.instance.callAmmo();
         }
         if(activePick.dmgBoost > 0)
         {
@@ -198,27 +206,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
             }
         }
     }
-
-    public void GetGunStats(GunStats gun)
-    {
-        gunList.Add(gun);
-        gunPos = gunList.Count - 1;
-
-        Shooting.instance.changeGun(gunList[gunPos]);
-
-    }
-
-    //public void changeGun(GunStats gunStats)
-    //{
-    //    if (dmgBoosting)
-    //    {
-    //        gunList[gunPos].bullet.damageAmount = tempOrginDmg;
-    //        dmgBoosting = false;
-    //    }
-    //    Shooting.instance.changeGun(gunStats);
-    //    Shooting.instance.changeBullet();
-     
-    //}
+   
     void SwitchWeapon()
     {
         if (Input.GetAxis("Mouse ScrollWheel") > 0 && invPos < itemPickup.Count - 1)
@@ -264,18 +252,22 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
     }
     void Interact()
     {
-        Debug.DrawRay(Camera.main.transform.position, Camera.main.transform.forward * interactDis, Color.red);
-        RaycastHit interact;
-        if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out interact, interactDis, ~ignoreLayer))
+
+        Vector3 origin = Camera.main.transform.position;
+        Vector3 direction = Camera.main.transform.forward;
+
+        Debug.DrawRay(origin, direction * interactDis, Color.mediumVioletRed);
+
+        if (Physics.Raycast(origin, direction, out RaycastHit hitInter, interactDis))
         {
-
-
-            if(interact.transform.TryGetComponent(out iInteract interactable)) //this wouldnt effect the overall code and allow the use of iInteract items.
+            if (hitInter.collider.TryGetComponent<iInteract>(out var interactable))
             {
+                Debug.Log($"Interacting with {hitInter.collider.name}");
                 interactable.Interacted();
             }
-            
         }
+  
+
     }
     public void takeDamage(int amount)
     {
@@ -325,5 +317,15 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
         speed *= (int)activePick.speedBoost;
         yield return new WaitForSeconds((float)boostTime);
         speed = tempOrginSpeed;
+    }
+
+    public void GetGunStats(GunStats gun)
+    {
+        gunList.Add(gun);
+        gunPos = gunList.Count - 1;
+        if(gunList.Count == 1)
+        {
+            Shooting.instance.changeGun(gunList[gunPos]);
+        }
     }
 }

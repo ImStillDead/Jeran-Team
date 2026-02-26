@@ -15,6 +15,10 @@ public class buttonFunctions : MonoBehaviour
     {
         
     }
+    public void respawn()
+    {
+        GameManager.instance.playerScript.spawnPlayer();
+    }
     public void MainMenu()
     {
         GameManager.instance.loadMain();
