@@ -1,6 +1,7 @@
 using UnityEngine;
 using System.Collections;
 using Unity.VisualScripting;
+using UnityEngine.Rendering;
 
 
 public class Shooting : MonoBehaviour
@@ -10,22 +11,23 @@ public class Shooting : MonoBehaviour
 
     // [SerializeFields] for variables that we want to edit in Unity
     [SerializeField] GameObject gunModel;
-    [SerializeField] GameObject magModel;
     [SerializeField] LayerMask ignoreLayer;
     [SerializeField] float shootRate;
     [SerializeField] int magSizeMax;
     [SerializeField] float reloadTime;
-    [SerializeField] public GameObject bullet;
+    [SerializeField] GameObject bullet;
     [SerializeField] Transform shootPos;
 
     [SerializeField] AudioClip[] aud;
     [SerializeField] Bullet bulletScript;
+    //[SerializeField] GameObject Gun;
 
     //Public variables
     public int currentAmmo;
+    public int startingMaxAmmo;
     public int maxAmmo;
     public static float shootTimer;
-
+    public float volume;
     // Other Variables
     bool reloading;
 
@@ -65,6 +67,7 @@ public class Shooting : MonoBehaviour
     public void callAmmo()
     {
         GameManager.instance.ammocount(currentAmmo, magSizeMax, maxAmmo);
+        GameManager.instance.playerScript.updateGunAmmo();
     }
     // Called in Update if the Fire1 button (Left Click) is pressed
     public void changeBullet()
@@ -77,18 +80,22 @@ public class Shooting : MonoBehaviour
     }
     public void changeGun(GunStats gunStats)
     {
-        gunModel.GetComponent<MeshFilter>().sharedMesh = gunStats.gunModel.GetComponent<MeshFilter>().sharedMesh;
-        gunModel.GetComponent<MeshRenderer>().sharedMaterial = gunStats.gunModel.GetComponent<MeshRenderer>().sharedMaterial;
-
-        magModel.GetComponent<MeshFilter>().sharedMesh = gunStats.magModel.GetComponent<MeshFilter>().sharedMesh;
-        magModel.GetComponent<MeshRenderer>().sharedMaterial = gunStats.magModel.GetComponent<MeshRenderer>().sharedMaterial;
-
+        
         currentAmmo = gunStats.currentAmmo;
         magSizeMax = gunStats.magSizeMax;
         maxAmmo = gunStats.maxAmmo;
         bulletScript = gunStats.bullet;
         shootRate = gunStats.shootRate;
         reloadTime = gunStats.reloadTime;
+        aud = gunStats.aud;
+        volume = gunStats.shotSoundVol;
+        gunModel.GetComponent<MeshFilter>().sharedMesh = gunStats.gunModel.GetComponent<MeshFilter>().sharedMesh;
+        gunModel.GetComponent<MeshRenderer>().sharedMaterial = gunStats.gunModel.GetComponent<MeshRenderer>().sharedMaterial;
+        gunModel.transform.localScale = gunStats.scale;
+        gunModel.transform.localPosition = gunStats.postion;
+        gunModel.transform.localRotation = gunStats.rotation;
+        shootPos.transform.localPosition = gunStats.shootPos.transform.localPosition;
+        shootPos.transform.localRotation = gunStats.shootRotate;
         changeBullet();
         callAmmo();
     }
@@ -100,7 +107,8 @@ public class Shooting : MonoBehaviour
         if(!reloading)
         {
             shootTimer = 0;
-            Instantiate(bullet, shootPos.position, transform.rotation);
+            GameManager.instance.playerScript.playAudio(aud[0], volume);
+            Instantiate(bullet, shootPos.position, shootPos.transform.rotation);
             currentAmmo = currentAmmo - 1;
             callAmmo();
         }

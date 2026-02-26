@@ -5,13 +5,21 @@ using UnityEngine;
 public class GunStats : ScriptableObject
 {
     public GameObject gunModel;
-    public GameObject magModel;
-    [Range(0.5f, 10f)] public float shootRate;
+    public GameObject shootPos;
+
+    [Range(0.05f, 10f)] public float shootRate;
     [Range(1, 500)] public int magSizeMax;
     [Range(0.5f, 10)] public float reloadTime;
+
     public Bullet bullet;
     public AudioClip[] aud;
+    public Vector3 scale;
+    public Vector3 postion;
+    public Quaternion rotation;
+    public Quaternion shootRotate;
     public int currentAmmo;
+
+    [Range(1, 500)] public int startingMaxAmmo;
     [Range(1, 500)] public int maxAmmo;
     AudioClip[] shotSound;
     [Range(0, 1)] public float shotSoundVol;
