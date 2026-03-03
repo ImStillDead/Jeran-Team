@@ -3,7 +3,6 @@ using System.Collections;
 using UnityEngine.AI;
 using UnityEngine.UI;
 
-
 public class EnemyAI : MonoBehaviour, IDamage
 {
     [SerializeField] Renderer model;
@@ -30,6 +29,10 @@ public class EnemyAI : MonoBehaviour, IDamage
     [SerializeField] GameObject enemyHPBar;
     public Image enemyHealth;
 
+    bool hasSpottedPlayer;
+    float timeSinceLastSight;
+    [SerializeField] float forgetPlayerTime = 5f;
+
     float inUseTimer;
     Color colorOrg;
     int HPOrigin;
@@ -51,50 +54,90 @@ public class EnemyAI : MonoBehaviour, IDamage
         stoppingDistanceOrig = agent.stoppingDistance;
         startingPos = transform.position;
         agent.speed = Speed;
+        hasSpottedPlayer = false;
+        timeSinceLastSight = 0f;
+
         if (!isRoaming)
         {
             agent.SetDestination(GameManager.instance.player.transform.position);
         }
     }
+
     void Update()
     {
-
         if (GameManager.instance.objectiveTimer >= 3)
         {
             agent.SetDestination(GameManager.instance.player.transform.position);
         }
-        if (agent.remainingDistance < 0.5f)
+
+        bool canSeePlayer = CanSeePlayer();
+
+        if (canSeePlayer)
         {
-            roamTimer += Time.deltaTime;
-        }
-        if (playerInTrigger && !CanSeePlayer())
-        {
-            CheckRoam();
-        }
-        else if (!playerInTrigger)
-        {
-            CheckRoam();
-            if (!isRoaming)
-            {
-                inUseTimer += Time.deltaTime;
-            }
+
+            hasSpottedPlayer = true;
+            timeSinceLastSight = 0f;
+            playerInTrigger = true;
+            enemyHPBar.SetActive(true);
+
+
+            spitTimer += Time.deltaTime;
+            damageTimer += Time.deltaTime;
+            inUseTimer = 0;
         }
         else
         {
-            spitTimer += Time.deltaTime;
-            damageTimer += Time.deltaTime;
-            if (!isRoaming)
+
+            if (hasSpottedPlayer)
             {
-                inUseTimer = 0;
+                timeSinceLastSight += Time.deltaTime;
+
+                if (timeSinceLastSight < forgetPlayerTime)
+                {
+
+                    agent.SetDestination(GameManager.instance.player.transform.position);
+
+
+                    if (agent.velocity.magnitude > 0.1f)
+                    {
+                        transform.rotation = Quaternion.LookRotation(agent.velocity.normalized);
+                    }
+                }
+                else
+                {
+
+                    hasSpottedPlayer = false;
+                    playerInTrigger = false;
+                    enemyHPBar.SetActive(false);
+                    agent.stoppingDistance = 0;
+                }
+            }
+
+
+            if (!hasSpottedPlayer)
+            {
+                if (agent.remainingDistance < 0.5f)
+                {
+                    roamTimer += Time.deltaTime;
+                }
+
+                CheckRoam();
+
+                if (!isRoaming)
+                {
+                    inUseTimer += Time.deltaTime;
+                }
             }
         }
-        if (inUseTimer > maxLifeTimer && !isRoaming)
+
+
+        if (inUseTimer > maxLifeTimer && !isRoaming && !hasSpottedPlayer)
         {
             GameManager.instance.enemyBoardCount(-1);
             Destroy(gameObject);
         }
     }
-    
+
     void roam()
     {
         roamTimer = 0;
@@ -107,6 +150,7 @@ public class EnemyAI : MonoBehaviour, IDamage
         NavMesh.SamplePosition(randPos, out hit, roamDist, 1);
         agent.SetDestination(hit.position);
     }
+
     void CheckRoam()
     {
         if (agent.remainingDistance < 0.5f && roamTimer >= roamPauseTime)
@@ -114,7 +158,7 @@ public class EnemyAI : MonoBehaviour, IDamage
             roam();
         }
     }
-    
+
     bool CanSeePlayer()
     {
         playerDir = GameManager.instance.player.transform.position - transform.position;
@@ -125,15 +169,17 @@ public class EnemyAI : MonoBehaviour, IDamage
         if (Physics.Raycast(transform.position, playerDir, out hit))
         {
             agent.stoppingDistance = stoppingDistanceOrig;
+
             if (angleToPlayer <= FOV && hit.collider.CompareTag("Player"))
             {
                 agent.SetDestination(GameManager.instance.player.transform.position);
+
                 if (spitTimer >= spitRate && agent.remainingDistance >= meleeDist)
                 {
                     shoot();
                 }
 
-               // neckRotate();
+                neckRotate();
 
                 if (agent.remainingDistance <= agent.stoppingDistance)
                 {
@@ -150,8 +196,8 @@ public class EnemyAI : MonoBehaviour, IDamage
         }
         agent.stoppingDistance = 0;
         return false;
-
     }
+
     void faceTarget()
     {
         Quaternion rot = Quaternion.LookRotation(playerDir);
@@ -163,16 +209,16 @@ public class EnemyAI : MonoBehaviour, IDamage
         if (other.CompareTag("Player"))
         {
             playerInTrigger = true;
+            hasSpottedPlayer = true;
             enemyHPBar.SetActive(true);
         }
     }
+
     private void OnTriggerExit(Collider other)
     {
         if (other.CompareTag("Player"))
         {
             playerInTrigger = false;
-            enemyHPBar.SetActive(false);
-            agent.stoppingDistance = 0;
         }
     }
 
@@ -185,14 +231,17 @@ public class EnemyAI : MonoBehaviour, IDamage
             shoot();
         }
     }
+
     public void takeDamage(int amount)
     {
         HP -= amount;
-        
+
         enemyHealth.fillAmount = (float)HP / HPOrigin;
-       
 
         agent.SetDestination(GameManager.instance.player.transform.position);
+
+        hasSpottedPlayer = true;
+        timeSinceLastSight = 0f;
 
         if (HP <= 0)
         {
@@ -205,25 +254,24 @@ public class EnemyAI : MonoBehaviour, IDamage
             StartCoroutine(FlashRed());
         }
     }
+
     IEnumerator FlashRed()
     {
         model.material.color = Color.red;
         yield return new WaitForSeconds(0.1f);
-        model.material.color= colorOrg;
+        model.material.color = colorOrg;
     }
 
-
-   /* void neckRotate()
+    void neckRotate()
     {
+        if (neckPivot == null) return;
+
         Vector3 directionToPlayer = GameManager.instance.player.transform.position - neckPivot.position;
 
-        float horizontalAngel= Mathf.Atan2(directionToPlayer.x, directionToPlayer.z)*Mathf.Rad2Deg;
-
+        float horizontalAngel = Mathf.Atan2(directionToPlayer.x, directionToPlayer.z) * Mathf.Rad2Deg;
         float verticalAngle = -Mathf.Atan2(directionToPlayer.y, new Vector3(directionToPlayer.x, 0, directionToPlayer.z).magnitude) * Mathf.Rad2Deg;
 
         Quaternion targetRotation = Quaternion.Euler(verticalAngle, horizontalAngel, 0);
-        neckPivot.rotation=Quaternion.RotateTowards(neckPivot.rotation, targetRotation, neckRotationSpeed* Time.deltaTime);
-    }*/
-
-  
+        neckPivot.rotation = Quaternion.RotateTowards(neckPivot.rotation, targetRotation, neckRotationSpeed * Time.deltaTime);
+    }
 }
