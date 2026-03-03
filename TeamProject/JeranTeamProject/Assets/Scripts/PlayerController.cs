@@ -392,11 +392,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
     }
     public void updateGunAmmo()
     {
-
-        if (gunList.Count !> 0)
-        {
-            gunList[gunPos].currentAmmo = Shooting.instance.currentAmmo;
-            gunList[gunPos].maxAmmo = Shooting.instance.maxAmmo;
-        }
+        gunList[gunPos].currentAmmo = Shooting.instance.currentAmmo;
+        gunList[gunPos].maxAmmo = Shooting.instance.maxAmmo;
     }
 }

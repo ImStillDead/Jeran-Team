@@ -19,7 +19,7 @@ public class EnemyAI : MonoBehaviour, IDamage
     [SerializeField] GameObject spit;
     [SerializeField] float spitRate;
     [SerializeField] Transform spitPos;
-    [SerializeField] Transform neckPivot = null;
+    [SerializeField] Transform neckPivot;
     [SerializeField] int neckRotationSpeed;
 
     [SerializeField] int contactDamage;
@@ -224,11 +224,10 @@ public class EnemyAI : MonoBehaviour, IDamage
 
     void shoot()
     {
-        
-
+        spitTimer = 0;
+        Instantiate(spit, spitPos.position, neckPivot.rotation);
         if (spitTimer >= spitRate)
         {
-            spitTimer = 0;
             shoot();
         }
     }
