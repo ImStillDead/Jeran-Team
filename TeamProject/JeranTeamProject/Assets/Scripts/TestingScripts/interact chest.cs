@@ -47,6 +47,8 @@ public class chest : MonoBehaviour , iInteract
         else if (isOpen == true)
         {
             closeChest();
+
+            if(item != null) 
             item.gameObject.SetActive(false);
         }
     }
