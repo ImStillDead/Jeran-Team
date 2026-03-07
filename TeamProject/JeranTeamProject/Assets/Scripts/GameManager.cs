@@ -83,9 +83,12 @@ public class GameManager : MonoBehaviour
         sceneIndex = SceneManager.GetActiveScene().buildIndex;
 
         player = GameObject.FindWithTag("Player");
-
-        playerScript = player.GetComponent<PlayerController>();
-        playerSpawn = GameObject.FindWithTag("PlayerSpawn");
+        if(player != null)
+        {
+            playerScript = player.GetComponent<PlayerController>();
+            playerSpawn = GameObject.FindWithTag("PlayerSpawn");
+        }
+        
     }
 
 
@@ -102,8 +105,10 @@ public class GameManager : MonoBehaviour
             }
             else if (menuActive == menuPause) stateUnpause();
         }
-
-        startMission();
+        if(player != null)
+        {
+            startMission();
+        }
 
 
     }

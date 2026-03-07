@@ -209,77 +209,46 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
    
     void SwitchWeapon()
     {
-        if(gunList.Count != 0) //gets rid of the outofrange error
+
+        if(Input.GetButtonDown("Swap"))
         {
-
-            if(Input.GetButtonDown("Swap"))
+            if(invPos >= itemList.Count - 1)
             {
-                if(invPos >= itemList.Count - 1)
-                {
-                    invPos = 0;
-                }
-                else
-                {
-                    invPos++;
-                }
+                invPos = 0;
+            }
+            else
+            {
+                invPos++;
+            }
               
-                changeItem(invPos);            
-            }
+            changeItem(invPos);            
+        }
 
-            if(Input.GetAxis("Mouse ScrollWheel") > 0)
-            {
-                if(gunPos >= gunList.Count - 1)
-                {
-                    gunPos = 0;
-                }
-                else
-                {
-                    gunPos++;
-                }
-
-                Shooting.instance.changeGun(gunList[gunPos]);
-            }
-            else if(Input.GetAxis("Mouse ScrollWheel") < 0)
-            {
-                if (gunPos <= 0)
-                {
-                    gunPos = gunList.Count - 1;
-                }
-                else
-                {
-                    gunPos--;
-                }
-
-                Shooting.instance.changeGun(gunList[gunPos]);
-            }
-
-            if (Input.GetButtonDown("Weapon1") && gunList[0] != null)
+        if(Input.GetAxis("Mouse ScrollWheel") > 0)
+        {
+            if(gunPos >= gunList.Count - 1)
             {
                 gunPos = 0;
-                Shooting.instance.changeGun(gunList[gunPos]);
             }
-            else if (Input.GetButtonDown("Weapon2"))
+            else
             {
-                gunPos = 1;
-                if(gunList[1] != null)
-                Shooting.instance.changeGun(gunList[gunPos]);
-            }
-            else if (Input.GetButtonDown("Weapon3") && gunList[2] != null)
-            {
-                gunPos = 2;
-                Shooting.instance.changeGun(gunList[gunPos]);
-            }
-            else if (Input.GetButtonDown("Weapon4") && gunList[3] != null)
-            {
-                gunPos = 3;
-                Shooting.instance.changeGun(gunList[gunPos]);
-            }
-            else if (Input.GetButtonDown("Weapon5") && gunList[4] != null)
-            {
-                gunPos = 4;
-                Shooting.instance.changeGun(gunList[gunPos]);
+                gunPos++;
             }
 
+            Shooting.instance.changeGun(gunList[gunPos]);
+        }
+        else if(Input.GetAxis("Mouse ScrollWheel") < 0)
+        {
+            if (gunPos <= 0)
+            {
+                gunPos = gunList.Count - 1;
+            }
+            else
+            {
+                gunPos--;
+            }
+
+            Shooting.instance.changeGun(gunList[gunPos]);
         }
 
 
@@ -298,7 +267,31 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
         //    GameManager.instance.updateItem(itemIndex);
         //}
         
-
+        if (Input.GetButtonDown("Weapon1"))
+        {
+            gunPos = 0;
+            Shooting.instance.changeGun(gunList[gunPos]);
+        }
+        else if (Input.GetButtonDown("Weapon2"))
+        {
+            gunPos = 1;
+            Shooting.instance.changeGun(gunList[gunPos]);
+        }
+        else if (Input.GetButtonDown("Weapon3"))
+        {
+            gunPos = 2;
+            Shooting.instance.changeGun(gunList[gunPos]);
+        }
+        else if (Input.GetButtonDown("Weapon4"))
+        {
+            gunPos = 3;
+            Shooting.instance.changeGun(gunList[gunPos]);
+        }
+        else if (Input.GetButtonDown("Weapon5"))
+        {
+            gunPos = 4;
+            Shooting.instance.changeGun(gunList[gunPos]);
+        }
     }
     void WeaponRotate()
     {
@@ -401,9 +394,8 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
     {
         if(gunList.Count > 0)
         {
-          gunList[gunPos].currentAmmo = Shooting.instance.currentAmmo;
-          gunList[gunPos].maxAmmo = Shooting.instance.maxAmmo;
+            gunList[gunPos].currentAmmo = Shooting.instance.currentAmmo;
+            gunList[gunPos].maxAmmo = Shooting.instance.maxAmmo;
         }
-
     }
 }
