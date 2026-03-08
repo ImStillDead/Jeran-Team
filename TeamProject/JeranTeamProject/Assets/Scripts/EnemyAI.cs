@@ -225,7 +225,6 @@ public class EnemyAI : MonoBehaviour, IDamage
     void shoot()
     {
         spitTimer = 0;
-        Instantiate(spit, spitPos.position, neckPivot.rotation);
         if (spitTimer >= spitRate)
         {
             shoot();
