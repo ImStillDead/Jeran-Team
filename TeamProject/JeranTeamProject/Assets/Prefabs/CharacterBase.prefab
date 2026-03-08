@@ -509,6 +509,7 @@ MonoBehaviour:
   aud: []
   bulletScript: {fileID: 0}
   currentAmmo: 0
+  startingMaxAmmo: 0
   maxAmmo: 0
   volume: 0
 --- !u!33 &998449188199442081
@@ -518,7 +519,7 @@ MeshFilter:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7173747062603681749}
-  m_Mesh: {fileID: -2159310261947464292, guid: bad3747746f5ca44191bea26b5ce57b8, type: 3}
+  m_Mesh: {fileID: 0}
 --- !u!23 &6896671229704493274
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -708,6 +709,7 @@ GameObject:
   - component: {fileID: 1628329440863234058}
   - component: {fileID: 7198869795535415850}
   - component: {fileID: 7159772785686402321}
+  - component: {fileID: 4150027424000959678}
   m_Layer: 16
   m_Name: FirstPerson
   m_TagString: MainCamera
@@ -845,6 +847,14 @@ MonoBehaviour:
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
   m_Version: 2
+--- !u!81 &4150027424000959678
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8269506281394273731}
+  m_Enabled: 1
 --- !u!1 &8621472841112053527
 GameObject:
   m_ObjectHideFlags: 0

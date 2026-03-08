@@ -29,10 +29,9 @@ public class EnemyAI : MonoBehaviour, IDamage
     [SerializeField] GameObject enemyHPBar;
     public Image enemyHealth;
 
-    
-    bool hasSpottedPlayer;  
-    float timeSinceLastSight; 
-    [SerializeField] float forgetPlayerTime = 5f; 
+    bool hasSpottedPlayer;
+    float timeSinceLastSight;
+    [SerializeField] float forgetPlayerTime = 5f;
 
     float inUseTimer;
     Color colorOrg;
@@ -71,37 +70,34 @@ public class EnemyAI : MonoBehaviour, IDamage
             agent.SetDestination(GameManager.instance.player.transform.position);
         }
 
-       
         bool canSeePlayer = CanSeePlayer();
 
         if (canSeePlayer)
         {
-           
+
             hasSpottedPlayer = true;
             timeSinceLastSight = 0f;
-            playerInTrigger = true; 
+            playerInTrigger = true;
             enemyHPBar.SetActive(true);
 
-            
+
             spitTimer += Time.deltaTime;
             damageTimer += Time.deltaTime;
             inUseTimer = 0;
         }
         else
         {
-            
+
             if (hasSpottedPlayer)
             {
-                
                 timeSinceLastSight += Time.deltaTime;
 
-               
                 if (timeSinceLastSight < forgetPlayerTime)
                 {
-                   
+
                     agent.SetDestination(GameManager.instance.player.transform.position);
 
-                    
+
                     if (agent.velocity.magnitude > 0.1f)
                     {
                         transform.rotation = Quaternion.LookRotation(agent.velocity.normalized);
@@ -109,7 +105,7 @@ public class EnemyAI : MonoBehaviour, IDamage
                 }
                 else
                 {
-                    
+
                     hasSpottedPlayer = false;
                     playerInTrigger = false;
                     enemyHPBar.SetActive(false);
@@ -117,7 +113,7 @@ public class EnemyAI : MonoBehaviour, IDamage
                 }
             }
 
-            
+
             if (!hasSpottedPlayer)
             {
                 if (agent.remainingDistance < 0.5f)
@@ -134,7 +130,7 @@ public class EnemyAI : MonoBehaviour, IDamage
             }
         }
 
-        
+
         if (inUseTimer > maxLifeTimer && !isRoaming && !hasSpottedPlayer)
         {
             GameManager.instance.enemyBoardCount(-1);
@@ -229,7 +225,6 @@ public class EnemyAI : MonoBehaviour, IDamage
     void shoot()
     {
         spitTimer = 0;
-        Instantiate(spit, spitPos.position, neckPivot.rotation);
         if (spitTimer >= spitRate)
         {
             shoot();

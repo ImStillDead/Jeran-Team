@@ -24,6 +24,7 @@ public class Shooting : MonoBehaviour
 
     //Public variables
     public int currentAmmo;
+    public int startingMaxAmmo;
     public int maxAmmo;
     public static float shootTimer;
     public float volume;
