@@ -37,6 +37,11 @@ public class buttonFunctions : MonoBehaviour
         Application.Quit();
         #endif
     }
+    public void NewGame()
+    {
+
+    }
+
     public void StartGame()
     {
         GameManager.instance.levelSelect(2);
