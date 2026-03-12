@@ -65,7 +65,7 @@ public class GameManager : MonoBehaviour
     public bool objectiveCompleted;
     float timeScaleOrg;
     public float objectiveTimer;
-    //int maxAmmoSize;
+    int maxAmmoSize;
     int magSize;
     int maxMagSize;
     
@@ -165,13 +165,15 @@ public class GameManager : MonoBehaviour
     {
         SceneManager.LoadScene(index);
     }
-    public void ammocount(int mag, int maxMag)
+    public void ammocount(int mag, int maxMag, int maxAmmo)
     {
         magSize = mag;
         maxMagSize = maxMag;
+        maxAmmoSize = maxAmmo;
 
         magazine_text.text = magSize.ToString();
         maxMagsize_text.text = maxMagSize.ToString();
+        maxAmmo_text.text = maxAmmoSize.ToString();
 
     }
     public bool objectiveCheck()

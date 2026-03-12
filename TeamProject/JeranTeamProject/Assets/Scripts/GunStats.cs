@@ -20,7 +20,7 @@ public class GunStats : ScriptableObject
     public int currentAmmo;
 
     [Range(1, 500)] public int startingMaxAmmo;
-    //[Range(1, 500)] public int maxAmmo;
+    [Range(1, 500)] public int maxAmmo;
     AudioClip[] shotSound;
     [Range(0, 1)] public float shotSoundVol;
 
