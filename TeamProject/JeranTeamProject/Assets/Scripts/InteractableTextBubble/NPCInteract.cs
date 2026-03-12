@@ -54,4 +54,5 @@ public class NPCInteract : MonoBehaviour, iInteract
             bubbleObject.SetActive(false);
         }
     }
+    // Im trying this out not sure if it will work, but I want to try to make it so that when the player interacts with the NPC, it will show the bubble for a certain amount of time and then hide it again.
 }
