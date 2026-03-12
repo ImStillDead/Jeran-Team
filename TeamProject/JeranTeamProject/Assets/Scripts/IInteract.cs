@@ -1,8 +1,8 @@
 using UnityEngine;
 
-interface iInteract 
+public interface iInteract 
 {
-    public void Interacted()
+    void Interacted()
     {
 
     }
