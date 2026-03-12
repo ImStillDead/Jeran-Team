@@ -40,16 +40,11 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
     bool torchActive;
     Vector3 moveDir;
     Vector3 playerVel;
+    // Start and Update Functions
     void Start()
     {
-        HPMax = HP;
         spawnPlayer();
-        isFirstPerson = true;
-        updatePlayerUI();
-        invPos = 0;
-        torch.SetActive(true);
-        torchActive = true;
-        if(DataManager.instance.basePlayerStats.Count < 1)
+        if (DataManager.instance.basePlayerStats.Count < 1)
         {
             setBaseStats();
         }
@@ -64,22 +59,22 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
         {
             playerController = instance.GetComponent<CharacterController>();
         }
+        isFirstPerson = true;
         HPMax = HP;
         updatePlayerUI();
     }
-
     void Update()
     {
         Movement();
         WeaponRotate();
         Sprint();
     }
+
+    // Movement and Button Interactions
     void Movement()
     {
         moveDir = Input.GetAxis("Horizontal") * transform.right + (Input.GetAxis("Vertical") * transform.forward);
         playerController.Move(moveDir * speed * Time.deltaTime);
-        Jump();
-        SwitchWeapon();
         playerController.Move(playerVel * Time.deltaTime);
         playerVel.y -= gravity * Time.deltaTime;
         if (playerController.isGrounded)
@@ -87,50 +82,32 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
             jumpCount = 0;
             playerVel = Vector3.zero;
         }
-        if (Input.GetButtonDown("ToggleCamera"))
-        {
-            CameraToggle();
-        }
-        if (Input.GetButtonDown("Interact"))
-        {
-            Interact();
-        }
-        if (activePick != null && Input.GetButtonDown("Use"))
-        {
-            useItem();
-        }
-        if (Input.GetButtonDown("Torch"))
-        {
-            if (torchActive == true)
-            {
-                torch.SetActive(false);
-                torchActive = false;
-            }
-            else
-            {
-                torch.SetActive(true);
-                torchActive = true;
-            }
-        }
+        Jump();
+        ChangeActiveInventory();
+        CameraToggle();
+        Interact();
+        useItem();
+        ToggleTorch();
     }
     void CameraToggle()
     {
-
-        if (isFirstPerson)
+        if (Input.GetButtonDown("ToggleCamera"))
         {
-            weaponPos.transform.Rotate(-4, 4, 0);
-            thirdPersonCamera.SetActive(true);
-            firstPersonCamera.SetActive(false);
-            isFirstPerson = false;
+            if (isFirstPerson)
+            {
+                weaponPos.transform.Rotate(-4, 4, 0);
+                thirdPersonCamera.SetActive(true);
+                firstPersonCamera.SetActive(false);
+                isFirstPerson = false;
+            }
+            else
+            {
+                weaponPos.transform.Rotate(4, -4, 0);
+                firstPersonCamera.SetActive(true);
+                thirdPersonCamera.SetActive(false);
+                isFirstPerson = true;
+            }
         }
-        else
-        {
-            weaponPos.transform.Rotate(4, -4, 0);
-            firstPersonCamera.SetActive(true);
-            thirdPersonCamera.SetActive(false);
-            isFirstPerson = true;
-        }
-        
     }
     void Jump()
     {
@@ -150,89 +127,28 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
             speed /= sprintMod;
         }
     }
-    public void spawnPlayer()
+    void ToggleTorch()
     {
-        playerController.transform.position = GameManager.instance.playerSpawn.transform.position;
-        Physics.SyncTransforms();
-        HP = HPMax;
-        updatePlayerUI();
-    }
-    public void pickUpObject(Pickups item)
-    {
-
-        if (itemList.Contains(item))
+        if (Input.GetButtonDown("Torch"))
         {
-            itemIndex = itemList.IndexOf(item);
-            itemList[itemIndex].uesage++;
-
-        }
-        else
-        {
-            itemList.Add(item);
-            itemIndex = itemList.Count - 1;
-            itemList[itemIndex].uesage = 1;
-        }
-        if(activePick == null)
-        {
-            changeItem(itemIndex);
-        }
-    }
-    void changeItem(int pos)
-    {
-        activePick = itemList[pos];
-        itemIndex = itemList[pos].itemIndex;
-        GameManager.instance.updateItem(itemIndex);
-    }
-    void useItem()
-    {
-        activePick.uesage--;
-        
-        //Healing if used object has health
-        if (activePick.healing > 0)
-        {
-            Heal(activePick.healing);
-        }
-        //add to max ammo
-        if(activePick.ammo > 0)
-        {
-            Shooting.instance.maxAmmo += activePick.ammo;
-            Shooting.instance.callAmmo();
-        }
-        if(activePick.dmgBoost > 0)
-        {
-            StartCoroutine(dmgBoost());
-        }
-        if(activePick.speedBoost > 0)
-        {
-            StartCoroutine(speedBoost());
-        }
-        //Check for usage and remove if no more uses
-        if (activePick.uesage <= 0)
-        {
-            itemList.Remove(activePick);
-            if(itemList.Count > 0)
+            if (torchActive == true)
             {
-                activePick = itemList[itemList.Count - 1];
-                itemIndex = itemList[itemList.Count - 1].itemIndex;
-                GameManager.instance.updateItem(itemIndex);
+                torch.SetActive(false);
+                torchActive = false;
             }
             else
             {
-                activePick = null;
-                GameManager.instance.updateItem(0);
+                torch.SetActive(true);
+                torchActive = true;
             }
         }
     }
-    public void updateGun()
+    void ChangeActiveInventory()
     {
-        Shooting.instance.changeGun(gunPos);
-    }
-    void SwitchWeapon()
-    {
-
-        if(Input.GetButtonDown("Swap"))
+        // Item Swap
+        if (Input.GetButtonDown("Swap"))
         {
-            if(invPos >= itemList.Count - 1)
+            if (invPos >= itemList.Count - 1)
             {
                 invPos = 0;
             }
@@ -240,13 +156,12 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
             {
                 invPos++;
             }
-              
-            changeItem(invPos);            
+            changeItem(invPos);
         }
-
-        if(Input.GetAxis("Mouse ScrollWheel") > 0)
+        // Weapon Scroll
+        if (Input.GetAxis("Mouse ScrollWheel") > 0)
         {
-            if(gunPos >= Shooting.instance.gunList.Count - 1)
+            if (gunPos >= Shooting.instance.gunList.Count - 1)
             {
                 gunPos = 0;
             }
@@ -254,10 +169,9 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
             {
                 gunPos++;
             }
-
             updateGun();
         }
-        else if(Input.GetAxis("Mouse ScrollWheel") < 0)
+        else if (Input.GetAxis("Mouse ScrollWheel") < 0)
         {
             if (gunPos <= 0)
             {
@@ -267,9 +181,9 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
             {
                 gunPos--;
             }
-
             updateGun();
         }
+        // Weapon Select 1-5
         if (Input.GetButtonDown("Weapon1"))
         {
             gunPos = 0;
@@ -296,6 +210,50 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
             Shooting.instance.changeGun(gunPos);
         }
     }
+    void Interact()
+    {
+        if (Input.GetButtonDown("Interact"))
+        {
+            Vector3 origin = Camera.main.transform.position;
+            Vector3 direction = Camera.main.transform.forward;
+
+            Debug.DrawRay(origin, direction * interactDis, Color.mediumVioletRed);
+
+            if (Physics.Raycast(origin, direction, out RaycastHit hitInter, interactDis))
+            {
+                if (hitInter.collider.TryGetComponent<iInteract>(out var interactable))
+                {
+                    Debug.Log($"Interacting with {hitInter.collider.name}");
+                    interactable.Interacted();
+                }
+            }
+        }
+
+    }
+
+    // Gun interactions
+    public void GetGunStats(GunStats gun)
+    {
+        if (Shooting.instance.gunList.Contains(gun))
+        {
+
+        }
+        else
+        {
+            Shooting.instance.gunList.Add(gun);
+            DataManager.instance.currentGuns.Add(gun);
+            gunPos = Shooting.instance.gunList.Count - 1;
+            if (Shooting.instance.gunList.Count == 1)
+            {
+                Shooting.instance.changeGun(gunPos);
+            }
+        }
+
+    }
+    public void updateGun()
+    {
+        Shooting.instance.changeGun(gunPos);
+    }
     void WeaponRotate()
     {
         if (isFirstPerson)
@@ -309,25 +267,8 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
             interactDis = 5;
         }
     }
-    void Interact()
-    {
 
-        Vector3 origin = Camera.main.transform.position;
-        Vector3 direction = Camera.main.transform.forward;
-
-        Debug.DrawRay(origin, direction * interactDis, Color.mediumVioletRed);
-
-        if (Physics.Raycast(origin, direction, out RaycastHit hitInter, interactDis))
-        {
-            if (hitInter.collider.TryGetComponent<iInteract>(out var interactable))
-            {
-                Debug.Log($"Interacting with {hitInter.collider.name}");
-                interactable.Interacted();
-            }
-        }
-  
-
-    }
+    // Health and UI interactions
     public void takeDamage(int amount)
     {
         HP -= amount;
@@ -350,6 +291,86 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
         GameManager.instance.PlayerHP_bar.fillAmount = (float)HP / HPMax;
     }
 
+    // Item Interactions
+    public void pickUpObject(Pickups item)
+    {
+
+        if (itemList.Contains(item))
+        {
+            itemIndex = itemList.IndexOf(item);
+            itemList[itemIndex].uesage++;
+
+        }
+        else
+        {
+            itemList.Add(item);
+            itemIndex = itemList.Count - 1;
+            itemList[itemIndex].uesage = 1;
+        }
+        if (activePick == null)
+        {
+            changeItem(itemIndex);
+        }
+    }
+    void changeItem(int pos)
+    {
+        activePick = itemList[pos];
+        itemIndex = itemList[pos].itemIndex;
+        GameManager.instance.updateItem(itemIndex);
+    }
+    void useItem()
+    {
+        if (activePick != null && Input.GetButtonDown("Use"))
+        {
+            //Healing if used object has health
+            if (activePick.healing > 0)
+            {
+                Heal(activePick.healing);
+                activePick.uesage--;
+            }
+            //add to max ammo
+            if (activePick.ammo > 0)
+            {
+                Shooting.instance.maxAmmo += activePick.ammo;
+                Shooting.instance.callAmmo();
+                activePick.uesage--;
+            }
+            //temp Boost dmg
+            if (activePick.dmgBoost > 0)
+            {
+                if(dmgBoosting == false)
+                {
+                    activePick.uesage--;
+                    StartCoroutine(dmgBoost());
+                }
+            }
+            //temp speed Boost
+            if (activePick.speedBoost > 0)
+            {
+                if(speed == DataManager.instance.currentRunStats[2])
+                {
+                    activePick.uesage--;
+                    StartCoroutine(speedBoost());
+                }
+            }
+            //Check for usage and remove if no more uses
+            if (activePick.uesage <= 0)
+            {
+                itemList.Remove(activePick);
+                if (itemList.Count > 0)
+                {
+                    activePick = itemList[itemList.Count - 1];
+                    itemIndex = itemList[itemList.Count - 1].itemIndex;
+                    GameManager.instance.updateItem(itemIndex);
+                }
+                else
+                {
+                    activePick = null;
+                    GameManager.instance.updateItem(0);
+                }
+            }
+        }
+    }
     public void Heal(int amount)
     {
         HPMax += amount;
@@ -361,10 +382,10 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
     }
     IEnumerator dmgBoost() 
     {
+        dmgBoosting = true;
         tempOrginDmg = Shooting.instance.gunList[gunPos].bullet.damageAmount;
         Shooting.instance.gunList[gunPos].bullet.damageAmount *= (int)activePick.dmgBoost;
         boostTime = activePick.boostDur;
-        dmgBoosting = true;
         yield return new WaitForSeconds(boostTime);
         Shooting.instance.gunList[gunPos].bullet.damageAmount = tempOrginDmg;
         dmgBoosting = false;
@@ -378,29 +399,20 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
         speed = tempOrginSpeed;
     }
 
-    public void GetGunStats(GunStats gun)
+    // World Interactions
+    public void spawnPlayer()
     {
-        if (Shooting.instance.gunList.Contains(gun))
-        {
-
-        }
-        else
-        {
-            Shooting.instance.gunList.Add(gun);
-            DataManager.instance.currentGuns.Add(gun);
-            gunPos = Shooting.instance.gunList.Count - 1;
-            if (Shooting.instance.gunList.Count == 1)
-            {
-                Shooting.instance.changeGun(gunPos);
-            }
-        }
-        
+        playerController.transform.position = GameManager.instance.playerSpawn.transform.position;
+        Physics.SyncTransforms();
+        HP = HPMax;
+        updatePlayerUI();
     }
     public void playAudio(AudioClip clip, float volume)
     {
         aud.PlayOneShot(clip, volume);
     }
 
+    // Data Management
     public void setBaseStats()
     {
         DataManager.instance.basePlayerStats.Add(HPMax);
