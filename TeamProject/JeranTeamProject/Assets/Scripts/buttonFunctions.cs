@@ -26,7 +26,7 @@ public class buttonFunctions : MonoBehaviour
     }
     public void Restart()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        GameManager.instance.playerScript.spawnPlayer();
         GameManager.instance.stateUnpause();
     }
     public void Quit()
@@ -51,6 +51,10 @@ public class buttonFunctions : MonoBehaviour
         int index = SceneManager.GetActiveScene().buildIndex;
         index += 1;
         SceneManager.LoadScene(index);
+        GameManager.instance.stateUnpause();
+        GameManager.instance.resetObjective();
+        GameManager.instance.playerScript.instance.updateGun();
+
     }
     public void levelOne()
     {
