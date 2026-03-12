@@ -864,6 +864,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 9115860967357371619}
+  - component: {fileID: 6891446722502554607}
   - component: {fileID: 2787569801988584938}
   - component: {fileID: 6094603833308852184}
   - component: {fileID: 1015177555335240534}
@@ -897,6 +898,19 @@ Transform:
   - {fileID: 3905308354307749536}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6891446722502554607
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8621472841112053527}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a155524e32b4fb24bbd2e844795e02d0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DoNotDestroy
+  persistentIndex: 1
 --- !u!114 &2787569801988584938
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -927,7 +941,7 @@ MonoBehaviour:
   thirdPersonCamera: {fileID: 3433218060911350080}
   torch: {fileID: 5439904606205444925}
   gunList: []
-  itemPickup: []
+  itemList: []
   aud: {fileID: 8287638095323782048}
 --- !u!33 &6094603833308852184
 MeshFilter:
