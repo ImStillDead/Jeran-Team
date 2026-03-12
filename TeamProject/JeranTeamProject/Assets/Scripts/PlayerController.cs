@@ -175,12 +175,6 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
         {
             Heal(activePick.healing);
         }
-        //add to max ammo
-        if(activePick.ammo > 0)
-        {
-            Shooting.instance.maxAmmo += activePick.ammo;
-            Shooting.instance.callAmmo();
-        }
         if(activePick.dmgBoost > 0)
         {
             StartCoroutine(dmgBoost());
@@ -395,7 +389,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
         if(gunList.Count > 0)
         {
             gunList[gunPos].currentAmmo = Shooting.instance.currentAmmo;
-            gunList[gunPos].maxAmmo = Shooting.instance.maxAmmo;
+           
         }
     }
 }

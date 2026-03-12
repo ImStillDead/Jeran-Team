@@ -25,7 +25,7 @@ public class Shooting : MonoBehaviour
     //Public variables
     public int currentAmmo;
     public int startingMaxAmmo;
-    public int maxAmmo;
+    //public int maxAmmo;
     public static float shootTimer;
     public float volume;
     // Other Variables
@@ -53,12 +53,12 @@ public class Shooting : MonoBehaviour
        
         /*  Checks to see if currentAmmo is less than or equal to 0 and if the player is not reloading.
             If so, it calls the Reload() method(function) */    
-        if (currentAmmo <= 0 && !reloading && maxAmmo > 0)
+        if (currentAmmo <= 0 && !reloading)
         {       
             StartCoroutine(Reload());       
         }
 
-        if(Input.GetButton("Reload") && !reloading && maxAmmo > 0)
+        if(Input.GetButton("Reload") && !reloading)
         {
             StartCoroutine(Reload());
         }
@@ -66,7 +66,7 @@ public class Shooting : MonoBehaviour
     }
     public void callAmmo()
     {
-        GameManager.instance.ammocount(currentAmmo, magSizeMax, maxAmmo);
+        GameManager.instance.ammocount(currentAmmo, magSizeMax);
         GameManager.instance.playerScript.updateGunAmmo();
     }
     // Called in Update if the Fire1 button (Left Click) is pressed
@@ -83,7 +83,7 @@ public class Shooting : MonoBehaviour
         
         currentAmmo = gunStats.currentAmmo;
         magSizeMax = gunStats.magSizeMax;
-        maxAmmo = gunStats.maxAmmo;
+        //maxAmmo = gunStats.maxAmmo;
         bulletScript = gunStats.bullet;
         shootRate = gunStats.shootRate;
         reloadTime = gunStats.reloadTime;
@@ -121,32 +121,13 @@ public class Shooting : MonoBehaviour
         reloading = true;                               // Sets reloading to true to stop the player from firing
 
         yield return new WaitForSeconds(reloadTime);    // Waits for a set amount of time determined by the reloadTime
-        if(maxAmmo >= magSizeMax)                       // check for carried ammo
+        if(currentAmmo > magSizeMax)                       // check for carried ammo
         {
-            maxAmmo -= magSizeMax - currentAmmo;
             currentAmmo = magSizeMax;                   // Sets currentAmmo equal to the max ammo
         }
-        else
+        else if(currentAmmo >= 0)
         {
-            if (currentAmmo > 0)
-            {
-                currentAmmo += maxAmmo;                 //add ammo to current
-                maxAmmo = currentAmmo - magSizeMax;     //subtract extra from current ammo if any;
-                if(currentAmmo > magSizeMax)
-                {
-                    currentAmmo = magSizeMax;               //reset current to max mag size
-                }
-                if(maxAmmo < 0)
-                {
-                    maxAmmo = 0;
-                }
-            }
-            else
-            {
-                currentAmmo = maxAmmo;
-                maxAmmo = 0;
-            }
-            
+            currentAmmo = magSizeMax;
         }
         callAmmo();
         reloading = false;                              // Sets reloading back to false so the player can shoot again
