@@ -76,18 +76,26 @@ public class GameManager : MonoBehaviour
             Time.timeScale = 1f;
         }
 
+        if (instance == null)
+        {
+            instance = this;
+        }
 
-        instance = this;
         timeScaleOrg += Time.timeScale;
 
         sceneIndex = SceneManager.GetActiveScene().buildIndex;
 
-        player = GameObject.FindWithTag("Player");
-        if(player != null)
+        if(player == null)
         {
+            player = GameObject.FindWithTag("Player");
             playerScript = player.GetComponent<PlayerController>();
+        }
+        if (player != null)
+        {
+
             playerSpawn = GameObject.FindWithTag("PlayerSpawn");
         }
+        
         
     }
 
@@ -160,19 +168,7 @@ public class GameManager : MonoBehaviour
     {
         SceneManager.LoadScene(0);
     }
-    public void loadNextScene()
-    {
-        objectiveTimer = 0;
-        sceneIndex += 1;
-        if (sceneIndex > SceneManager.sceneCount)
-        {
-            loadMain();
-        }
-        else
-        {
-            SceneManager.LoadScene(sceneIndex);
-        }
-    }
+
     public void levelSelect(int index)
     {
         SceneManager.LoadScene(index);
@@ -197,6 +193,13 @@ public class GameManager : MonoBehaviour
         }
 
         return objectiveTimer <= 0f;
+    }
+    public void resetObjective()
+    {
+        objectiveCompleted = false;
+        startTimer = false;
+        startMission();
+        
     }
     public void enemyBoardCount(int count)
     {   

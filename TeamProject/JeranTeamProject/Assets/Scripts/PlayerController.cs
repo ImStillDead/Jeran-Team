@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
 {
-    public PlayerController instancePlayer;
+    public PlayerController instance;
 
     [SerializeField] CharacterController playerController;
     [SerializeField] LayerMask ignoreLayer;
@@ -23,11 +23,11 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
     [SerializeField] GameObject firstPersonCamera;
     [SerializeField] GameObject thirdPersonCamera;
     [SerializeField] GameObject torch;
-    [SerializeField] List<GunStats> gunList = new List<GunStats>();
+    //[SerializeField] List<GunStats> gunList = new List<GunStats>();
     [SerializeField] List<Pickups> itemList = new List<Pickups>();
     [SerializeField] AudioSource aud;
     Pickups activePick;
-    int HPOrigin;
+    int HPMax;
     int jumpCount;
     int invPos;
     int gunPos;
@@ -42,13 +42,28 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
     Vector3 playerVel;
     void Start()
     {
-        HPOrigin = HP;
+        
+        HPMax = HP;
         spawnPlayer();
         isFirstPerson = true;
         updatePlayerUI();
         invPos = 0;
         torch.SetActive(true);
         torchActive = true;
+    }
+    void Awake()
+    {
+        if (instance == null)
+        {
+            instance = this;
+        }
+        if(playerController == null)
+        {
+            playerController = instance.GetComponent<CharacterController>();
+        }
+        HPMax = HP;
+        //spawnPlayer();
+        updatePlayerUI();
     }
 
     void Update()
@@ -137,7 +152,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
     {
         playerController.transform.position = GameManager.instance.playerSpawn.transform.position;
         Physics.SyncTransforms();
-        HP = HPOrigin;
+        HP = HPMax;
         updatePlayerUI();
     }
     public void pickUpObject(Pickups item)
@@ -206,7 +221,10 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
             }
         }
     }
-   
+    public void updateGun()
+    {
+        Shooting.instance.changeGun(gunPos);
+    }
     void SwitchWeapon()
     {
 
@@ -226,7 +244,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
 
         if(Input.GetAxis("Mouse ScrollWheel") > 0)
         {
-            if(gunPos >= gunList.Count - 1)
+            if(gunPos >= Shooting.instance.gunList.Count - 1)
             {
                 gunPos = 0;
             }
@@ -235,20 +253,20 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
                 gunPos++;
             }
 
-            Shooting.instance.changeGun(gunList[gunPos]);
+            updateGun();
         }
         else if(Input.GetAxis("Mouse ScrollWheel") < 0)
         {
             if (gunPos <= 0)
             {
-                gunPos = gunList.Count - 1;
+                gunPos = Shooting.instance.gunList.Count - 1;
             }
             else
             {
                 gunPos--;
             }
 
-            Shooting.instance.changeGun(gunList[gunPos]);
+            updateGun();
         }
 
 
@@ -270,27 +288,27 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
         if (Input.GetButtonDown("Weapon1"))
         {
             gunPos = 0;
-            Shooting.instance.changeGun(gunList[gunPos]);
+            Shooting.instance.changeGun(gunPos);
         }
         else if (Input.GetButtonDown("Weapon2"))
         {
             gunPos = 1;
-            Shooting.instance.changeGun(gunList[gunPos]);
+            Shooting.instance.changeGun(gunPos);
         }
         else if (Input.GetButtonDown("Weapon3"))
         {
             gunPos = 2;
-            Shooting.instance.changeGun(gunList[gunPos]);
+            Shooting.instance.changeGun(gunPos);
         }
         else if (Input.GetButtonDown("Weapon4"))
         {
             gunPos = 3;
-            Shooting.instance.changeGun(gunList[gunPos]);
+            Shooting.instance.changeGun(gunPos);
         }
         else if (Input.GetButtonDown("Weapon5"))
         {
             gunPos = 4;
-            Shooting.instance.changeGun(gunList[gunPos]);
+            Shooting.instance.changeGun(gunPos);
         }
     }
     void WeaponRotate()
@@ -344,26 +362,26 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
     }
     public void updatePlayerUI()
     {
-        GameManager.instance.PlayerHP_bar.fillAmount = (float)HP / HPOrigin;
+        GameManager.instance.PlayerHP_bar.fillAmount = (float)HP / HPMax;
     }
 
     public void Heal(int amount)
     {
         HP += amount;
-        if (HP > HPOrigin)
+        if (HP > HPMax)
         {
-            HP = HPOrigin;
+            HP = HPMax;
         }
         updatePlayerUI();
     }
     IEnumerator dmgBoost() 
     {
-        tempOrginDmg = gunList[gunPos].bullet.damageAmount;
-        gunList[gunPos].bullet.damageAmount *= (int)activePick.dmgBoost;
+        tempOrginDmg = Shooting.instance.gunList[gunPos].bullet.damageAmount;
+        Shooting.instance.gunList[gunPos].bullet.damageAmount *= (int)activePick.dmgBoost;
         boostTime = activePick.boostDur;
         dmgBoosting = true;
         yield return new WaitForSeconds(boostTime);
-        gunList[gunPos].bullet.damageAmount = tempOrginDmg;
+        Shooting.instance.gunList[gunPos].bullet.damageAmount = tempOrginDmg;
         dmgBoosting = false;
     }
     IEnumerator speedBoost()
@@ -379,23 +397,16 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
     {
         //gun.rotation = weaponPos.localRotation;
         //gun.postion = weaponPos.transform.position;
-        gunList.Add(gun);
-        gunPos = gunList.Count - 1;
-        if(gunList.Count == 1)
+        Shooting.instance.gunList.Add(gun);
+        gunPos = Shooting.instance.gunList.Count - 1;
+        if(Shooting.instance.gunList.Count == 1)
         {
-            Shooting.instance.changeGun(gunList[gunPos]);
+            Shooting.instance.changeGun(gunPos);
         }
     }
     public void playAudio(AudioClip clip, float volume)
     {
         aud.PlayOneShot(clip, volume);
     }
-    public void updateGunAmmo()
-    {
-        if(gunList.Count > 0)
-        {
-            gunList[gunPos].currentAmmo = Shooting.instance.currentAmmo;
-            gunList[gunPos].maxAmmo = Shooting.instance.maxAmmo;
-        }
-    }
+    
 }

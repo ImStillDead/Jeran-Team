@@ -1,6 +1,7 @@
-using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 using Unity.VisualScripting;
+using UnityEngine;
 using UnityEngine.Rendering;
 
 
@@ -23,6 +24,7 @@ public class Shooting : MonoBehaviour
     //[SerializeField] GameObject Gun;
 
     //Public variables
+    public List<GunStats> gunList = new List<GunStats>();
     public int currentAmmo;
     public int startingMaxAmmo;
     public int maxAmmo;
@@ -30,11 +32,14 @@ public class Shooting : MonoBehaviour
     public float volume;
     // Other Variables
     bool reloading;
-
+    int activeGun;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    void Awake()
     {
-        instance = this;
+        if(instance == null)
+        {
+            instance = this;
+        }
         currentAmmo = magSizeMax;  // Sets currentAmmo equal to the maxAmmo
         callAmmo();
     }
@@ -67,7 +72,11 @@ public class Shooting : MonoBehaviour
     public void callAmmo()
     {
         GameManager.instance.ammocount(currentAmmo, magSizeMax, maxAmmo);
-        GameManager.instance.playerScript.updateGunAmmo();
+        if (gunList.Count > 0)
+        {
+            gunList[activeGun].currentAmmo = currentAmmo;
+            gunList[activeGun].maxAmmo = maxAmmo;
+        }
     }
     // Called in Update if the Fire1 button (Left Click) is pressed
     public void changeBullet()
@@ -78,24 +87,24 @@ public class Shooting : MonoBehaviour
         bullet.GetComponent<Damage>().hitEffect = bulletScript.hitEffect;
         bullet.GetComponent<Damage>().speed = bulletScript.speed;
     }
-    public void changeGun(GunStats gunStats)
+    public void changeGun(int gunPos)
     {
-        
-        currentAmmo = gunStats.currentAmmo;
-        magSizeMax = gunStats.magSizeMax;
-        maxAmmo = gunStats.maxAmmo;
-        bulletScript = gunStats.bullet;
-        shootRate = gunStats.shootRate;
-        reloadTime = gunStats.reloadTime;
-        aud = gunStats.aud;
-        volume = gunStats.shotSoundVol;
-        gunModel.GetComponent<MeshFilter>().sharedMesh = gunStats.gunModel.GetComponent<MeshFilter>().sharedMesh;
-        gunModel.GetComponent<MeshRenderer>().sharedMaterial = gunStats.gunModel.GetComponent<MeshRenderer>().sharedMaterial;
-        gunModel.transform.localScale = gunStats.scale;
-        gunModel.transform.localPosition = gunStats.postion;
-        gunModel.transform.localRotation = gunStats.rotation;
-        shootPos.transform.localPosition = gunStats.shootPos.transform.localPosition;
-        shootPos.transform.localRotation = gunStats.shootRotate;
+        activeGun = gunPos;
+        currentAmmo = gunList[gunPos].currentAmmo;
+        magSizeMax = gunList[gunPos].magSizeMax;
+        maxAmmo = gunList[gunPos].maxAmmo;
+        bulletScript = gunList[gunPos].bullet;
+        shootRate = gunList[gunPos].shootRate;
+        reloadTime = gunList[gunPos].reloadTime;
+        aud = gunList[gunPos].aud;
+        volume = gunList[gunPos].shotSoundVol;
+        gunModel.GetComponent<MeshFilter>().sharedMesh = instance.gunList[gunPos].gunModel.GetComponent<MeshFilter>().sharedMesh;
+        gunModel.GetComponent<MeshRenderer>().sharedMaterial = instance.gunList[gunPos].gunModel.GetComponent<MeshRenderer>().sharedMaterial;
+        gunModel.transform.localScale = gunList[gunPos].scale;
+        gunModel.transform.localPosition = gunList[gunPos].postion;
+        gunModel.transform.localRotation = gunList[gunPos].rotation;
+        shootPos.transform.localPosition = gunList[gunPos].shootPos.transform.localPosition;
+        shootPos.transform.localRotation = gunList[gunPos].shootRotate;
         changeBullet();
         callAmmo();
     }
