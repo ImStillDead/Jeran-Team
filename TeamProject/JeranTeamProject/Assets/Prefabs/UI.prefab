@@ -413,6 +413,52 @@ MonoBehaviour:
   startTimer: 0
   objectiveCompleted: 0
   objectiveTimer: 0
+--- !u!1 &2431465805945855142
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4289762150806742709}
+  - component: {fileID: 7117879445349705014}
+  m_Layer: 0
+  m_Name: DataManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4289762150806742709
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2431465805945855142}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -959.99994, y: -521.5877, z: 0}
+  m_LocalScale: {x: 1.6389244, y: 1.6389244, z: 1.6389244}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3960778526486469259}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &7117879445349705014
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2431465805945855142}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a93aa9686343abd47b7c1600904e401f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DataManager
+  basePlayerStats: 
+  currentRunStats: 
 --- !u!1 &2765127732332320864
 GameObject:
   m_ObjectHideFlags: 0
@@ -753,6 +799,7 @@ RectTransform:
   - {fileID: 5712854556219027761}
   - {fileID: 4866994411928202577}
   - {fileID: 753469375498878925}
+  - {fileID: 4289762150806742709}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}

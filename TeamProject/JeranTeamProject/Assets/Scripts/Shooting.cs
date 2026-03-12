@@ -41,7 +41,6 @@ public class Shooting : MonoBehaviour
             instance = this;
         }
         currentAmmo = magSizeMax;  // Sets currentAmmo equal to the maxAmmo
-        callAmmo();
     }
 
     // Update is called once per frame

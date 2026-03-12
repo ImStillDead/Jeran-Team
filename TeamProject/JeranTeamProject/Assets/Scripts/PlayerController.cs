@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
+using Unity.VisualScripting;
 
 public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
 {
@@ -23,7 +24,6 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
     [SerializeField] GameObject firstPersonCamera;
     [SerializeField] GameObject thirdPersonCamera;
     [SerializeField] GameObject torch;
-    //[SerializeField] List<GunStats> gunList = new List<GunStats>();
     [SerializeField] List<Pickups> itemList = new List<Pickups>();
     [SerializeField] AudioSource aud;
     Pickups activePick;
@@ -42,7 +42,6 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
     Vector3 playerVel;
     void Start()
     {
-        
         HPMax = HP;
         spawnPlayer();
         isFirstPerson = true;
@@ -50,6 +49,10 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
         invPos = 0;
         torch.SetActive(true);
         torchActive = true;
+        if(DataManager.instance.basePlayerStats.Count < 1)
+        {
+            setBaseStats();
+        }
     }
     void Awake()
     {
@@ -62,7 +65,6 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
             playerController = instance.GetComponent<CharacterController>();
         }
         HPMax = HP;
-        //spawnPlayer();
         updatePlayerUI();
     }
 
@@ -268,23 +270,6 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
 
             updateGun();
         }
-
-
-        //if (Input.GetAxis("Mouse ScrollWheel") > 0 && invPos < itemPickup.Count - 1)
-        //{
-        //    invPos++;
-        //    changeItem(invPos);
-        //    itemIndex = activePick.itemIndex;
-        //    GameManager.instance.updateItem(itemIndex);
-        //}
-        //else if (Input.GetAxis("Mouse ScrollWheel") < 0 && invPos > 0)
-        //{
-        //    invPos--;
-        //    changeItem(invPos);
-        //    itemIndex = activePick.itemIndex;
-        //    GameManager.instance.updateItem(itemIndex);
-        //}
-        
         if (Input.GetButtonDown("Weapon1"))
         {
             gunPos = 0;
@@ -367,7 +352,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
 
     public void Heal(int amount)
     {
-        HP += amount;
+        HPMax += amount;
         if (HP > HPMax)
         {
             HP = HPMax;
@@ -395,18 +380,65 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
 
     public void GetGunStats(GunStats gun)
     {
-        //gun.rotation = weaponPos.localRotation;
-        //gun.postion = weaponPos.transform.position;
-        Shooting.instance.gunList.Add(gun);
-        gunPos = Shooting.instance.gunList.Count - 1;
-        if(Shooting.instance.gunList.Count == 1)
+        if (Shooting.instance.gunList.Contains(gun))
         {
-            Shooting.instance.changeGun(gunPos);
+
         }
+        else
+        {
+            Shooting.instance.gunList.Add(gun);
+            DataManager.instance.currentGuns.Add(gun);
+            gunPos = Shooting.instance.gunList.Count - 1;
+            if (Shooting.instance.gunList.Count == 1)
+            {
+                Shooting.instance.changeGun(gunPos);
+            }
+        }
+        
     }
     public void playAudio(AudioClip clip, float volume)
     {
         aud.PlayOneShot(clip, volume);
     }
-    
+
+    public void setBaseStats()
+    {
+        DataManager.instance.basePlayerStats.Add(HPMax);
+        DataManager.instance.basePlayerStats.Add(speed);
+        DataManager.instance.basePlayerStats.Add(jumpMax);
+        DataManager.instance.basePlayerStats.Add(jumpSpeed);
+        updateStats();
+    }
+    public void updateStats()
+    {
+        if (DataManager.instance.currentRunStats.Count < 1)
+        {
+            DataManager.instance.currentRunStats.Add(SceneManager.GetActiveScene().buildIndex);
+            DataManager.instance.currentRunStats.Add(HPMax);
+            DataManager.instance.currentRunStats.Add(speed);
+            DataManager.instance.currentRunStats.Add(jumpMax);
+            DataManager.instance.currentRunStats.Add(jumpSpeed);
+        }
+        else
+        {
+            DataManager.instance.currentRunStats[0] = SceneManager.GetActiveScene().buildIndex;
+            DataManager.instance.currentRunStats[1] = HPMax;
+            DataManager.instance.currentRunStats[2] = speed;
+            DataManager.instance.currentRunStats[3] = jumpMax;
+            DataManager.instance.currentRunStats[4] = jumpSpeed;
+        }
+    }
+    public void getRunStats()
+    {
+        HPMax = DataManager.instance.currentRunStats[1];
+        speed = DataManager.instance.currentRunStats[2];
+        jumpMax = DataManager.instance.currentRunStats[3];
+        jumpSpeed = DataManager.instance.currentRunStats[4];
+        Shooting.instance.gunList.Clear();
+        foreach (var gun in DataManager.instance.currentGuns)
+        {
+            Shooting.instance.gunList.Add(gun);
+        }
+        Shooting.instance.changeGun(gunPos);
+    }
 }
