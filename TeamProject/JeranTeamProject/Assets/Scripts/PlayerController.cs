@@ -27,6 +27,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
     [SerializeField] List<Pickups> itemList = new List<Pickups>();
     [SerializeField] AudioSource aud;
     Pickups activePick;
+    MenuController menus;
     int HPOrigin;
     int jumpCount;
     int invPos;
@@ -332,7 +333,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
         StartCoroutine(flahScreen());
         if (HP <= 0)
         {
-            GameManager.instance.youLose();
+            GameManager.instance.menus.youLose();
         }
 
     }

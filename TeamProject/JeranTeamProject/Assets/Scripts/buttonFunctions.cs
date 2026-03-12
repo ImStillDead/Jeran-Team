@@ -3,9 +3,11 @@ using UnityEngine.SceneManagement;
 
 public class buttonFunctions : MonoBehaviour
 {
+    MenuController menu;
+
     public void resume()
     {
-        GameManager.instance.stateUnpause();
+        GameManager.instance.menus.stateUnpause();
     }
     public void LevelSelect()
     {
@@ -18,7 +20,7 @@ public class buttonFunctions : MonoBehaviour
     public void respawn()
     {
         GameManager.instance.playerScript.spawnPlayer();
-        GameManager.instance.stateUnpause();
+        menu.stateUnpause();
     }
     public void MainMenu()
     {
@@ -27,7 +29,7 @@ public class buttonFunctions : MonoBehaviour
     public void Restart()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
-        GameManager.instance.stateUnpause();
+        GameManager.instance.menus.stateUnpause();
     }
     public void Quit()
     {

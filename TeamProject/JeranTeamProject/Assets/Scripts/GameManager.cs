@@ -1,22 +1,20 @@
 using System.Collections;
+using System.Collections.Generic;
 using TMPro;
+using UnityEditor;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using System.Collections.Generic;
-using UnityEngine.ProBuilder.MeshOperations;
 
 
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
-    [SerializeField] GameObject menuActive;
-    [SerializeField] GameObject menuMain;
-    [SerializeField] GameObject menuPause;
-    [SerializeField] GameObject menuWin;
-    [SerializeField] GameObject menuLose;
-    [SerializeField] GameObject settingsMenu;
+
+
+    public MenuController menus;
     [SerializeField] List<GameObject> itemsCase;
 
     [SerializeField] GameObject VolumeSlider;
@@ -28,7 +26,6 @@ public class GameManager : MonoBehaviour
     [SerializeField] TMP_Text magazine_text;
     [SerializeField] TMP_Text maxMagsize_text;
     [SerializeField] TMP_Text maxAmmo_text;
-    [SerializeField] TMP_Text killCount_text;
     [SerializeField] TMP_Text Objective_timer_text;
 
     [SerializeField] Color activeColor = Color.white;
@@ -48,27 +45,28 @@ public class GameManager : MonoBehaviour
     public Image PlayerHP_bar;
     public GameObject playerDamageFlash;
 
-    
+    public TMP_Text killCount_text;
+
     public GameObject player;
     public PlayerController playerScript;
     public Light objectiveLight;
     public GameObject doorLights;
     public GameObject playerSpawn;
     public GameObject playerCheckpointPop;
-    int sceneIndex;
+    public int sceneIndex;
     int itemIndex;
     public int enemyCount;
     public int killCount;
     public bool canSpawn;
-    public bool isPaused;
     public bool startTimer;
     public bool objectiveCompleted;
-    float timeScaleOrg;
     public float objectiveTimer;
     int maxAmmoSize;
     int magSize;
     int maxMagSize;
-    
+
+
+
     void Awake()
     {
         if(Time.timeScale == 0)
@@ -78,7 +76,6 @@ public class GameManager : MonoBehaviour
 
 
         instance = this;
-        timeScaleOrg += Time.timeScale;
 
         sceneIndex = SceneManager.GetActiveScene().buildIndex;
 
@@ -91,27 +88,38 @@ public class GameManager : MonoBehaviour
         
     }
 
-
+    void Start()
+    {
+        menus = Object.FindAnyObjectByType<MenuController>();
+    }
 
     void Update()
     {
         if (Input.GetButtonDown("Cancel"))
         {
-            if (menuActive == null)
-            {
-                statePause();
-                menuActive = menuPause;
-                menuActive.SetActive(true);
-            }
-            else if (menuActive == menuPause) stateUnpause();
+            Debug.LogWarning("tried opening pause menu");
+            
+            menus.pauseMenu();
+
         }
         if(player != null)
         {
             startMission();
         }
 
-
+        reticle.SetActive(!menus.isPaused);
     }
+
+    public void menuButtonController(GameObject menuNameHere)
+    {
+
+
+        Button firstButton = menuNameHere.GetComponentInChildren<Button>();
+        EventSystem.current.SetSelectedGameObject(null);
+        EventSystem.current.SetSelectedGameObject(firstButton.gameObject);
+
+    }  //gives menus the ability to be controlled by keyboard input, has to be called each time you call a new menu
+
     private void startMission()
     {
         if (startTimer || objectiveCompleted) Objective_timer_text.gameObject.SetActive(true); 
@@ -120,41 +128,71 @@ public class GameManager : MonoBehaviour
         
         if (startTimer)objectiveStartTimer();
     }
+    //public void statePause()
+    //{
+    //    if(reticle != null) reticle.SetActive(false); //
+    //    isPaused = true;
+    //    Time.timeScale = 0;
+    //    Cursor.visible = true;
+    //    Cursor.lockState = CursorLockMode.None;
 
-    public void statePause()
-    {
-        if(reticle != null) reticle.SetActive(false); //
-        isPaused = true;
-        Time.timeScale = 0;
-        Cursor.visible = true;
-        Cursor.lockState = CursorLockMode.None;
-        
-    }
-    public void stateUnpause()
-    {
-        if (reticle != null) reticle.SetActive(true); 
-        isPaused = false;
-        Time.timeScale = timeScaleOrg;
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
+    //}
+    //public void stateUnpause()
+    //{
+    //    if (reticle != null) reticle.SetActive(true); 
+    //    isPaused = false;
+    //    Time.timeScale = timeScaleOrg;
+    //    Cursor.visible = false;
+    //    Cursor.lockState = CursorLockMode.Locked;
 
-        menuActive.SetActive(false);
-        menuActive = null;
+    //    menuActive.SetActive(false);
+    //    menuActive = null;
 
-    }
-    public void youWin()
-    {
-        statePause();
-        menuActive = menuWin;
-        killCount_text.text = killCount.ToString();
-        menuActive.SetActive(true);
-    }
-    public void youLose()
-    {
-         statePause();
-         menuActive = menuLose;
-         menuActive.SetActive(true);
-    }
+    //}
+    //public void pauseMenu()
+    //{
+    //    if (menuActive == null)
+    //    {
+    //        statePause();
+    //        menuActive = menuPause;
+    //        menuActive.SetActive(true);
+
+    //        menuButtonController(menuActive);
+
+
+
+    //    }
+    //    else if (menuActive == menuPause) stateUnpause();
+
+    //    else if (menuActive == settingsMenu)
+    //    {
+    //        settingsMenu.SetActive(false);
+    //        menuActive = null;
+    //        menuActive = menuPause;
+    //        menuPause.SetActive(true);
+    //        menuButtonController(menuPause);
+    //    }
+
+    //}
+    //public void settingMenu()
+    //{
+    //    menuActive = settingsMenu;
+    //    menuButtonController(menuActive);
+    //}
+
+    //public void youWin()
+    //{
+    //    menus.statePause(true);
+    //    menuActive = menuWin;
+    //    killCount_text.text = killCount.ToString();
+    //    menuActive.SetActive(true);
+    //}
+    //public void youLose()
+    //{
+    //     menus.statePause(true);
+    //     menuActive = menuLose;
+    //     menuActive.SetActive(true);
+    //}
     
     public void loadMain()
     {
