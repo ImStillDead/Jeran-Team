@@ -75,16 +75,12 @@ public class GameManager : MonoBehaviour
         {
             Time.timeScale = 1f;
         }
-
         if (instance == null)
         {
             instance = this;
         }
-
         timeScaleOrg += Time.timeScale;
-
         sceneIndex = SceneManager.GetActiveScene().buildIndex;
-
         if(player == null)
         {
             player = GameObject.FindWithTag("Player");
@@ -92,11 +88,8 @@ public class GameManager : MonoBehaviour
         }
         if (player != null)
         {
-
             playerSpawn = GameObject.FindWithTag("PlayerSpawn");
         }
-        
-        
     }
 
 
@@ -148,7 +141,6 @@ public class GameManager : MonoBehaviour
 
         menuActive.SetActive(false);
         menuActive = null;
-
     }
     public void youWin()
     {
