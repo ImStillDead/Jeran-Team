@@ -6,7 +6,7 @@ public class buttonFunctions : MonoBehaviour
 {
     public void resume()
     {
-        GameManager.instance.stateUnpause();
+        GameManager.instance.menus.stateUnpause();
     }
     public void LevelSelect()
     {
@@ -19,7 +19,7 @@ public class buttonFunctions : MonoBehaviour
     public void respawn()
     {
         GameManager.instance.playerScript.spawnPlayer();
-        GameManager.instance.stateUnpause();
+        GameManager.instance.menus.stateUnpause();
     }
     public void MainMenu()
     {
@@ -36,7 +36,7 @@ public class buttonFunctions : MonoBehaviour
         {
             SceneManager.LoadScene(DataManager.instance.currentRunStats[0]);
             GameManager.instance.playerScript.getRunStats();
-            GameManager.instance.stateUnpause();
+            GameManager.instance.menus.stateUnpause();
             GameManager.instance.playerScript.instance.updateGun();
         }
 
@@ -44,7 +44,7 @@ public class buttonFunctions : MonoBehaviour
     public void Restart()
     {
         GameManager.instance.playerScript.spawnPlayer();
-        GameManager.instance.stateUnpause();
+        GameManager.instance.menus.stateUnpause();
     }
     public void Quit()
     {
@@ -68,7 +68,7 @@ public class buttonFunctions : MonoBehaviour
         int index = SceneManager.GetActiveScene().buildIndex;
         index += 1;
         SceneManager.LoadScene(index);
-        GameManager.instance.stateUnpause();
+        GameManager.instance.menus.stateUnpause();
         GameManager.instance.resetObjective();
         GameManager.instance.playerScript.instance.updateStats();
         GameManager.instance.playerScript.instance.updateGun();

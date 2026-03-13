@@ -1,3 +1,4 @@
+using UnityEditor;
 using UnityEngine;
 
 public class LevelDoor : MonoBehaviour
@@ -5,6 +6,8 @@ public class LevelDoor : MonoBehaviour
     [SerializeField] GameObject button;
     [SerializeField] GameObject Lights;
     bool playerInTrigger;
+
+
     void Start()
     {
         GameManager.instance.doorLights = Lights;
@@ -13,7 +16,7 @@ public class LevelDoor : MonoBehaviour
     {
         if (Input.GetButtonDown("Interact") && playerInTrigger && GameManager.instance.objectiveCompleted)
         {
-            GameManager.instance.youWin();
+            GameManager.instance.menus.youWin();
         }
     }
     private void OnTriggerEnter(Collider other)
