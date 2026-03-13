@@ -1,17 +1,19 @@
-using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
+using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
-using Unity.VisualScripting;
 
-public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
+
+public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDash
 {
     public PlayerController instance;
 
     [SerializeField] CharacterController playerController;
     [SerializeField] LayerMask ignoreLayer;
 
+    [Header("Player Stats")]
     [SerializeField] int HP;
     [SerializeField] int speed;
     [SerializeField] int sprintMod;
@@ -20,6 +22,20 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
     [SerializeField] int interactDis;
     [SerializeField] int enemyViewDis;
     [SerializeField] int gravity;
+
+    [Header("Dash Settings")]
+    [SerializeField] float dashForce = 30f;
+    [SerializeField] float dashDur = 0.2f;
+    [SerializeField] float dashCD = 1f; //CD = cooldown
+
+    [Header("Sliding Settings")]
+    [SerializeField] bool canSlide = true;
+    [SerializeField] float slideSpeed = 12f;
+    [SerializeField] float slideDur = 1.5f;
+    [SerializeField] float slideYScale = 0.5f;
+    [SerializeField] float slideCD = 1f;
+
+    [Header("Other Settings")]
     [SerializeField] Transform weaponPos;
     [SerializeField] GameObject firstPersonCamera;
     [SerializeField] GameObject thirdPersonCamera;
@@ -40,6 +56,17 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
     bool torchActive;
     Vector3 moveDir;
     Vector3 playerVel;
+
+    //sliding varibles
+    private Dashing dashingComponent;
+    private bool isSliding;
+    private float slideTimer;
+    private float slideCDTimer;
+    private float originalHeight;
+    private float originalYScale;
+    private Vector3 originalCenter;
+    private CharacterController characterController;
+
     // Start and Update Functions
     void Start()
     {
@@ -59,6 +86,10 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
         {
             playerController = instance.GetComponent<CharacterController>();
         }
+
+        SetupDashing(); 
+        SetupSliding();
+
         isFirstPerson = true;
         HPMax = HP;
         updatePlayerUI();
@@ -73,6 +104,34 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
     // Movement and Button Interactions
     void Movement()
     {
+        HandleSliding();
+
+        if (IsDashing()) // checks dashing
+        {
+            playerController.Move(playerVel * Time.deltaTime);
+            playerVel.y -= gravity * Time.deltaTime;
+            return;
+        }
+
+        if (isSliding) // checks sliding
+        {
+            playerController.Move(playerVel * Time.deltaTime);
+            playerVel.y -= gravity * Time.deltaTime;
+
+            if (playerController.isGrounded)
+            {
+                playerVel = Vector3.zero;
+            }
+            return;
+        }
+        float horizontal = Input.GetAxis("Horizontal");
+        float vertical = Input.GetAxis("Vertical");
+
+        if (horizontal != 0 || vertical != 0)
+        {
+            Debug.Log($"Input detected - H:{horizontal}, V:{vertical}");
+        }
+
         moveDir = Input.GetAxis("Horizontal") * transform.right + (Input.GetAxis("Vertical") * transform.forward);
         playerController.Move(moveDir * speed * Time.deltaTime);
         playerController.Move(playerVel * Time.deltaTime);
@@ -82,6 +141,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
             jumpCount = 0;
             playerVel = Vector3.zero;
         }
+        
         Jump();
         ChangeActiveInventory();
         CameraToggle();
@@ -89,6 +149,136 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
         useItem();
         ToggleTorch();
     }
+
+    void SetupDashing()
+    {
+        dashingComponent = GetComponent<Dashing>();
+        if (dashingComponent == null)
+        {
+            dashingComponent = gameObject.AddComponent<Dashing>();
+        }
+
+        dashingComponent.dashForce = dashForce;
+        dashingComponent.dashDur = dashDur;
+        dashingComponent.dashCD = dashCD;
+    }
+
+    void SetupSliding()
+    {
+        characterController = GetComponent<CharacterController>();
+        originalHeight = characterController.height;
+        originalCenter = characterController.center;
+        originalYScale = transform.localScale.y;
+    }
+
+    void HandleSliding()
+    {
+        // Update cooldown timer
+        if (slideCDTimer > 0)
+            slideCDTimer -= Time.deltaTime;
+
+        float horizontalInput = Input.GetAxisRaw("Horizontal");
+        float verticalInput = Input.GetAxisRaw("Vertical");
+        bool isMoving = (horizontalInput != 0 || verticalInput != 0);
+
+        if (Input.GetButtonDown("Slide") && canSlide && !isSliding && isMoving && slideCDTimer <= 0)
+        {
+            StartSlide();
+        }
+
+        if (Input.GetButtonDown("Slide")&& isSliding)
+        {
+            StopSlide();
+        }
+
+        // Handle sliding movement
+        if (isSliding)
+        {
+            SlidingMovement();
+        }
+    }
+
+    void StartSlide()
+    {
+        isSliding = true;
+        slideTimer = slideDur;
+
+        characterController.height = originalHeight * slideYScale;
+        characterController.center = new Vector3(originalCenter.x, originalCenter.y * slideYScale, originalCenter.z);
+
+    }
+
+    void SlidingMovement()
+    {
+        float horizontalInput = Input.GetAxisRaw("Horizontal");
+        float verticalInput = Input.GetAxisRaw("Vertical");
+        Vector3 moveDirection = transform.right * horizontalInput + transform.forward * verticalInput;
+
+        if (moveDirection.magnitude > 0.1f)
+        {
+            playerController.Move(moveDirection.normalized * slideSpeed * Time.deltaTime);
+        }
+
+        slideTimer -= Time.deltaTime;
+
+        if (slideTimer <= 0)
+        {
+            StopSlide();
+        }
+    }
+
+    void StopSlide()
+    {
+        isSliding = false;
+        slideCDTimer = slideCD;
+
+        characterController.height = originalHeight;
+        characterController.center = originalCenter;
+    }
+
+    public bool IsSliding()
+    {
+        return isSliding;
+    }
+
+    public int GetSpeed()
+    {
+        return speed;
+    }
+
+    public void SetSpeed(int newSpeed)
+    {
+        speed = newSpeed;
+    }
+
+    public int GetJumpSpeed()
+    {
+        return jumpSpeed;
+    }
+
+    public void SetJumpSpeed(int newJumpSpeed)
+    {
+        jumpSpeed = newJumpSpeed;
+    }
+
+    // IDash Implementation
+    public void StartDash()
+    {
+        if (dashingComponent != null)
+            dashingComponent.StartDash();
+    }
+
+    public bool IsDashing()
+    {
+        return dashingComponent != null && dashingComponent.IsDashing();
+    }
+
+    public float GetDashRemainingCooldown()
+    {
+        return dashingComponent != null ? dashingComponent.GetDashRemainingCooldown() : 0f;
+    }
+
+
     void CameraToggle()
     {
         if (Input.GetButtonDown("ToggleCamera"))
@@ -111,7 +301,10 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
     }
     void Jump()
     {
-        if(Input.GetButtonDown("Jump") && jumpCount < jumpMax)
+        if (isSliding)
+            return;
+
+        if (Input.GetButtonDown("Jump") && jumpCount < jumpMax)
         {
             playerVel.y = jumpSpeed;
             jumpCount++;
@@ -119,6 +312,9 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
     }
     void Sprint()
     {
+        if (IsDashing() || isSliding)
+            return;
+
         if (Input.GetButtonDown("Sprint"))
         {
             speed *= sprintMod;
