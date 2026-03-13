@@ -30,6 +30,7 @@ public class NPCInteract : MonoBehaviour, iInteract
     
     public void Interacted()
     {
+        Debug.Log("this charter has been interacted with");
         if (useGameManagerDialog && GameManager.instance != null)
         {
             GameManager.instance.addDialog(message);
