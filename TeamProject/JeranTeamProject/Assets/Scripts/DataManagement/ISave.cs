@@ -2,8 +2,8 @@ using UnityEngine;
 
 public interface ISave
 {
-    void Load();
+    void Load(GameData data);
 
-    void Save(GameData data);
+    void Save(ref GameData data);
 }
     
