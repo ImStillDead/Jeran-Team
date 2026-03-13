@@ -24,22 +24,17 @@ public class buttonFunctions : MonoBehaviour
     public void MainMenu()
     {
         GameManager.instance.loadMain();
-        if(GameManager.instance.playerScript != null)
-        {
-            GameManager.instance.playerScript.updateStats();
-            
-        }
+        Save();
     }
     public void ContinueRun()
     {
-        if (GameManager.instance.player != null)
-        {
-            SceneManager.LoadScene(DataManager.instance.currentRunStats[0]);
-            GameManager.instance.playerScript.getRunStats();
-            GameManager.instance.stateUnpause();
-            GameManager.instance.playerScript.instance.updateGun();
-        }
-
+        GameData load = DataManager.instance.Load();
+        SceneManager.LoadScene(load.sceneIndex);
+    }
+    public void ChooseRun(string fileName)
+    {
+        DataManager.instance.fileName = fileName;
+        DataManager.instance.Load();
     }
     public void Restart()
     {
@@ -48,6 +43,7 @@ public class buttonFunctions : MonoBehaviour
     }
     public void Quit()
     {
+        Save();
         #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
         #else
@@ -68,11 +64,12 @@ public class buttonFunctions : MonoBehaviour
         int index = SceneManager.GetActiveScene().buildIndex;
         index += 1;
         SceneManager.LoadScene(index);
-        GameManager.instance.stateUnpause();
+        GameManager.instance.sceneIndex = index;
         GameManager.instance.resetObjective();
-        GameManager.instance.playerScript.instance.updateStats();
         GameManager.instance.playerScript.instance.updateGun();
-
+        Save();
+        GameManager.instance.playerScript.spawnPlayer();
+        GameManager.instance.stateUnpause();
     }
     public void levelOne()
     {
@@ -89,5 +86,16 @@ public class buttonFunctions : MonoBehaviour
     public void levelFour()
     {
         GameManager.instance.levelSelect(5);
+    }
+    void Save()
+    {
+        GameData current = DataManager.instance.Load();
+        current.gameManager = GameManager.instance;
+        current.player = GameManager.instance.player;
+        current.playerScript = GameManager.instance.playerScript;
+        current.gunData = Shooting.instance;
+        current.sceneIndex = current.gameManager.sceneIndex;
+        current.gameManager.stateUnpause();
+        DataManager.instance.Save(current);
     }
 }

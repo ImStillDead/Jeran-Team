@@ -55,7 +55,7 @@ public class GameManager : MonoBehaviour
     public GameObject doorLights;
     public GameObject playerSpawn;
     public GameObject playerCheckpointPop;
-    int sceneIndex;
+    public int sceneIndex;
     int itemIndex;
     public int enemyCount;
     public int killCount;
@@ -71,6 +71,7 @@ public class GameManager : MonoBehaviour
     
     void Awake()
     {
+        sceneIndex = SceneManager.GetActiveScene().buildIndex;
         if(Time.timeScale == 0)
         {
             Time.timeScale = 1f;
