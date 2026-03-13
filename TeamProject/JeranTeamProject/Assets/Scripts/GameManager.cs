@@ -69,7 +69,8 @@ public class GameManager : MonoBehaviour
 
     void Awake()
     {
-        if (Time.timeScale == 0)
+        sceneIndex = SceneManager.GetActiveScene().buildIndex;
+        if(Time.timeScale == 0)
         {
             Time.timeScale = 1f;
         }

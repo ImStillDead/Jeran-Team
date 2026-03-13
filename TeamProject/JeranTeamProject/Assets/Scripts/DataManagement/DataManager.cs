@@ -1,15 +1,17 @@
 using System.Collections.Generic;
+using System.IO;
 using System.Security.Cryptography;
 using Unity.Properties;
 using UnityEngine;
 
-public class DataManager : MonoBehaviour
+public class DataManager : MonoBehaviour, ISave
 {
     public static DataManager instance;
-    public List<int> basePlayerStats = new List<int>();
-    public List<int> currentRunStats = new List<int>();
-    public List<GunStats> currentGuns = new List<GunStats>();
-    public Quaternion playerPos;
+    private GameData gameData;
+    public string fileName;
+    private string fullPath;
+    FileManager currentLoad;
+   
     void Awake()
     {
         if(instance == null)
@@ -17,6 +19,37 @@ public class DataManager : MonoBehaviour
             instance = this;
         }
     }
+    public void NewGame()
+    {
+        gameData = new GameData();
+        FileManager newFile = new FileManager(Application.persistentDataPath, fileName);
+        newFile.Save(gameData);
+        currentLoad = newFile;
+        fullPath = Path.Combine(Application.persistentDataPath, fileName);
+    }
  
-  
+    public void Save(GameData data)
+    {
+        currentLoad.Save(data);
+    }
+    
+    public GameData Load()
+    {
+        if(currentLoad != new FileManager(Application.persistentDataPath, fileName))
+        {
+            NewGame();
+        }
+        gameData = currentLoad.Load();
+        return gameData;
+    }
+
+    void ISave.Load()
+    {
+        if (currentLoad.dataFileName != fileName)
+        {
+            fullPath = Path.Combine(Application.persistentDataPath, fileName);
+            currentLoad = new FileManager(Application.persistentDataPath, fileName);
+            currentLoad.Load();
+        }
+    }
 }
