@@ -121,8 +121,6 @@ public class GameManager : MonoBehaviour
 
     public void menuButtonController(GameObject menuNameHere)
     {
-
-
         Button firstButton = menuNameHere.GetComponentInChildren<Button>();
         EventSystem.current.SetSelectedGameObject(null);
         EventSystem.current.SetSelectedGameObject(firstButton.gameObject);

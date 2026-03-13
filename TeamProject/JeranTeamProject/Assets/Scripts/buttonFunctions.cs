@@ -43,8 +43,19 @@ public class buttonFunctions : MonoBehaviour
     }
     public void Restart()
     {
-        GameManager.instance.playerScript.spawnPlayer();
-        GameManager.instance.menus.stateUnpause();
+        if (GameManager.instance == null)
+        {
+            Debug.LogError("GameManager.instance is null! Cannot restart.");
+            return;
+        }
+        if (GameManager.instance.playerScript != null)
+        {
+            GameManager.instance.playerScript.spawnPlayer();
+        }
+        if (GameManager.instance.menus != null)
+        {
+            GameManager.instance.menus.stateUnpause();
+        }
     }
     public void Quit()
     {

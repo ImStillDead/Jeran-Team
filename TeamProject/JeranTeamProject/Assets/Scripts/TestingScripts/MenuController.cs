@@ -22,11 +22,14 @@ public class MenuController : MonoBehaviour
 
     GameManager manager;
 
+    private void Awake()
+    {
+        manager = GameManager.instance;
+    }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        manager = GameManager.instance;
         timeScaleOrg = Time.timeScale;
     }
 
@@ -43,8 +46,8 @@ public class MenuController : MonoBehaviour
         }
         else if (menuActive == menuPause)
         {
-            menuActive = null;
             stateUnpause();
+    
         }
 
         manager.menuButtonController(menuActive);
@@ -52,7 +55,6 @@ public class MenuController : MonoBehaviour
     public void exitSubMenu (GameObject menu)
     {
         menu.SetActive(false);
-        menuActive = null;
         menuActive = menuPause;
         menuPause.SetActive(true);
         manager.menuButtonController(menuActive);
