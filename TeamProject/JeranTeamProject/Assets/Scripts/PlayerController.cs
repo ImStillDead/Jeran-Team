@@ -325,13 +325,6 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
                 Heal(activePick.healing);
                 activePick.uesage--;
             }
-            //add to max ammo
-            if (activePick.ammo > 0)
-            {
-                Shooting.instance.maxAmmo += activePick.ammo;
-                Shooting.instance.callAmmo();
-                activePick.uesage--;
-            }
             //temp Boost dmg
             if (activePick.dmgBoost > 0)
             {
