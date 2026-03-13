@@ -28,7 +28,7 @@ public class DataManager : MonoBehaviour, ISave
         fullPath = Path.Combine(Application.persistentDataPath, fileName);
     }
  
-    public void Save(GameData data)
+    public void Save(ref GameData data)
     {
         currentLoad.Save(data);
     }
@@ -43,13 +43,13 @@ public class DataManager : MonoBehaviour, ISave
         return gameData;
     }
 
-    void ISave.Load()
+    void Load(GameData data)
     {
-        if (currentLoad.dataFileName != fileName)
+        if (currentLoad.Load() != data)
         {
             fullPath = Path.Combine(Application.persistentDataPath, fileName);
             currentLoad = new FileManager(Application.persistentDataPath, fileName);
-            currentLoad.Load();
+            gameData = currentLoad.Load(data);
         }
     }
 }
