@@ -45,11 +45,11 @@ public class DataManager : MonoBehaviour, ISave
 
     void ISave.Load()
     {
-        if (currentLoad.dataFileName != fileName)
+        if (currentLoad.Load() != gameData)
         {
             fullPath = Path.Combine(Application.persistentDataPath, fileName);
             currentLoad = new FileManager(Application.persistentDataPath, fileName);
-            currentLoad.Load();
+            gameData = currentLoad.Load();
         }
     }
 }

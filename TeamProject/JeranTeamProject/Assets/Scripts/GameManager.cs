@@ -152,11 +152,11 @@ public class GameManager : MonoBehaviour
     {
         magSize = mag;
         maxMagSize = maxMag;
-        maxAmmoSize = maxAmmo;
+        //maxAmmoSize = maxAmmo;
 
         magazine_text.text = magSize.ToString();
         maxMagsize_text.text = maxMagSize.ToString();
-        maxAmmo_text.text = maxAmmoSize.ToString();
+        //maxAmmo_text.text = maxAmmoSize.ToString();
 
     }
     public bool objectiveCheck()
