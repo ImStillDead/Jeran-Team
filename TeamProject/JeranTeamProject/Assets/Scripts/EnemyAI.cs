@@ -17,6 +17,7 @@ public class EnemyAI : MonoBehaviour, IDamage
     [SerializeField] int roamPauseTime;
 
     [SerializeField] GameObject spit;
+    [SerializeField] bool canSpit = true;
     [SerializeField] float spitRate;
     [SerializeField] Transform spitPos;
     [SerializeField] Transform neckPivot;
@@ -27,6 +28,7 @@ public class EnemyAI : MonoBehaviour, IDamage
     [SerializeField] int meleeDist;
     [SerializeField] int maxLifeTimer;
     [SerializeField] GameObject enemyHPBar;
+
     public Image enemyHealth;
 
     bool hasSpottedPlayer;
@@ -174,7 +176,7 @@ public class EnemyAI : MonoBehaviour, IDamage
             {
                 agent.SetDestination(GameManager.instance.player.transform.position);
 
-                if (spitTimer >= spitRate && agent.remainingDistance >= meleeDist)
+                if (canSpit && spitTimer >= spitRate && agent.remainingDistance >= meleeDist)
                 {
                     shoot();
                 }
@@ -224,11 +226,8 @@ public class EnemyAI : MonoBehaviour, IDamage
 
     void shoot()
     {
+        Instantiate(spit, spitPos.position, spitPos.rotation);
         spitTimer = 0;
-        if (spitTimer >= spitRate)
-        {
-            shoot();
-        }
     }
 
     public void takeDamage(int amount)

@@ -65,7 +65,9 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
     private float originalHeight;
     private float originalYScale;
     private Vector3 originalCenter;
+    private Vector3 slideDirection;
     private CharacterController characterController;
+    private bool slideButtonHeld;
 
     // Start and Update Functions
     void Start()
@@ -115,13 +117,8 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
 
         if (isSliding) // checks sliding
         {
-            playerController.Move(playerVel * Time.deltaTime);
             playerVel.y -= gravity * Time.deltaTime;
-
-            if (playerController.isGrounded)
-            {
-                playerVel = Vector3.zero;
-            }
+            playerController.Move(playerVel * Time.deltaTime);
             return;
         }
         float horizontal = Input.GetAxis("Horizontal");
@@ -173,7 +170,6 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
 
     void HandleSliding()
     {
-        // Update cooldown timer
         if (slideCDTimer > 0)
             slideCDTimer -= Time.deltaTime;
 
@@ -181,17 +177,21 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
         float verticalInput = Input.GetAxisRaw("Vertical");
         bool isMoving = (horizontalInput != 0 || verticalInput != 0);
 
-        if (Input.GetButtonDown("Slide") && canSlide && !isSliding && isMoving && slideCDTimer <= 0)
+        if (isMoving)
+        {
+            slideDirection = (transform.right * horizontalInput + transform.forward * verticalInput).normalized;
+        }
+
+        if (Input.GetButtonDown("Slide") && canSlide && !isSliding && isMoving && slideCDTimer <= 0 && !IsDashing())
         {
             StartSlide();
         }
 
-        if (Input.GetButtonDown("Slide")&& isSliding)
+        if (Input.GetButtonUp("Slide") && isSliding)
         {
             StopSlide();
         }
 
-        // Handle sliding movement
         if (isSliding)
         {
             SlidingMovement();
@@ -202,22 +202,25 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
     {
         isSliding = true;
         slideTimer = slideDur;
+        slideButtonHeld = true;
 
         characterController.height = originalHeight * slideYScale;
-        characterController.center = new Vector3(originalCenter.x, originalCenter.y * slideYScale, originalCenter.z);
 
+        Vector3 newCenter = originalCenter;
+        newCenter.y = originalCenter.y * slideYScale;
+        characterController.center = newCenter;
+
+        transform.localScale = new Vector3(transform.localScale.x, originalYScale * slideYScale, transform.localScale.z);
+
+        Debug.Log("Slide started");
     }
 
     void SlidingMovement()
     {
-        float horizontalInput = Input.GetAxisRaw("Horizontal");
-        float verticalInput = Input.GetAxisRaw("Vertical");
-        Vector3 moveDirection = transform.right * horizontalInput + transform.forward * verticalInput;
+        playerController.Move(slideDirection * slideSpeed * Time.deltaTime);
 
-        if (moveDirection.magnitude > 0.1f)
-        {
-            playerController.Move(moveDirection.normalized * slideSpeed * Time.deltaTime);
-        }
+        playerVel.y -= gravity * Time.deltaTime;
+        playerController.Move(playerVel * Time.deltaTime);
 
         slideTimer -= Time.deltaTime;
 
@@ -231,9 +234,19 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
     {
         isSliding = false;
         slideCDTimer = slideCD;
+        slideButtonHeld = false;
 
         characterController.height = originalHeight;
         characterController.center = originalCenter;
+
+        transform.localScale = new Vector3(transform.localScale.x, originalYScale, transform.localScale.z);
+
+        if (playerController.isGrounded)
+        {
+            playerVel.y = -2f;
+        }
+
+        Debug.Log("Slide stopped");
     }
 
     public bool IsSliding()
@@ -484,7 +497,11 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
     }
     public void updatePlayerUI()
     {
-        GameManager.instance.PlayerHP_bar.fillAmount = (float)HP / HPMax;
+        if (GameManager.instance != null && GameManager.instance.PlayerHP_bar != null)
+        {
+            GameManager.instance.PlayerHP_bar.fillAmount = (float)HP / HPMax;
+        }
+
     }
 
     // Item Interactions
