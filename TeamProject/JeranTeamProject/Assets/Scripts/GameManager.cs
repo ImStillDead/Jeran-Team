@@ -1,22 +1,20 @@
 using System.Collections;
+using System.Collections.Generic;
 using TMPro;
+using UnityEditor;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-using System.Collections.Generic;
-using UnityEngine.ProBuilder.MeshOperations;
 
 
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
-    [SerializeField] GameObject menuActive;
-    [SerializeField] GameObject menuMain;
-    [SerializeField] GameObject menuPause;
-    [SerializeField] GameObject menuWin;
-    [SerializeField] GameObject menuLose;
-    [SerializeField] GameObject settingsMenu;
+
+
+    public MenuController menus;
     [SerializeField] List<GameObject> itemsCase;
 
     [SerializeField] GameObject VolumeSlider;
@@ -28,7 +26,6 @@ public class GameManager : MonoBehaviour
     [SerializeField] TMP_Text magazine_text;
     [SerializeField] TMP_Text maxMagsize_text;
     [SerializeField] TMP_Text maxAmmo_text;
-    [SerializeField] TMP_Text killCount_text;
     [SerializeField] TMP_Text Objective_timer_text;
 
     [SerializeField] Color activeColor = Color.white;
@@ -41,14 +38,15 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] GameObject Objective_prefab;
     [SerializeField] Transform missonParent;
-    public List<TMP_Text> missions = new List<TMP_Text> {}; //wip
+    public List<TMP_Text> missions = new List<TMP_Text> { }; //wip
     int maxTextprefabs = 5;
 
 
     public Image PlayerHP_bar;
     public GameObject playerDamageFlash;
 
-    
+    public TMP_Text killCount_text;
+
     public GameObject player;
     public PlayerController playerScript;
     public Light objectiveLight;
@@ -60,15 +58,15 @@ public class GameManager : MonoBehaviour
     public int enemyCount;
     public int killCount;
     public bool canSpawn;
-    public bool isPaused;
     public bool startTimer;
     public bool objectiveCompleted;
-    float timeScaleOrg;
     public float objectiveTimer;
     int maxAmmoSize;
     int magSize;
     int maxMagSize;
-    
+
+
+
     void Awake()
     {
         sceneIndex = SceneManager.GetActiveScene().buildIndex;
@@ -76,13 +74,20 @@ public class GameManager : MonoBehaviour
         {
             Time.timeScale = 1f;
         }
-        if (instance == null)
-        {
-            instance = this;
-        }
-        timeScaleOrg += Time.timeScale;
+
+        instance = this;
+
         sceneIndex = SceneManager.GetActiveScene().buildIndex;
-        if(player == null)
+
+        player = GameObject.FindWithTag("Player");
+        if (player != null)
+
+            if (instance == null)
+            {
+                instance = this;
+            }
+        sceneIndex = SceneManager.GetActiveScene().buildIndex;
+        if (player == null)
         {
             player = GameObject.FindWithTag("Player");
             playerScript = player.GetComponent<PlayerController>();
@@ -93,70 +98,47 @@ public class GameManager : MonoBehaviour
         }
     }
 
-
+    void Start()
+    {
+        menus = Object.FindAnyObjectByType<MenuController>();
+    }
 
     void Update()
     {
         if (Input.GetButtonDown("Cancel"))
         {
-            if (menuActive == null)
-            {
-                statePause();
-                menuActive = menuPause;
-                menuActive.SetActive(true);
-            }
-            else if (menuActive == menuPause) stateUnpause();
+            Debug.LogWarning("tried opening pause menu");
+
+            menus.pauseMenu();
+
         }
-        if(player != null)
+        if (player != null)
         {
             startMission();
         }
 
-
+        reticle.SetActive(!menus.isPaused);
     }
+
+    public void menuButtonController(GameObject menuNameHere)
+    {
+
+
+        Button firstButton = menuNameHere.GetComponentInChildren<Button>();
+        EventSystem.current.SetSelectedGameObject(null);
+        EventSystem.current.SetSelectedGameObject(firstButton.gameObject);
+
+    }  //gives menus the ability to be controlled by keyboard input, has to be called each time you call a new menu
+
     private void startMission()
     {
-        if (startTimer || objectiveCompleted) Objective_timer_text.gameObject.SetActive(true); 
+        if (startTimer || objectiveCompleted) Objective_timer_text.gameObject.SetActive(true);
 
         else Objective_timer_text.gameObject.SetActive(false);
-        
-        if (startTimer)objectiveStartTimer();
+
+        if (startTimer) objectiveStartTimer();
     }
 
-    public void statePause()
-    {
-        if(reticle != null) reticle.SetActive(false); //
-        isPaused = true;
-        Time.timeScale = 0;
-        Cursor.visible = true;
-        Cursor.lockState = CursorLockMode.None;
-        
-    }
-    public void stateUnpause()
-    {
-        if (reticle != null) reticle.SetActive(true); 
-        isPaused = false;
-        Time.timeScale = timeScaleOrg;
-        Cursor.visible = false;
-        Cursor.lockState = CursorLockMode.Locked;
-
-        menuActive.SetActive(false);
-        menuActive = null;
-    }
-    public void youWin()
-    {
-        statePause();
-        menuActive = menuWin;
-        killCount_text.text = killCount.ToString();
-        menuActive.SetActive(true);
-    }
-    public void youLose()
-    {
-         statePause();
-         menuActive = menuLose;
-         menuActive.SetActive(true);
-    }
-    
     public void loadMain()
     {
         SceneManager.LoadScene(0);
@@ -192,15 +174,16 @@ public class GameManager : MonoBehaviour
         objectiveCompleted = false;
         startTimer = false;
         startMission();
-        
+
     }
     public void enemyBoardCount(int count)
-    {   
+    {
         enemyCount += count;
-        if(enemyCount >= maxSpawn)
+        if (enemyCount >= maxSpawn)
         {
             canSpawn = false;
-        }else if(enemyCount < maxSpawn)
+        }
+        else if (enemyCount < maxSpawn)
         {
             canSpawn = true;
         }
@@ -255,7 +238,7 @@ public class GameManager : MonoBehaviour
 
             Objective_timer_text.color = Color.white;
             addMission("RUN TO THE EXIT");
-            
+
         }
 
     }
@@ -296,7 +279,7 @@ public class GameManager : MonoBehaviour
 
 
         while (missions.Count > maxTextprefabs)
-        {   
+        {
             TMP_Text oldest = missions[0];
             Destroy(oldest);
             missions.RemoveAt(0);
@@ -310,7 +293,7 @@ public class GameManager : MonoBehaviour
 
         amounOfUses++;
 
-        if(amounOfUses  == 1)
+        if (amounOfUses == 1)
         {
             foreach (TMP_Text oldDialog in listofDialog)
             {
@@ -355,8 +338,8 @@ public class GameManager : MonoBehaviour
         }
 
 
-        if(Text != null)
-        Destroy(Text.gameObject);
+        if (Text != null)
+            Destroy(Text.gameObject);
     }
     public void updateItem(int index)
     {

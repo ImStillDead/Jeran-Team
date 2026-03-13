@@ -6,7 +6,7 @@ public class buttonFunctions : MonoBehaviour
 {
     public void resume()
     {
-        GameManager.instance.stateUnpause();
+        GameManager.instance.menus.stateUnpause();
     }
     public void LevelSelect()
     {
@@ -19,7 +19,7 @@ public class buttonFunctions : MonoBehaviour
     public void respawn()
     {
         GameManager.instance.playerScript.spawnPlayer();
-        GameManager.instance.stateUnpause();
+        GameManager.instance.menus.stateUnpause();
     }
     public void MainMenu()
     {
@@ -39,7 +39,7 @@ public class buttonFunctions : MonoBehaviour
     public void Restart()
     {
         GameManager.instance.playerScript.spawnPlayer();
-        GameManager.instance.stateUnpause();
+        GameManager.instance.menus.stateUnpause();
     }
     public void Quit()
     {
@@ -69,7 +69,7 @@ public class buttonFunctions : MonoBehaviour
         GameManager.instance.playerScript.instance.updateGun();
         Save();
         GameManager.instance.playerScript.spawnPlayer();
-        GameManager.instance.stateUnpause();
+        GameManager.instance.menus.stateUnpause();
     }
     public void levelOne()
     {
@@ -95,7 +95,7 @@ public class buttonFunctions : MonoBehaviour
         current.playerScript = GameManager.instance.playerScript;
         current.gunData = Shooting.instance;
         current.sceneIndex = current.gameManager.sceneIndex;
-        current.gameManager.stateUnpause();
+        current.gameManager.menus.stateUnpause();
         DataManager.instance.Save(current);
     }
 }

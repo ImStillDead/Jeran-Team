@@ -273,7 +273,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
         StartCoroutine(flahScreen());
         if (HP <= 0)
         {
-            GameManager.instance.youLose();
+            GameManager.instance.menus.youLose();
         }
 
     }

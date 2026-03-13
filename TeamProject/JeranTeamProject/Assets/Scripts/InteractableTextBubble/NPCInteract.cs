@@ -1,0 +1,57 @@
+using UnityEngine;
+using TMPro;
+
+public class NPCInteract : MonoBehaviour, iInteract
+{
+    [SerializeField] private GameObject bubbleObject;
+    [SerializeField] private TMP_Text bubbleText;
+
+    [TextArea(2, 5)]
+    [SerializeField] private string message = "Hello there.";
+
+    [SerializeField] private bool useWorldBubble = true;
+    [SerializeField] private bool useGameManagerDialog = true;
+
+    private bool bubbleShowing = false;
+
+
+    void Start()
+    {
+        if (bubbleObject != null)
+        {
+            bubbleObject.SetActive(false);
+        }
+        if (bubbleText != null)
+        { 
+            bubbleText.text = message;
+        }
+    }
+
+    
+    public void Interacted()
+    {
+        if (useGameManagerDialog && GameManager.instance != null)
+        {
+            GameManager.instance.addDialog(message);
+        }
+        if (useWorldBubble && bubbleObject != null)
+        {
+            bubbleShowing = !bubbleShowing;
+            bubbleObject.SetActive(bubbleShowing);
+
+            if(bubbleText != null)
+            {
+                bubbleText.text = message;
+            }
+        }
+    }
+
+    public void StopInteraction()
+    {
+        if (bubbleObject != null)
+        {
+            bubbleShowing = false;
+            bubbleObject.SetActive(false);
+        }
+    }
+}
