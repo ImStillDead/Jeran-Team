@@ -326,6 +326,9 @@ public class GameManager : MonoBehaviour
             yield return null;
         }
 
+
+        if (Text != null)
+            Destroy(Text.gameObject);
     }
     public void updateItem(int index)
     {
@@ -361,14 +364,14 @@ public class GameManager : MonoBehaviour
 
      public void guiAlwaysFacePlayer(GameObject obje)
     {
-        Vector3 playDir = GameManager.instance.player.transform.position - transform.position;
+        if (obje == null) return;
 
+
+        Vector3 playDir = player.transform.position - obje.transform.position;
+        
         playDir.y = 0;
 
-        Quaternion rot = Quaternion.LookRotation(playDir);
-        obje.transform.rotation = Quaternion.Slerp(transform.rotation, rot, 2f * Time.deltaTime);
-
-        if (obje == null) return;
+        obje.transform.rotation = Quaternion.LookRotation(-playDir);
 
     }
 
