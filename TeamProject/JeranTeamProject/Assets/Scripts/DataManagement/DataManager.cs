@@ -22,8 +22,8 @@ public class DataManager : MonoBehaviour, ISave
         if (currentLoad == null)
         {
             fullPath = Path.Combine(Application.persistentDataPath, fileName);
-            currentLoad = new FileManager(Application.persistentDataPath, fileName);
-        }
+            currentLoad = new FileManager(Application.persistentDataPath, fileName); //i addded this so it has a file to work off of if there is no save file to begin with, i think newgame should do the same                                                                                            
+        }                                                                            // either which works. - cris
 
     }
     public void NewGame()
@@ -40,9 +40,9 @@ public class DataManager : MonoBehaviour, ISave
         if (currentLoad == null)
         {
             Load();
-            Debug.Log("No save detected, new save has been made" + Application.persistentDataPath);
-        }
-
+            Debug.Log("No save detected, new save has been made" + Application.persistentDataPath); //this one was just to make a save if there wasnt a save yet automaticlly, i also removed
+        }                                                                                           //"ref" from your parameter, since it wasnt being utilized and it was giving me issues for some reason 
+                                                                                                    // can be easily added back of course - cris
         currentLoad.Save(data);
     }
     
@@ -56,7 +56,7 @@ public class DataManager : MonoBehaviour, ISave
         return gameData;
     }
 
-    void ISave.Load(GameData data)
+    void ISave.Load(GameData data) //only added the parameter for the isave function didnt remove it cause thought you were going to do something with it. - cris
     {
         if (currentLoad.dataFileName != fileName)
         {

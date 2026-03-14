@@ -26,10 +26,10 @@ public class MenuController : MonoBehaviour
 
     private void Awake()
     {
-        manager = GameManager.instance;
+        manager = GameManager.instance; //pretty sure this has no uses.
     }
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+
     void Start()
     {
         timeScaleOrg = Time.timeScale;
@@ -39,9 +39,9 @@ public class MenuController : MonoBehaviour
             setMenuButton(menuPause);
             if (EventSystem.current != null)
             {
-                EventSystem.current.SetSelectedGameObject(null);
-                EventSystem.current.SetSelectedGameObject(firstMainButton.gameObject);
-            }
+                EventSystem.current.SetSelectedGameObject(null); 
+                EventSystem.current.SetSelectedGameObject(firstMainButton.gameObject);   //this is so we dont have to click on a button within the main menu and seamlessly use the buttons
+            }                                                                            //only within the main menu of course. 
         }
 
     }
@@ -61,8 +61,8 @@ public class MenuController : MonoBehaviour
 
     public void setMenuButton(GameObject menu)
     {
-        if (menuActive != null) menuActive.SetActive(false);
-
+        if (menuActive != null) menuActive.SetActive(false);  //when making a new button make sure the button that goes is supposed to open the submenu make sure to have this activate as well,
+                                                              // it will update the current active menu which will give you the ability to use controller or keyboard imputs as controlls for the menu.
         menuActive = menu;
         menuActive.SetActive(true);
 
@@ -116,6 +116,6 @@ public class MenuController : MonoBehaviour
         EventSystem.current.SetSelectedGameObject(null);
         EventSystem.current.SetSelectedGameObject(firstButton.gameObject);
 
-    } 
+    } //this is the main function that allows us to use contoller input as controlls for menus.
 
 }

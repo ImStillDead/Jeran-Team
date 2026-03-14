@@ -70,7 +70,7 @@ public class GameManager : MonoBehaviour
 
     void Awake()
     {
-        sceneIndex = SceneManager.GetActiveScene().buildIndex;
+        sceneIndex = SceneManager.GetActiveScene().buildIndex; //did alittle clean up for the awake method, had alot of sceneIndex within it. and mulitple player = gameobject---- 
 
         if(Time.timeScale == 0)
         {
