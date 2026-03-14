@@ -285,7 +285,10 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
     }
     public void updatePlayerUI()
     {
-        GameManager.instance.PlayerHP_bar.fillAmount = (float)HP / HPMax;
+        if (GameManager.instance != null && GameManager.instance.PlayerHP_bar != null)
+        {
+            GameManager.instance.PlayerHP_bar.fillAmount = (float)HP / HPMax;
+        }
     }
 
     // Item Interactions

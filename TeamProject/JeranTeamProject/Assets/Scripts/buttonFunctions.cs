@@ -42,11 +42,23 @@ public class buttonFunctions : MonoBehaviour
     }
     public void Restart()
     {
-        GameManager.instance.playerScript.spawnPlayer();
-
+        if (GameManager.instance == null)
+        {
+            Debug.LogError("GameManager.instance is null! Cannot restart.");
+            return;
+        }
+        if (GameManager.instance.playerScript != null)
+        {
+            GameManager.instance.playerScript.spawnPlayer();
+        }
+        if (GameManager.instance.menus != null)
+        {
+            GameManager.instance.menus.stateUnpause();
+        }
     }
     public void Quit()
     {
+        //Save();
         #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
         #else
@@ -55,14 +67,12 @@ public class buttonFunctions : MonoBehaviour
     }
     public void NewGame()
     {
-        StartGame();
-        DataManager.instance.NewGame();
+
     }
 
     public void StartGame()
     {
         SceneManager.LoadScene(2);
-        GameManager.instance.menus.stateUnpause();
     }
     public void nextLevel()
     {
