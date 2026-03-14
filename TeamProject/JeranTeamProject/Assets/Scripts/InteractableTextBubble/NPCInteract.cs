@@ -53,8 +53,6 @@ public class NPCInteract : MonoBehaviour, iInteract
             manager.addDialog(message);
 
 
-
-
     }
 
     public void StopInteraction()

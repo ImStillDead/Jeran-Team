@@ -83,7 +83,7 @@ public class GameManager : MonoBehaviour
         {
             instance = this;
         }
-        
+
         if (player == null)
         {
             player = GameObject.FindWithTag("Player");
@@ -310,7 +310,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public IEnumerator fadeText(TMP_Text Text, float duration)
+    IEnumerator fadeText(TMP_Text Text, float duration)
     {
         if (Text == null) yield break;
 
@@ -327,27 +327,9 @@ public class GameManager : MonoBehaviour
         }
 
 
+        if (Text != null)
+            Destroy(Text.gameObject);
     }
-
-    //public IEnumerator fadeGui(TMP_Text Text, Graphic image, float duration)
-    //{
-    //    if (Text == null) yield break;
-
-    //    float elapsed = 0f;
-
-    //    Color original = Color.white;
-    //    Color target = Color.clear;
-
-    //    while (elapsed < duration)
-    //    {
-    //        elapsed += Time.deltaTime;
-    //        Text.color = Color.Lerp(original, target, elapsed / duration);
-    //        image.color = Color.Lerp(original, target, elapsed / duration);
-    //        yield return null;
-    //    }
-
-    //}
-
     public void updateItem(int index)
     {
         itemsCase[itemIndex].SetActive(false);
@@ -389,9 +371,7 @@ public class GameManager : MonoBehaviour
         
         playDir.y = 0;
 
-        obje.transform.rotation = Quaternion.LookRotation(playDir);
-
-        Debug.Log("this object " + obje + " is turning");
+        obje.transform.rotation = Quaternion.LookRotation(-playDir);
 
     }
 
