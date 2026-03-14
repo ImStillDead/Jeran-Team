@@ -24,12 +24,8 @@ public class DataManager : MonoBehaviour
         GameData fresh = new GameData();
         FileManager newFile = new FileManager(Application.persistentDataPath, fileName);
         currentLoad = newFile;
-        fullPath = Path.Combine(Application.persistentDataPath, fileName);
-        if(gameData == null)
-        {
-            gameData = new GameData();
-        }
-        Save(fresh);
+        gameData = fresh;
+        
     }
     public void chooseFile(string fileName)
     {
