@@ -12,11 +12,8 @@ public class NPCInteract : MonoBehaviour, iInteract
     [SerializeField] private bool useWorldBubble = true;
     [SerializeField] private bool useGameManagerDialog = true;
 
-    [SerializeField] Transform parentObject;
-
     private bool bubbleShowing = false;
 
-    GameManager manager = GameManager.instance;
 
     void Start()
     {
@@ -33,7 +30,7 @@ public class NPCInteract : MonoBehaviour, iInteract
     
     public void Interacted()
     {
-        Debug.Log("this charter has been interacted with");
+        Debug.Log("this character has been interacted with");
         if (useGameManagerDialog && GameManager.instance != null)
         {
             GameManager.instance.addDialog(message);
@@ -43,12 +40,17 @@ public class NPCInteract : MonoBehaviour, iInteract
             bubbleShowing = !bubbleShowing;
             bubbleObject.SetActive(bubbleShowing);
 
-            manager.guiAlwaysFacePlayer(bubbleObject);
-
             if(bubbleText != null)
             {
                 bubbleText.text = message;
             }
+        }
+    }
+    public void Update()
+    {
+        if (useWorldBubble && bubbleObject != null && bubbleShowing)
+        {
+            GameManager.instance.guiAlwaysFacePlayer(bubbleObject);
         }
     }
 
