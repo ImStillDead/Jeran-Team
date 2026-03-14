@@ -23,28 +23,27 @@ public class buttonFunctions : MonoBehaviour
     }
     public void MainMenu()
     {
+        GameManager.instance.saveCurrentRun();
         GameManager.instance.loadMain();
-        if(GameManager.instance.playerScript != null)
-        {
-            GameManager.instance.playerScript.updateStats();
-            
-        }
     }
     public void ContinueRun()
     {
-        if (GameManager.instance.player != null)
+        if (DataManager.instance.currentLoad != null)
         {
-            SceneManager.LoadScene(DataManager.instance.currentRunStats[0]);
-            GameManager.instance.playerScript.getRunStats();
+            GameData load = DataManager.instance.currentLoad.Load();
+            SceneManager.LoadScene(load.sceneIndex);
             GameManager.instance.menus.stateUnpause();
-            GameManager.instance.playerScript.instance.updateGun();
         }
-
+    }
+    public void ChooseRun(string fileName)
+    {
+        DataManager.instance.fileName = fileName;
+        DataManager.instance.currentLoad.Load();
     }
     public void Restart()
     {
         GameManager.instance.playerScript.spawnPlayer();
-        GameManager.instance.menus.stateUnpause();
+
     }
     public void Quit()
     {
@@ -56,23 +55,26 @@ public class buttonFunctions : MonoBehaviour
     }
     public void NewGame()
     {
-
+        StartGame();
+        DataManager.instance.NewGame();
     }
 
     public void StartGame()
     {
         SceneManager.LoadScene(2);
+        GameManager.instance.menus.stateUnpause();
     }
     public void nextLevel()
     {
         int index = SceneManager.GetActiveScene().buildIndex;
         index += 1;
         SceneManager.LoadScene(index);
-        GameManager.instance.menus.stateUnpause();
+        GameManager.instance.sceneIndex = index;
         GameManager.instance.resetObjective();
-        GameManager.instance.playerScript.instance.updateStats();
         GameManager.instance.playerScript.instance.updateGun();
-
+        GameManager.instance.saveCurrentRun();
+        GameManager.instance.playerScript.spawnPlayer();
+        GameManager.instance.menus.stateUnpause();
     }
     public void levelOne()
     {
@@ -90,4 +92,5 @@ public class buttonFunctions : MonoBehaviour
     {
         GameManager.instance.levelSelect(5);
     }
+    
 }

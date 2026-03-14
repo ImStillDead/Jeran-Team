@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1659726603228183579
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 4132312772176831909, guid: 64b182395c0b6744a920c74bce3ece13, type: 3}
+  m_PrefabInstance: {fileID: 7466875289193135423}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1699816553210522324}
+  m_Layer: 0
+  m_Name: 'Rio (Missing Prefab with guid: 64b182395c0b6744a920c74bce3ece13)'
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1699816553210522324
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 3983322368406506902, guid: 64b182395c0b6744a920c74bce3ece13, type: 3}
+  m_PrefabInstance: {fileID: 7466875289193135423}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1659726603228183579}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.455, z: -0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 9115860967357371619}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &3431709173557266611
 GameObject:
   m_ObjectHideFlags: 0
@@ -508,9 +539,9 @@ MonoBehaviour:
   shootPos: {fileID: 2914670745330331498}
   aud: []
   bulletScript: {fileID: 0}
+  gunList: []
   currentAmmo: 0
   startingMaxAmmo: 0
-  maxAmmo: 0
   volume: 0
 --- !u!33 &998449188199442081
 MeshFilter:
@@ -923,7 +954,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 702bea551e769674e8677faba3484417, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
-  instancePlayer: {fileID: 0}
+  instance: {fileID: 0}
   playerController: {fileID: 7136655406761469723}
   ignoreLayer:
     serializedVersion: 2
@@ -940,7 +971,6 @@ MonoBehaviour:
   firstPersonCamera: {fileID: 8269506281394273731}
   thirdPersonCamera: {fileID: 3433218060911350080}
   torch: {fileID: 5439904606205444925}
-  gunList: []
   itemList: []
   aud: {fileID: 8287638095323782048}
 --- !u!33 &6094603833308852184
@@ -1478,8 +1508,3 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 64b182395c0b6744a920c74bce3ece13, type: 3}
---- !u!4 &1699816553210522324 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 8073086772555192299, guid: 64b182395c0b6744a920c74bce3ece13, type: 3}
-  m_PrefabInstance: {fileID: 7466875289193135423}
-  m_PrefabAsset: {fileID: 0}
