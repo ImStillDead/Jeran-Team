@@ -4,13 +4,13 @@ using System.Security.Cryptography;
 using Unity.Properties;
 using UnityEngine;
 
-public class DataManager : MonoBehaviour
+public class DataManager : MonoBehaviour, ISave
 {
     public static DataManager instance;
     private GameData gameData;
     public string fileName;
     private string fullPath;
-    public FileManager currentLoad;
+    FileManager currentLoad;
    
     void Awake()
     {
@@ -27,33 +27,29 @@ public class DataManager : MonoBehaviour
         currentLoad = newFile;
         fullPath = Path.Combine(Application.persistentDataPath, fileName);
     }
-    public void chooseFile(string fileName)
-    {
-        currentLoad = new FileManager(Application.persistentDataPath, fileName);
-        Load(currentLoad.Load());
-    }
-    public void Load(GameData data)
-    {
-        if(fileName != currentLoad.dataFileName)
-        {
-            NewGame();
-        }
-        else
-        {
-            gameData = data;
-            GameManager.instance.currentGameData = gameData;
-            GameManager.instance.loadCurrentRun();
-        }
-    }
+ 
     public void Save(GameData data)
     {
-        if(currentLoad == null)
+        currentLoad.Save(data);
+    }
+    
+    public GameData Load()
+    {
+        if(currentLoad != new FileManager(Application.persistentDataPath, fileName))
         {
             NewGame();
         }
-        gameData.sceneIndex = data.sceneIndex;
-        gameData.player = data.player;
-        gameData.playerScript = data.playerScript;
-        currentLoad.Save(gameData);
+        gameData = currentLoad.Load();
+        return gameData;
+    }
+
+    void ISave.Load()
+    {
+        if (currentLoad.dataFileName != fileName)
+        {
+            fullPath = Path.Combine(Application.persistentDataPath, fileName);
+            currentLoad = new FileManager(Application.persistentDataPath, fileName);
+            currentLoad.Load();
+        }
     }
 }
