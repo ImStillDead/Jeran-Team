@@ -44,7 +44,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
     // Start and Update Functions
     void Start()
     {
-        //spawnPlayer();
+        spawnPlayer();
     }
     void Awake()
     {
@@ -325,13 +325,6 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
                 Heal(activePick.healing);
                 activePick.uesage--;
             }
-            //add to max ammo
-            if (activePick.ammo > 0)
-            {
-                Shooting.instance.maxAmmo += activePick.ammo;
-                Shooting.instance.callAmmo();
-                activePick.uesage--;
-            }
             //temp Boost dmg
             if (activePick.dmgBoost > 0)
             {
@@ -403,6 +396,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
         Physics.SyncTransforms();
         HP = HPMax;
         updatePlayerUI();
+        GameManager.instance.menus.stateUnpause();
     }
     public void playAudio(AudioClip clip, float volume)
     {
