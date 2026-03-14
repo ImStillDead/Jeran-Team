@@ -10,7 +10,7 @@ public class DataManager : MonoBehaviour, ISave
     private GameData gameData;
     public string fileName;
     private string fullPath;
-    FileManager currentLoad;
+    public FileManager currentLoad;
    
     void Awake()
     {
@@ -18,6 +18,13 @@ public class DataManager : MonoBehaviour, ISave
         {
             instance = this;
         }
+
+        if (currentLoad == null)
+        {
+            fullPath = Path.Combine(Application.persistentDataPath, fileName);
+            currentLoad = new FileManager(Application.persistentDataPath, fileName);
+        }
+
     }
     public void NewGame()
     {
@@ -30,12 +37,18 @@ public class DataManager : MonoBehaviour, ISave
  
     public void Save(GameData data)
     {
+        if (currentLoad == null)
+        {
+            Load();
+            Debug.Log("No save detected, new save has been made" + Application.persistentDataPath);
+        }
+
         currentLoad.Save(data);
     }
     
     public GameData Load()
     {
-        if(currentLoad != new FileManager(Application.persistentDataPath, fileName))
+        if(currentLoad == null)
         {
             NewGame();
         }
@@ -43,7 +56,7 @@ public class DataManager : MonoBehaviour, ISave
         return gameData;
     }
 
-    void ISave.Load()
+    void ISave.Load(GameData data)
     {
         if (currentLoad.dataFileName != fileName)
         {
@@ -52,4 +65,5 @@ public class DataManager : MonoBehaviour, ISave
             currentLoad.Load();
         }
     }
+
 }

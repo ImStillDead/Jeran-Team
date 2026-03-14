@@ -34,11 +34,14 @@ public class MenuController : MonoBehaviour
     {
         timeScaleOrg = Time.timeScale;
 
-        if (menuPause != null && firstMainButton != null)
+        if (menuPause != null && firstMainButton != null )
         {
             setMenuButton(menuPause);
-            EventSystem.current.SetSelectedGameObject(null);
-            EventSystem.current.SetSelectedGameObject(firstMainButton.gameObject);
+            if (EventSystem.current != null)
+            {
+                EventSystem.current.SetSelectedGameObject(null);
+                EventSystem.current.SetSelectedGameObject(firstMainButton.gameObject);
+            }
         }
 
     }
@@ -85,8 +88,11 @@ public class MenuController : MonoBehaviour
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
 
-        menuActive.SetActive(false);
-        menuActive = null;
+        if (menuActive != null)
+        {
+            menuActive.SetActive(false);
+            menuActive = null;
+        }
     }
 
     public void youWin()

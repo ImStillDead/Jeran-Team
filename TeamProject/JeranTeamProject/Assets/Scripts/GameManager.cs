@@ -71,6 +71,7 @@ public class GameManager : MonoBehaviour
     void Awake()
     {
         sceneIndex = SceneManager.GetActiveScene().buildIndex;
+
         if(Time.timeScale == 0)
         {
             Time.timeScale = 1f;
@@ -78,16 +79,11 @@ public class GameManager : MonoBehaviour
 
         instance = this;
 
-        sceneIndex = SceneManager.GetActiveScene().buildIndex;
+        if (instance == null)
+        {
+            instance = this;
+        }
 
-        player = GameObject.FindWithTag("Player");
-        if (player != null)
-
-            if (instance == null)
-            {
-                instance = this;
-            }
-        sceneIndex = SceneManager.GetActiveScene().buildIndex;
         if (player == null)
         {
             player = GameObject.FindWithTag("Player");
