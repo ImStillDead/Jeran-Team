@@ -1,8 +1,10 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class MenuController : MonoBehaviour
 {
@@ -10,10 +12,10 @@ public class MenuController : MonoBehaviour
     [SerializeField] GameObject menuActive;
 
 
-    [SerializeField] GameObject menuPause;
+    public GameObject menuPause;
+    [SerializeField] private Button firstMainButton;
     [SerializeField] GameObject menuWin;
     [SerializeField] GameObject menuLose;
-
 
     public bool isPaused;
     float timeScaleOrg;
@@ -31,40 +33,37 @@ public class MenuController : MonoBehaviour
     void Start()
     {
         timeScaleOrg = Time.timeScale;
+
+        if (menuPause != null && firstMainButton != null)
+        {
+            setMenuButton(menuPause);
+            EventSystem.current.SetSelectedGameObject(null);
+            EventSystem.current.SetSelectedGameObject(firstMainButton.gameObject);
+        }
+
     }
 
     public void pauseMenu()
     {
-
-        if (menuActive == null)
-        {
-            statePause(true);
-            menuActive = menuPause;
-            menuActive.SetActive(true);
-            manager.menuButtonController(menuActive);
-
-        }
-        else if (menuActive == menuPause)
+        if (isPaused)
         {
             stateUnpause();
-    
         }
-
-        manager.menuButtonController(menuActive);
+        else
+        {
+            statePause(true);
+            setMenuButton(menuPause);
+        }
     }
-    public void exitSubMenu (GameObject menu)
-    {
-        menu.SetActive(false);
-        menuActive = menuPause;
-        menuPause.SetActive(true);
-        manager.menuButtonController(menuActive);
-        Debug.Log(menuActive + " is active");
 
-    }
-    public void setSubMenuButton(GameObject menu)
+    public void setMenuButton(GameObject menu)
     {
+        if (menuActive != null) menuActive.SetActive(false);
+
         menuActive = menu;
-        manager.menuButtonController(menu);
+        menuActive.SetActive(true);
+
+        menuButtonController(menuActive);
         Debug.Log(menuActive + " is active");
     }
 
@@ -104,5 +103,13 @@ public class MenuController : MonoBehaviour
         menuActive = menuLose;
         menuActive.SetActive(true);
     }
+
+    public void menuButtonController(GameObject menuNameHere)
+    {
+        Button firstButton = menuNameHere.GetComponentInChildren<Button>();
+        EventSystem.current.SetSelectedGameObject(null);
+        EventSystem.current.SetSelectedGameObject(firstButton.gameObject);
+
+    } 
 
 }

@@ -101,17 +101,20 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         menus = Object.FindAnyObjectByType<MenuController>();
+        menus.stateUnpause();
     }
 
     void Update()
     {
         if (Input.GetButtonDown("Cancel"))
         {
-            Debug.LogWarning("tried opening pause menu");
 
             menus.pauseMenu();
 
         }
+        
+
+
         if (player != null)
         {
             startMission();
@@ -120,14 +123,7 @@ public class GameManager : MonoBehaviour
         reticle.SetActive(!menus.isPaused);
     }
 
-    public void menuButtonController(GameObject menuNameHere)
-    {
-        Button firstButton = menuNameHere.GetComponentInChildren<Button>();
-        EventSystem.current.SetSelectedGameObject(null);
-        EventSystem.current.SetSelectedGameObject(firstButton.gameObject);
-
-    }  //gives menus the ability to be controlled by keyboard input, has to be called each time you call a new menu
-
+   
     private void startMission()
     {
         if (startTimer || objectiveCompleted) Objective_timer_text.gameObject.SetActive(true);

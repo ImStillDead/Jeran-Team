@@ -8,7 +8,7 @@ public class DataManager : MonoBehaviour, ISave
 {
     public static DataManager instance;
     private GameData gameData;
-    public string fileName;
+    public string fileName = "saveData.json";
     private string fullPath;
     FileManager currentLoad;
    
@@ -22,24 +22,48 @@ public class DataManager : MonoBehaviour, ISave
     public void NewGame()
     {
         gameData = new GameData();
-        FileManager newFile = new FileManager(Application.persistentDataPath, fileName);
-        newFile.Save(gameData);
-        currentLoad = newFile;
+
+        if (currentLoad == null)
+        {
+            currentLoad = new FileManager(Application.persistentDataPath, fileName);
+        }
+
+        currentLoad.Save(gameData);
         fullPath = Path.Combine(Application.persistentDataPath, fileName);
     }
  
     public void Save(GameData data)
     {
+        if (currentLoad == null)
+        {
+            Debug.LogWarning("FileManager not initialized. Creating a new one.");
+            currentLoad = new FileManager(Application.persistentDataPath, fileName);
+        }
+
+        if (data == null)
+        {
+            Debug.LogWarning("GameData is null. Cannot save.");
+            return;
+        }
+
         currentLoad.Save(data);
+        Debug.Log("Saved to: " + fullPath);
     }
     
     public GameData Load()
     {
-        if(currentLoad != new FileManager(Application.persistentDataPath, fileName))
+        if(currentLoad == null)
+        {
+            currentLoad = new FileManager(Application.persistentDataPath, fileName);
+        }
+        gameData = currentLoad.Load();
+
+        if(gameData == null)
         {
             NewGame();
         }
-        gameData = currentLoad.Load();
+
+
         return gameData;
     }
 
