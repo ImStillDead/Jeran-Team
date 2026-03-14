@@ -326,9 +326,6 @@ public class GameManager : MonoBehaviour
             yield return null;
         }
 
-
-        if (Text != null)
-            Destroy(Text.gameObject);
     }
     public void updateItem(int index)
     {
