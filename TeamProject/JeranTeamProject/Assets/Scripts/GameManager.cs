@@ -102,6 +102,11 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         menus = Object.FindAnyObjectByType<MenuController>();
+        if(playerSpawn == null && player != null)
+        {
+            playerSpawn = GameObject.FindWithTag("PlayerSpawn");
+            playerScript.spawnPlayer();
+        }
     }
 
     void Update()

@@ -43,11 +43,10 @@ public class buttonFunctions : MonoBehaviour
     public void Restart()
     {
         GameManager.instance.playerScript.spawnPlayer();
-        GameManager.instance.menus.stateUnpause();
+
     }
     public void Quit()
     {
-        //Save();
         #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
         #else
@@ -56,12 +55,14 @@ public class buttonFunctions : MonoBehaviour
     }
     public void NewGame()
     {
-
+        StartGame();
+        DataManager.instance.NewGame();
     }
 
     public void StartGame()
     {
         SceneManager.LoadScene(2);
+        GameManager.instance.menus.stateUnpause();
     }
     public void nextLevel()
     {

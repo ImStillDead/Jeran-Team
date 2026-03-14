@@ -21,11 +21,15 @@ public class DataManager : MonoBehaviour
     }
     public void NewGame()
     {
-        gameData = new GameData();
+        GameData fresh = new GameData();
         FileManager newFile = new FileManager(Application.persistentDataPath, fileName);
-        newFile.Save(gameData);
         currentLoad = newFile;
         fullPath = Path.Combine(Application.persistentDataPath, fileName);
+        if(gameData == null)
+        {
+            gameData = new GameData();
+        }
+        Save(fresh);
     }
     public void chooseFile(string fileName)
     {
