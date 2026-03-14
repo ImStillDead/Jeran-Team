@@ -23,18 +23,22 @@ public class buttonFunctions : MonoBehaviour
     }
     public void MainMenu()
     {
+        GameManager.instance.saveCurrentRun();
         GameManager.instance.loadMain();
-        Save();
     }
     public void ContinueRun()
     {
-        GameData load = DataManager.instance.Load();
-        SceneManager.LoadScene(load.sceneIndex);
+        if (DataManager.instance.currentLoad != null)
+        {
+            GameData load = DataManager.instance.currentLoad.Load();
+            SceneManager.LoadScene(load.sceneIndex);
+            GameManager.instance.menus.stateUnpause();
+        }
     }
     public void ChooseRun(string fileName)
     {
         DataManager.instance.fileName = fileName;
-        DataManager.instance.Load();
+        DataManager.instance.currentLoad.Load();
     }
     public void Restart()
     {
@@ -54,7 +58,7 @@ public class buttonFunctions : MonoBehaviour
     }
     public void Quit()
     {
-        Save();
+        //Save();
         #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
         #else
@@ -78,7 +82,7 @@ public class buttonFunctions : MonoBehaviour
         GameManager.instance.sceneIndex = index;
         GameManager.instance.resetObjective();
         GameManager.instance.playerScript.instance.updateGun();
-        Save();
+        GameManager.instance.saveCurrentRun();
         GameManager.instance.playerScript.spawnPlayer();
         GameManager.instance.menus.stateUnpause();
     }
@@ -98,15 +102,5 @@ public class buttonFunctions : MonoBehaviour
     {
         GameManager.instance.levelSelect(5);
     }
-    void Save()
-    {
-        GameData current = DataManager.instance.Load();
-        current.gameManager = GameManager.instance;
-        current.player = GameManager.instance.player;
-        current.playerScript = GameManager.instance.playerScript;
-        current.gunData = Shooting.instance;
-        current.sceneIndex = current.gameManager.sceneIndex;
-        current.gameManager.menus.stateUnpause();
-        DataManager.instance.Save(current);
-    }
+    
 }

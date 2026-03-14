@@ -27,7 +27,6 @@ public class Shooting : MonoBehaviour
     public List<GunStats> gunList = new List<GunStats>();
     public int currentAmmo;
     public int startingMaxAmmo;
-    public int maxAmmo;
     public static float shootTimer;
     public float volume;
     // Other Variables
@@ -57,12 +56,12 @@ public class Shooting : MonoBehaviour
        
         /*  Checks to see if currentAmmo is less than or equal to 0 and if the player is not reloading.
             If so, it calls the Reload() method(function) */    
-        if (currentAmmo <= 0 && !reloading && maxAmmo > 0)
+        if (currentAmmo <= 0 && !reloading)
         {       
             StartCoroutine(Reload());       
         }
 
-        if(Input.GetButton("Reload") && !reloading && maxAmmo > 0)
+        if(Input.GetButton("Reload") && !reloading)
         {
             StartCoroutine(Reload());
         }
@@ -70,12 +69,12 @@ public class Shooting : MonoBehaviour
     }
     public void callAmmo()
     {
-        GameManager.instance.ammocount(currentAmmo, magSizeMax, maxAmmo);
+        GameManager.instance.ammocount(currentAmmo, magSizeMax);
         if (gunList.Count > 0)
         {
             gunList[activeGun].currentAmmo = currentAmmo;
-            gunList[activeGun].maxAmmo = maxAmmo;
         }
+        GameManager.instance.ammocount(currentAmmo, magSizeMax);
     }
     // Called in Update if the Fire1 button (Left Click) is pressed
     public void changeBullet()
@@ -91,7 +90,6 @@ public class Shooting : MonoBehaviour
         activeGun = gunPos;
         currentAmmo = gunList[gunPos].currentAmmo;
         magSizeMax = gunList[gunPos].magSizeMax;
-        maxAmmo = gunList[gunPos].maxAmmo;
         bulletScript = gunList[gunPos].bullet;
         shootRate = gunList[gunPos].shootRate;
         reloadTime = gunList[gunPos].reloadTime;
@@ -115,7 +113,7 @@ public class Shooting : MonoBehaviour
         if(!reloading)
         {
             shootTimer = 0;
-            GameManager.instance.playerScript.playAudio(aud[0], volume);
+            //GameManager.instance.playerScript.playAudio(aud[0], volume);
             Instantiate(bullet, shootPos.position, shootPos.transform.rotation);
             currentAmmo = currentAmmo - 1;
             callAmmo();
@@ -127,35 +125,8 @@ public class Shooting : MonoBehaviour
     IEnumerator Reload()
     {
         reloading = true;                               // Sets reloading to true to stop the player from firing
-
         yield return new WaitForSeconds(reloadTime);    // Waits for a set amount of time determined by the reloadTime
-        if(maxAmmo >= magSizeMax)                       // check for carried ammo
-        {
-            maxAmmo -= magSizeMax - currentAmmo;
-            currentAmmo = magSizeMax;                   // Sets currentAmmo equal to the max ammo
-        }
-        else
-        {
-            if (currentAmmo > 0)
-            {
-                currentAmmo += maxAmmo;                 //add ammo to current
-                maxAmmo = currentAmmo - magSizeMax;     //subtract extra from current ammo if any;
-                if(currentAmmo > magSizeMax)
-                {
-                    currentAmmo = magSizeMax;               //reset current to max mag size
-                }
-                if(maxAmmo < 0)
-                {
-                    maxAmmo = 0;
-                }
-            }
-            else
-            {
-                currentAmmo = maxAmmo;
-                maxAmmo = 0;
-            }
-            
-        }
+        currentAmmo = magSizeMax;                   // Sets currentAmmo equal to the max ammo
         callAmmo();
         reloading = false;                              // Sets reloading back to false so the player can shoot again
     }

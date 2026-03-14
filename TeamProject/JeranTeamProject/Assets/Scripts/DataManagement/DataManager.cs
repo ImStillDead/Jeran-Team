@@ -4,13 +4,13 @@ using System.Security.Cryptography;
 using Unity.Properties;
 using UnityEngine;
 
-public class DataManager : MonoBehaviour, ISave
+public class DataManager : MonoBehaviour
 {
     public static DataManager instance;
     private GameData gameData;
-    public string fileName = "saveData.json";
+    public string fileName;
     private string fullPath;
-    FileManager currentLoad;
+    public FileManager currentLoad;
    
     void Awake()
     {
@@ -22,58 +22,38 @@ public class DataManager : MonoBehaviour, ISave
     public void NewGame()
     {
         gameData = new GameData();
-
-        if (currentLoad == null)
-        {
-            currentLoad = new FileManager(Application.persistentDataPath, fileName);
-        }
-
-        currentLoad.Save(gameData);
+        FileManager newFile = new FileManager(Application.persistentDataPath, fileName);
+        newFile.Save(gameData);
+        currentLoad = newFile;
         fullPath = Path.Combine(Application.persistentDataPath, fileName);
     }
- 
-    public void Save(GameData data)
+    public void chooseFile(string fileName)
     {
-        if (currentLoad == null)
-        {
-            Debug.LogWarning("FileManager not initialized. Creating a new one.");
-            currentLoad = new FileManager(Application.persistentDataPath, fileName);
-        }
-
-        if (data == null)
-        {
-            Debug.LogWarning("GameData is null. Cannot save.");
-            return;
-        }
-
-        currentLoad.Save(data);
-        Debug.Log("Saved to: " + fullPath);
+        currentLoad = new FileManager(Application.persistentDataPath, fileName);
+        Load(currentLoad.Load());
     }
-    
-    public GameData Load()
+    public void Load(GameData data)
     {
-        if(currentLoad == null)
-        {
-            currentLoad = new FileManager(Application.persistentDataPath, fileName);
-        }
-        gameData = currentLoad.Load();
-
-        if(gameData == null)
+        if(fileName != currentLoad.dataFileName)
         {
             NewGame();
         }
-
-
-        return gameData;
-    }
-
-    void ISave.Load()
-    {
-        if (currentLoad.dataFileName != fileName)
+        else
         {
-            fullPath = Path.Combine(Application.persistentDataPath, fileName);
-            currentLoad = new FileManager(Application.persistentDataPath, fileName);
-            currentLoad.Load();
+            gameData = data;
+            GameManager.instance.currentGameData = gameData;
+            GameManager.instance.loadCurrentRun();
         }
+    }
+    public void Save(GameData data)
+    {
+        if(currentLoad == null)
+        {
+            NewGame();
+        }
+        gameData.sceneIndex = data.sceneIndex;
+        gameData.player = data.player;
+        gameData.playerScript = data.playerScript;
+        currentLoad.Save(gameData);
     }
 }
