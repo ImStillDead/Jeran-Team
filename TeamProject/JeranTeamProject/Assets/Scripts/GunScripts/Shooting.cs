@@ -74,6 +74,7 @@ public class Shooting : MonoBehaviour
         {
             gunList[activeGun].currentAmmo = currentAmmo;
         }
+        GameManager.instance.ammocount(currentAmmo, magSizeMax);
     }
     // Called in Update if the Fire1 button (Left Click) is pressed
     public void changeBullet()
@@ -124,18 +125,8 @@ public class Shooting : MonoBehaviour
     IEnumerator Reload()
     {
         reloading = true;                               // Sets reloading to true to stop the player from firing
-
         yield return new WaitForSeconds(reloadTime);    // Waits for a set amount of time determined by the reloadTime
-
-        if (currentAmmo <= 0)
-        {
-            currentAmmo = magSizeMax;
-        }
-        else if (currentAmmo > magSizeMax)
-        {
-            currentAmmo = magSizeMax;
-        }
-
+        currentAmmo = magSizeMax;                   // Sets currentAmmo equal to the max ammo
         callAmmo();
         reloading = false;                              // Sets reloading back to false so the player can shoot again
     }

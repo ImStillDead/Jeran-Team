@@ -47,6 +47,8 @@ public class GameManager : MonoBehaviour
 
     public TMP_Text killCount_text;
 
+    public GameData currentGameData;
+
     public GameObject player;
     public PlayerController playerScript;
     public Light objectiveLight;
@@ -89,11 +91,11 @@ public class GameManager : MonoBehaviour
         if (player == null)
         {
             player = GameObject.FindWithTag("Player");
-            playerScript = player.GetComponent<PlayerController>();
         }
         if (player != null)
         {
             playerSpawn = GameObject.FindWithTag("PlayerSpawn");
+            playerScript = player.GetComponent<PlayerController>();
         }
     }
 
@@ -151,11 +153,9 @@ public class GameManager : MonoBehaviour
     {
         magSize = mag;
         maxMagSize = maxMag;
-        //maxAmmoSize = maxAmmo;
 
         magazine_text.text = magSize.ToString();
         maxMagsize_text.text = maxMagSize.ToString();
-        //maxAmmo_text.text = maxAmmoSize.ToString();
 
     }
     public bool objectiveCheck()
@@ -346,5 +346,21 @@ public class GameManager : MonoBehaviour
         itemIndex = index;
         itemsCase[index].SetActive(true);
     }
-
+    
+    public void saveCurrentRun()
+    {
+        if(currentGameData == null)
+        {
+            currentGameData = new GameData();
+        }
+        currentGameData.sceneIndex = sceneIndex;
+        currentGameData.player = player;
+        currentGameData.playerScript = playerScript;
+        DataManager.instance.Save(currentGameData);
+    }
+    public void loadCurrentRun()
+    {
+        player = currentGameData.player;
+        playerScript = currentGameData.playerScript;
+    }
 }
