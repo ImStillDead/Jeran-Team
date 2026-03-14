@@ -25,7 +25,7 @@ public class DataManager : MonoBehaviour
         FileManager newFile = new FileManager(Application.persistentDataPath, fileName);
         currentLoad = newFile;
         gameData = fresh;
-        
+        Save(fresh);
     }
     public void chooseFile(string fileName)
     {
