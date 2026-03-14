@@ -353,4 +353,27 @@ public class GameManager : MonoBehaviour
         player = currentGameData.player;
         playerScript = currentGameData.playerScript;
     }
+
+    public int randomNumberPicker(int amount)
+    {
+        int item = Random.Range(0, amount);
+
+
+        return item;
+    }
+
+     public void guiAlwaysFacePlayer(GameObject obje)
+    {
+        Vector3 playDir = GameManager.instance.player.transform.position - transform.position;
+
+        playDir.y = 0;
+
+        Quaternion rot = Quaternion.LookRotation(playDir);
+        obje.transform.rotation = Quaternion.Slerp(transform.rotation, rot, 2f * Time.deltaTime);
+
+        if (obje == null) return;
+
+    }
+
+
 }
