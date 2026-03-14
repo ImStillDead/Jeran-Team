@@ -83,7 +83,7 @@ public class GameManager : MonoBehaviour
         {
             instance = this;
         }
-
+        
         if (player == null)
         {
             player = GameObject.FindWithTag("Player");
@@ -310,7 +310,7 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    IEnumerator fadeText(TMP_Text Text, float duration)
+    public IEnumerator fadeText(TMP_Text Text, float duration)
     {
         if (Text == null) yield break;
 
@@ -327,9 +327,27 @@ public class GameManager : MonoBehaviour
         }
 
 
-        if (Text != null)
-            Destroy(Text.gameObject);
     }
+
+    //public IEnumerator fadeGui(TMP_Text Text, Graphic image, float duration)
+    //{
+    //    if (Text == null) yield break;
+
+    //    float elapsed = 0f;
+
+    //    Color original = Color.white;
+    //    Color target = Color.clear;
+
+    //    while (elapsed < duration)
+    //    {
+    //        elapsed += Time.deltaTime;
+    //        Text.color = Color.Lerp(original, target, elapsed / duration);
+    //        image.color = Color.Lerp(original, target, elapsed / duration);
+    //        yield return null;
+    //    }
+
+    //}
+
     public void updateItem(int index)
     {
         itemsCase[itemIndex].SetActive(false);
@@ -364,14 +382,16 @@ public class GameManager : MonoBehaviour
 
      public void guiAlwaysFacePlayer(GameObject obje)
     {
-        Vector3 playDir = GameManager.instance.player.transform.position - transform.position;
+        if (obje == null) return;
 
+
+        Vector3 playDir = player.transform.position - obje.transform.position;
+        
         playDir.y = 0;
 
-        Quaternion rot = Quaternion.LookRotation(playDir);
-        obje.transform.rotation = Quaternion.Slerp(transform.rotation, rot, 2f * Time.deltaTime);
+        obje.transform.rotation = Quaternion.LookRotation(playDir);
 
-        if (obje == null) return;
+        Debug.Log("this object " + obje + " is turning");
 
     }
 
