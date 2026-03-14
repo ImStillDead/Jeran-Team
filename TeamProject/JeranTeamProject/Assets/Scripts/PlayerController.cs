@@ -44,7 +44,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
     // Start and Update Functions
     void Start()
     {
-        //spawnPlayer();
+        spawnPlayer();
     }
     void Awake()
     {
@@ -396,6 +396,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
         Physics.SyncTransforms();
         HP = HPMax;
         updatePlayerUI();
+        GameManager.instance.menus.stateUnpause();
     }
     public void playAudio(AudioClip clip, float volume)
     {

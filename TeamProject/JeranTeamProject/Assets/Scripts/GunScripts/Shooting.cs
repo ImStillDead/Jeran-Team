@@ -112,7 +112,7 @@ public class Shooting : MonoBehaviour
         if(!reloading)
         {
             shootTimer = 0;
-            //GameManager.instance.playerScript.playAudio(aud[0], volume);
+            GameManager.instance.playerScript.playAudio(aud[0], volume);
             Instantiate(bullet, shootPos.position, shootPos.transform.rotation);
             currentAmmo = currentAmmo - 1;
             callAmmo();
@@ -124,18 +124,8 @@ public class Shooting : MonoBehaviour
     IEnumerator Reload()
     {
         reloading = true;                               // Sets reloading to true to stop the player from firing
-
         yield return new WaitForSeconds(reloadTime);    // Waits for a set amount of time determined by the reloadTime
-
-        if (currentAmmo <= 0)
-        {
-            currentAmmo = magSizeMax;
-        }
-        else if (currentAmmo > magSizeMax)
-        {
-            currentAmmo = magSizeMax;
-        }
-
+        currentAmmo = magSizeMax;                   // Sets currentAmmo equal to the max ammo
         callAmmo();
         reloading = false;                              // Sets reloading back to false so the player can shoot again
     }
