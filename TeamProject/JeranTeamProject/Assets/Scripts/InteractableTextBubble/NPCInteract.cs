@@ -12,8 +12,11 @@ public class NPCInteract : MonoBehaviour, iInteract
     [SerializeField] private bool useWorldBubble = true;
     [SerializeField] private bool useGameManagerDialog = true;
 
+    [SerializeField] Transform parentObject;
+
     private bool bubbleShowing = false;
 
+    GameManager manager = GameManager.instance;
 
     void Start()
     {
@@ -39,6 +42,8 @@ public class NPCInteract : MonoBehaviour, iInteract
         {
             bubbleShowing = !bubbleShowing;
             bubbleObject.SetActive(bubbleShowing);
+
+            manager.guiAlwaysFacePlayer(bubbleObject);
 
             if(bubbleText != null)
             {
