@@ -7,15 +7,14 @@ public class EnemyAI : MonoBehaviour, IDamage
 {
     [SerializeField] Renderer model;
     [SerializeField] NavMeshAgent agent;
-
+    [Header("Zom Stats")]
     [SerializeField] int HP;
     [SerializeField] int Speed;
     [SerializeField] int faceTargetSpeed;
-
     [SerializeField] int FOV;
     [SerializeField] int roamDist;
     [SerializeField] int roamPauseTime;
-
+    [Header("Zombie Spit")]
     [SerializeField] GameObject spit;
     [SerializeField] bool canSpit = true;
     [SerializeField] float spitRate;
@@ -178,7 +177,7 @@ public class EnemyAI : MonoBehaviour, IDamage
 
                 if (canSpit && spitTimer >= spitRate && agent.remainingDistance >= meleeDist)
                 {
-                    shoot();
+                        shoot(); 
                 }
 
                 neckRotate();

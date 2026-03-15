@@ -290,7 +290,10 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
     {
         return dashingComponent != null ? dashingComponent.GetDashRemainingCooldown() : 0f;
     }
-
+    public Vector3 GetVel()
+    {
+        return playerVel;
+    }
 
     void CameraToggle()
     {
