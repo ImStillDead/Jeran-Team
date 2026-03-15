@@ -6,7 +6,7 @@ public class buttonFunctions : MonoBehaviour
 {
     public void resume()
     {
-        GameManager.instance.stateUnpause();
+        GameManager.instance.menus.stateUnpause();
     }
     public void LevelSelect()
     {
@@ -19,35 +19,46 @@ public class buttonFunctions : MonoBehaviour
     public void respawn()
     {
         GameManager.instance.playerScript.spawnPlayer();
-        GameManager.instance.stateUnpause();
+        GameManager.instance.menus.stateUnpause();
     }
     public void MainMenu()
     {
+        GameManager.instance.saveCurrentRun();
         GameManager.instance.loadMain();
-        if(GameManager.instance.playerScript != null)
-        {
-            GameManager.instance.playerScript.updateStats();
-            
-        }
     }
     public void ContinueRun()
     {
-        if (GameManager.instance.player != null)
+        if (DataManager.instance.currentLoad != null)
         {
-            SceneManager.LoadScene(DataManager.instance.currentRunStats[0]);
-            GameManager.instance.playerScript.getRunStats();
-            GameManager.instance.stateUnpause();
-            GameManager.instance.playerScript.instance.updateGun();
+            GameData load = DataManager.instance.currentLoad.Load();
+            SceneManager.LoadScene(load.sceneIndex);
+            GameManager.instance.menus.stateUnpause();
         }
-
+    }
+    public void ChooseRun(string fileName)
+    {
+        DataManager.instance.fileName = fileName;
+        DataManager.instance.currentLoad.Load();
     }
     public void Restart()
     {
-        GameManager.instance.playerScript.spawnPlayer();
-        GameManager.instance.stateUnpause();
+        if (GameManager.instance == null)
+        {
+            Debug.LogError("GameManager.instance is null! Cannot restart.");
+            return;
+        }
+        if (GameManager.instance.playerScript != null)
+        {
+            GameManager.instance.playerScript.spawnPlayer();
+        }
+        if (GameManager.instance.menus != null)
+        {
+            GameManager.instance.menus.stateUnpause();
+        }
     }
     public void Quit()
     {
+        //Save();
         #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
         #else
@@ -68,11 +79,12 @@ public class buttonFunctions : MonoBehaviour
         int index = SceneManager.GetActiveScene().buildIndex;
         index += 1;
         SceneManager.LoadScene(index);
-        GameManager.instance.stateUnpause();
+        GameManager.instance.sceneIndex = index;
         GameManager.instance.resetObjective();
-        GameManager.instance.playerScript.instance.updateStats();
         GameManager.instance.playerScript.instance.updateGun();
-
+        GameManager.instance.saveCurrentRun();
+        GameManager.instance.playerScript.spawnPlayer();
+        GameManager.instance.menus.stateUnpause();
     }
     public void levelOne()
     {
@@ -90,4 +102,7 @@ public class buttonFunctions : MonoBehaviour
     {
         GameManager.instance.levelSelect(5);
     }
+
+
+    
 }

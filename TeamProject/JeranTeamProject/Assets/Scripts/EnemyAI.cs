@@ -42,7 +42,7 @@ public class EnemyAI : MonoBehaviour, IDamage
     float roamTimer;
     float damageTimer;
 
-    bool playerInTrigger;
+    bool playerInTrigger = false;
     float stoppingDistanceOrig;
     float angleToPlayer;
     Vector3 startingPos;
