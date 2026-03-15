@@ -41,7 +41,7 @@ public class GameManager : MonoBehaviour
     public List<TMP_Text> missions = new List<TMP_Text> { }; //wip
     int maxTextprefabs = 5;
 
-
+    public TMP_Text moneyCount;
     public Image PlayerHP_bar;
     public GameObject playerDamageFlash;
 
@@ -65,7 +65,6 @@ public class GameManager : MonoBehaviour
     public float objectiveTimer;
     int magSize;
     int maxMagSize;
-
 
 
     void Awake()
@@ -99,19 +98,19 @@ public class GameManager : MonoBehaviour
     {
         menus = Object.FindAnyObjectByType<MenuController>();
         menus.stateUnpause();
+
+        moneyCount.text = playerScript.getplayerMoney().ToString();
+
     }
 
     void Update()
     {
         if (Input.GetButtonDown("Cancel"))
         {
-
             menus.pauseMenu();
-
         }
-        
 
-
+   
         if (player != null)
         {
             startMission();

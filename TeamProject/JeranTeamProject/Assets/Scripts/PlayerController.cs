@@ -26,6 +26,9 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
     [SerializeField] GameObject torch;
     [SerializeField] List<Pickups> itemList = new List<Pickups>();
     [SerializeField] AudioSource aud;
+
+    [SerializeField] int moneyOnPlayer;
+
     Pickups activePick;
     int HPMax;
     int jumpCount;
@@ -42,8 +45,12 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
     Vector3 moveDir;
     Vector3 playerVel;
     // Start and Update Functions
+
+    GameManager manager;
+
     void Start()
     {
+        manager = GameManager.instance;
         spawnPlayer();
     }
     void Awake()
@@ -63,6 +70,10 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
     }
     void Update()
     {
+        if (manager != null && manager.moneyCount != null)
+        manager.moneyCount.text = moneyOnPlayer.ToString();
+
+        updatePlayerUI();
         Movement();
         WeaponRotate();
         Sprint();
@@ -285,11 +296,38 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
     }
     public void updatePlayerUI()
     {
+        float tartget = (float)HP / HPMax;
+
         if (GameManager.instance != null && GameManager.instance.PlayerHP_bar != null)
         {
-            GameManager.instance.PlayerHP_bar.fillAmount = (float)HP / HPMax;
+            GameManager MGs = GameManager.instance;
+
+            MGs.PlayerHP_bar.fillAmount = Mathf.Lerp(MGs.PlayerHP_bar.fillAmount, tartget, Time.deltaTime * 30);
         }
     }
+
+    public void addPlayerMoney(int increase)
+    {
+        moneyOnPlayer += increase;
+        Debug.Log(moneyOnPlayer);
+
+    }
+    public void removePlayerMoney(int decrease)
+    {
+        if ((moneyOnPlayer - decrease) >= 0)
+        {
+            moneyOnPlayer -= decrease;
+        }
+        else
+        {
+            manager.addDialog("you to broke to buy this item");
+        }
+    }
+    public int getplayerMoney()
+    {
+        return moneyOnPlayer;
+    }
+
 
     // Item Interactions
     public void pickUpObject(Pickups item)
@@ -364,6 +402,8 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
             }
         }
     }
+
+
     public void Heal(int amount)
     {
         HPMax += amount;
@@ -399,7 +439,9 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
         Physics.SyncTransforms();
         HP = HPMax;
         updatePlayerUI();
-        GameManager.instance.menus.stateUnpause();
+
+        if(manager.menus != null) manager.menus.stateUnpause();
+
     }
     public void playAudio(AudioClip clip, float volume)
     {
