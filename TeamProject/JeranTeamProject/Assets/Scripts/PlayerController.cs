@@ -50,8 +50,8 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
 
     void Start()
     {
-        spawnPlayer();
         manager = GameManager.instance;
+        spawnPlayer();
     }
     void Awake()
     {
@@ -70,8 +70,10 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
     }
     void Update()
     {
+        if (manager != null && manager.moneyCount != null)
         manager.moneyCount.text = moneyOnPlayer.ToString();
 
+        updatePlayerUI();
         Movement();
         WeaponRotate();
         Sprint();
@@ -296,11 +298,10 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
     {
         float tartget = (float)HP / HPMax;
 
-        GameManager MGs = GameManager.instance;
-
-
         if (GameManager.instance != null && GameManager.instance.PlayerHP_bar != null)
         {
+            GameManager MGs = GameManager.instance;
+
             MGs.PlayerHP_bar.fillAmount = Mathf.Lerp(MGs.PlayerHP_bar.fillAmount, tartget, Time.deltaTime * 30);
         }
     }
@@ -313,7 +314,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
     }
     public void removePlayerMoney(int decrease)
     {
-        if ((moneyOnPlayer - decrease) !< 0)
+        if ((moneyOnPlayer - decrease) >= 0)
         {
             moneyOnPlayer -= decrease;
         }
@@ -438,7 +439,9 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
         Physics.SyncTransforms();
         HP = HPMax;
         updatePlayerUI();
-        GameManager.instance.menus.stateUnpause();
+
+        if(manager.menus != null) manager.menus.stateUnpause();
+
     }
     public void playAudio(AudioClip clip, float volume)
     {
