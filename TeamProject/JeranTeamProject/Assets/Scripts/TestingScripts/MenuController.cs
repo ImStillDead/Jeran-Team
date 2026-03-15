@@ -1,8 +1,10 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class MenuController : MonoBehaviour
 {
@@ -10,10 +12,10 @@ public class MenuController : MonoBehaviour
     [SerializeField] GameObject menuActive;
 
 
-    [SerializeField] GameObject menuPause;
+    public GameObject menuPause;
+    [SerializeField] private Button firstMainButton;
     [SerializeField] GameObject menuWin;
     [SerializeField] GameObject menuLose;
-
 
     public bool isPaused;
     float timeScaleOrg;
@@ -22,47 +24,49 @@ public class MenuController : MonoBehaviour
 
     GameManager manager;
 
+    private void Awake()
+    {
+        manager = GameManager.instance; //pretty sure this has no uses.
+    }
 
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+
     void Start()
     {
-        manager = GameManager.instance;
         timeScaleOrg = Time.timeScale;
+
+        if (menuPause != null && firstMainButton != null )
+        {
+            setMenuButton(menuPause);
+            if (EventSystem.current != null)
+            {
+                EventSystem.current.SetSelectedGameObject(null); 
+                EventSystem.current.SetSelectedGameObject(firstMainButton.gameObject);   //this is so we dont have to click on a button within the main menu and seamlessly use the buttons
+            }                                                                            //only within the main menu of course. 
+        }
+
     }
 
     public void pauseMenu()
     {
-
-        if (menuActive == null)
+        if (isPaused)
         {
-            statePause(true);
-            menuActive = menuPause;
-            menuActive.SetActive(true);
-            manager.menuButtonController(menuActive);
-
-        }
-        else if (menuActive == menuPause)
-        {
-            menuActive = null;
             stateUnpause();
         }
-
-        manager.menuButtonController(menuActive);
+        else
+        {
+            statePause(true);
+            setMenuButton(menuPause);
+        }
     }
-    public void exitSubMenu (GameObject menu)
-    {
-        menu.SetActive(false);
-        menuActive = null;
-        menuActive = menuPause;
-        menuPause.SetActive(true);
-        manager.menuButtonController(menuActive);
-        Debug.Log(menuActive + " is active");
 
-    }
-    public void setSubMenuButton(GameObject menu)
+    public void setMenuButton(GameObject menu)
     {
+        if (menuActive != null) menuActive.SetActive(false);  //when making a new button make sure the button that goes is supposed to open the submenu make sure to have this activate as well,
+                                                              // it will update the current active menu which will give you the ability to use controller or keyboard imputs as controlls for the menu.
         menuActive = menu;
-        manager.menuButtonController(menu);
+        menuActive.SetActive(true);
+
+        menuButtonController(menuActive);
         Debug.Log(menuActive + " is active");
     }
 
@@ -84,8 +88,11 @@ public class MenuController : MonoBehaviour
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
 
-        menuActive.SetActive(false);
-        menuActive = null;
+        if (menuActive != null)
+        {
+            menuActive.SetActive(false);
+            menuActive = null;
+        }
     }
 
     public void youWin()
@@ -102,5 +109,13 @@ public class MenuController : MonoBehaviour
         menuActive = menuLose;
         menuActive.SetActive(true);
     }
+
+    public void menuButtonController(GameObject menuNameHere)
+    {
+        Button firstButton = menuNameHere.GetComponentInChildren<Button>();
+        EventSystem.current.SetSelectedGameObject(null);
+        EventSystem.current.SetSelectedGameObject(firstButton.gameObject);
+
+    } //this is the main function that allows us to use contoller input as controlls for menus.
 
 }

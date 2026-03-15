@@ -70,7 +70,8 @@ public class GameManager : MonoBehaviour
 
     void Awake()
     {
-        sceneIndex = SceneManager.GetActiveScene().buildIndex;
+        sceneIndex = SceneManager.GetActiveScene().buildIndex; //did alittle clean up for the awake method, had alot of sceneIndex within it. and mulitple player = gameobject---- 
+
         if(Time.timeScale == 0)
         {
             Time.timeScale = 1f;
@@ -78,16 +79,11 @@ public class GameManager : MonoBehaviour
 
         instance = this;
 
-        sceneIndex = SceneManager.GetActiveScene().buildIndex;
+        if (instance == null)
+        {
+            instance = this;
+        }
 
-        player = GameObject.FindWithTag("Player");
-        if (player != null)
-
-            if (instance == null)
-            {
-                instance = this;
-            }
-        sceneIndex = SceneManager.GetActiveScene().buildIndex;
         if (player == null)
         {
             player = GameObject.FindWithTag("Player");
@@ -102,22 +98,20 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         menus = Object.FindAnyObjectByType<MenuController>();
-        if(playerSpawn == null && player != null)
-        {
-            playerSpawn = GameObject.FindWithTag("PlayerSpawn");
-            playerScript.spawnPlayer();
-        }
+        menus.stateUnpause();
     }
 
     void Update()
     {
         if (Input.GetButtonDown("Cancel"))
         {
-            Debug.LogWarning("tried opening pause menu");
 
             menus.pauseMenu();
 
         }
+        
+
+
         if (player != null)
         {
             startMission();
@@ -126,16 +120,7 @@ public class GameManager : MonoBehaviour
         reticle.SetActive(!menus.isPaused);
     }
 
-    public void menuButtonController(GameObject menuNameHere)
-    {
-
-
-        Button firstButton = menuNameHere.GetComponentInChildren<Button>();
-        EventSystem.current.SetSelectedGameObject(null);
-        EventSystem.current.SetSelectedGameObject(firstButton.gameObject);
-
-    }  //gives menus the ability to be controlled by keyboard input, has to be called each time you call a new menu
-
+   
     private void startMission()
     {
         if (startTimer || objectiveCompleted) Objective_timer_text.gameObject.SetActive(true);
@@ -368,4 +353,27 @@ public class GameManager : MonoBehaviour
         player = currentGameData.player;
         playerScript = currentGameData.playerScript;
     }
+
+    public int randomNumberPicker(int amount)
+    {
+        int item = Random.Range(0, amount);
+
+
+        return item;
+    }
+
+     public void guiAlwaysFacePlayer(GameObject obje)
+    {
+        if (obje == null) return;
+
+
+        Vector3 playDir = player.transform.position - obje.transform.position;
+        
+        playDir.y = 0;
+
+        obje.transform.rotation = Quaternion.LookRotation(-playDir);
+
+    }
+
+
 }
