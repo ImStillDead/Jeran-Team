@@ -11,6 +11,7 @@ public class EnemyAI : MonoBehaviour, IDamage
     [SerializeField] int HP;
     [SerializeField] int Speed;
     [SerializeField] int faceTargetSpeed;
+    [SerializeField] int killReward;
 
     [SerializeField] int FOV;
     [SerializeField] int roamDist;
@@ -47,8 +48,13 @@ public class EnemyAI : MonoBehaviour, IDamage
     Vector3 startingPos;
     Vector3 playerDir;
 
+    GameManager manager;
+    PlayerController player;
+
     void Start()
     {
+        manager = GameManager.instance;
+        player = GameManager.instance.player.GetComponent<PlayerController>();
         colorOrg = model.material.color;
         HPOrigin = HP;
         stoppingDistanceOrig = agent.stoppingDistance;
@@ -69,6 +75,9 @@ public class EnemyAI : MonoBehaviour, IDamage
         {
             agent.SetDestination(GameManager.instance.player.transform.position);
         }
+
+        if (enemyHPBar != null) manager.guiAlwaysFacePlayer(enemyHPBar);
+
 
         bool canSeePlayer = CanSeePlayer();
 
@@ -225,17 +234,17 @@ public class EnemyAI : MonoBehaviour, IDamage
     void shoot()
     {
         spitTimer = 0;
-        if (spitTimer >= spitRate)
-        {
-            shoot();
-        }
+        Instantiate(spit, spitPos.position, transform.rotation);
     }
 
     public void takeDamage(int amount)
     {
         HP -= amount;
 
-        enemyHealth.fillAmount = (float)HP / HPOrigin;
+        if (enemyHealth != null)
+        {
+            enemyHealth.fillAmount = (float)HP / HPOrigin;
+        }
 
         agent.SetDestination(GameManager.instance.player.transform.position);
 
@@ -245,8 +254,11 @@ public class EnemyAI : MonoBehaviour, IDamage
         if (HP <= 0)
         {
             GameManager.instance.enemyBoardCount(-1);
-            Destroy(gameObject);
             GameManager.instance.killCount++;
+
+            player.addPlayerMoney(killReward);
+
+            Destroy(gameObject);
         }
         else
         {

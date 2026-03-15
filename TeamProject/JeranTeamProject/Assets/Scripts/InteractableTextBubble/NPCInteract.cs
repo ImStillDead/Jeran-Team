@@ -9,7 +9,7 @@ public class NPCInteract : MonoBehaviour, iInteract
     [TextArea(2, 5)]
     [SerializeField] private string message = "Hello there.";
 
-    [SerializeField] private bool useWorldBubble = true;
+    //[SerializeField] private bool useWorldBubble = true;
     [SerializeField] private bool useGameManagerDialog = true;
 
 
