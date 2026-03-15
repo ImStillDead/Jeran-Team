@@ -21,7 +21,6 @@ public class Shooting : MonoBehaviour
 
     [SerializeField] AudioClip[] aud;
     [SerializeField] Bullet bulletScript;
-    //[SerializeField] GameObject Gun;
 
     //Public variables
     public List<GunStats> gunList = new List<GunStats>();
@@ -29,10 +28,15 @@ public class Shooting : MonoBehaviour
     public int startingMaxAmmo;
     public static float shootTimer;
     public float volume;
+
+    public float spread;
+
+    public Recoil recoil;
+
     // Other Variables
     bool reloading;
     int activeGun;
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+
     void Awake()
     {
         if(instance == null)
@@ -40,6 +44,9 @@ public class Shooting : MonoBehaviour
             instance = this;
         }
         currentAmmo = magSizeMax;  // Sets currentAmmo equal to the maxAmmo
+
+        recoil = GameObject.Find("CameraRot/CameraRecoil").GetComponent<Recoil>();
+
     }
 
     // Update is called once per frame
@@ -53,7 +60,7 @@ public class Shooting : MonoBehaviour
         {
             Shoot();
         }
-       
+
         /*  Checks to see if currentAmmo is less than or equal to 0 and if the player is not reloading.
             If so, it calls the Reload() method(function) */    
         if (currentAmmo <= 0 && !reloading)
@@ -94,6 +101,9 @@ public class Shooting : MonoBehaviour
         reloadTime = gunList[gunPos].reloadTime;
         aud = gunList[gunPos].aud;
         volume = gunList[gunPos].shotSoundVol;
+
+        spread = gunList[gunPos].spread;
+
         gunModel.GetComponent<MeshFilter>().sharedMesh = instance.gunList[gunPos].gunModel.GetComponent<MeshFilter>().sharedMesh;
         gunModel.GetComponent<MeshRenderer>().sharedMaterial = instance.gunList[gunPos].gunModel.GetComponent<MeshRenderer>().sharedMaterial;
         gunModel.transform.localScale = gunList[gunPos].scale;
@@ -113,9 +123,19 @@ public class Shooting : MonoBehaviour
         {
             shootTimer = 0;
             GameManager.instance.playerScript.playAudio(aud[0], volume);
-            Instantiate(bullet, shootPos.position, shootPos.transform.rotation);
+
+
+            Quaternion spreadRotation = shootPos.transform.rotation * 
+                Quaternion.Euler(Random.Range(-spread, spread), Random.Range(-spread, spread), 0);
+
+
+            Instantiate(bullet, shootPos.position, spreadRotation);
+            
+            
             currentAmmo = currentAmmo - 1;
             callAmmo();
+            
+            recoil.RecoilFire();
         }
 
     }
