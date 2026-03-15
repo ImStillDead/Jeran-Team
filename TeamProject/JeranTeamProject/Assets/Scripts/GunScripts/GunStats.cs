@@ -11,6 +11,8 @@ public class GunStats : ScriptableObject
     [Range(1, 500)] public int magSizeMax;
     [Range(0.5f, 10)] public float reloadTime;
 
+
+
     public Bullet bullet;
     public AudioClip[] aud;
     public Vector3 scale;
@@ -18,6 +20,8 @@ public class GunStats : ScriptableObject
     public Quaternion rotation;
     public Quaternion shootRotate;
     public int currentAmmo;
+
+    public float spread;
 
     [Range(1, 500)] public int startingMaxAmmo;
     [Range(1, 500)] public int maxAmmo;
