@@ -30,7 +30,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
     [SerializeField] int moneyOnPlayer;
 
     Pickups activePick;
-    int HPMax;
+    float HPMax;
     int jumpCount;
     int invPos;
     int gunPos;
@@ -63,14 +63,13 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
             playerController = manager.player.GetComponent<CharacterController>();
         }
         isFirstPerson = true;
-        HPMax = HP;
+        if(HPMax == 0) 
+        HPMax = 50;
         speedOrigin = speed;
         updatePlayerUI();
     }
     void Update()
     {
-       
-
         updatePlayerUI();
         Movement();
         WeaponRotate();
@@ -303,6 +302,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
         if (manager.PlayerHP_bar != null)
         {
             manager.PlayerHP_bar.fillAmount = Mathf.Lerp(manager.PlayerHP_bar.fillAmount, tartget, Time.deltaTime * 30);
+
         }
         if(manager.XP_bar != null)
         {
@@ -313,6 +313,13 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
 
         if (manager.moneyCount != null)
             manager.moneyCount.text = moneyOnPlayer.ToString();
+
+        if(manager.heathNum != null && manager.maxHealthNum != null)
+        {
+            manager.heathNum.text = Mathf.RoundToInt(HP).ToString();
+            manager.maxHealthNum.text = Mathf.RoundToInt(HPMax).ToString();
+
+        }
 
     }
 
@@ -334,6 +341,14 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
             manager.addDialog("you to broke to buy this item");
             return false;
         }
+    }
+    public void setMaxHp(float input)
+    {
+        HPMax = input;
+    }
+    public float getMaxHP()
+    {
+        return HPMax;
     }
     public int getplayerMoney()
     {
@@ -420,7 +435,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
         HP += amount;
 
         if (HP > HPMax)
-            HP = HPMax;
+            HP = (int)HPMax;
 
         updatePlayerUI();
     }
@@ -448,7 +463,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
     {
         playerController.transform.position = GameManager.instance.playerSpawn.transform.position;
         Physics.SyncTransforms();
-        HP = HPMax;
+        HP = (int)HPMax;
         updatePlayerUI();
 
         if(manager.menus != null) manager.menus.stateUnpause();

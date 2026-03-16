@@ -2367,6 +2367,8 @@ MonoBehaviour:
   HP: 5
   Speed: 7
   faceTargetSpeed: 1
+  killReward: 0
+  experienceReward: 0
   FOV: 65
   roamDist: 15
   roamPauseTime: 3
@@ -2381,6 +2383,7 @@ MonoBehaviour:
   maxLifeTimer: 0
   enemyHPBar: {fileID: 3942883864272483843}
   enemyHealth: {fileID: 6485073116435268024}
+  forgetPlayerTime: 5
   isRoaming: 1
 --- !u!195 &6438487049217479987
 NavMeshAgent:
@@ -2471,10 +2474,10 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 9793
+    m_Bits: 1601
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 4096
+    m_Bits: 0
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
