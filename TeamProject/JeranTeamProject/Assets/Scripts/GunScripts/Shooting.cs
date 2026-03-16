@@ -44,7 +44,6 @@ public class Shooting : MonoBehaviour
     // Other Variables
     bool reloading;
     int activeGun;
-    int burstCount;
     int pelletCount;
 
     bool burstFiring = true;
@@ -210,35 +209,8 @@ public class Shooting : MonoBehaviour
 
 
     }
-    public void BurstShot()
-    {
-        /*  Checks to see if the player is not reloading. If they are not, it fires a projectile
-            and decreases current ammo by 1 */
-
-        if (!reloading)
-        {
-            shootTimer = 0;
-            GameManager.instance.playerScript.playAudio(aud[0], volume);
-
-
-            Quaternion spreadRotation = shootPos.transform.rotation *
-                Quaternion.Euler(Random.Range(-spread, spread), Random.Range(-spread, spread), 0);
-
-
-            Instantiate(bullet, shootPos.position, spreadRotation);
-
-
-            currentAmmo = currentAmmo - 1;
-            callAmmo();
-
-            recoil.RecoilFire();
-            burstCount++;
-
-        }
-
-
-    }
-
+    
+    
     // Called in Update if the currentAmmo is less than or equal to 0 and the player is not reloading
     IEnumerator Reload()
     {
@@ -255,11 +227,11 @@ public class Shooting : MonoBehaviour
 
         for (int i = 0; i < burstAmount; i++)
         {
-            BurstShot();
-            yield return new WaitForSeconds(burstTime);
+           Shoot();
+           yield return new WaitForSeconds(burstTime);
         }
 
-        yield return new WaitForSeconds(burstDelay);
+       yield return new WaitForSeconds(burstDelay);
        burstFiring = true;
     }
 
