@@ -404,10 +404,6 @@ public class GameManager : MonoBehaviour
             levelUpCap *= increaseXpCap;
 
         }
-        else
-        {
-            Debug.LogWarning("this is not working dude");
-        }
 
     }
 
