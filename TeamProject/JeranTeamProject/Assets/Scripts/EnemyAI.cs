@@ -12,6 +12,7 @@ public class EnemyAI : MonoBehaviour, IDamage
     [SerializeField] int Speed;
     [SerializeField] int faceTargetSpeed;
     [SerializeField] int killReward;
+    [SerializeField] int experienceReward;
 
     [SerializeField] int FOV;
     [SerializeField] int roamDist;
@@ -257,6 +258,7 @@ public class EnemyAI : MonoBehaviour, IDamage
             GameManager.instance.killCount++;
 
             player.addPlayerMoney(killReward);
+            manager.giveXP(experienceReward);
 
             Destroy(gameObject);
         }

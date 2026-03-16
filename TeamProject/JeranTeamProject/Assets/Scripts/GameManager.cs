@@ -42,6 +42,8 @@ public class GameManager : MonoBehaviour
 
     public TMP_Text moneyCount;
     public Image PlayerHP_bar;
+    public Image XP_bar;
+    public TMP_Text levelText;
     public GameObject playerDamageFlash;
 
     public TMP_Text killCount_text;
@@ -65,6 +67,12 @@ public class GameManager : MonoBehaviour
     int magSize;
     int maxMagSize;
 
+    public float experience;
+    public float levelUpCap = 15f;
+    float increaseXpCap = 1.25f;
+    public float level;
+
+    private supportGameProgression prog;
 
     void Awake()
     {
@@ -99,7 +107,7 @@ public class GameManager : MonoBehaviour
         menus.stateUnpause();
 
         moneyCount.text = playerScript.getplayerMoney().ToString();
-
+        prog = GetComponent<supportGameProgression>();
     }
 
     void Update()
@@ -109,11 +117,17 @@ public class GameManager : MonoBehaviour
             menus.pauseMenu();
         }
 
-   
+        if (prog != null)
+        {
+            prog.get10kills(killCount);
+        }
+
         if (player != null)
         {
             startMission();
         }
+
+        levelUp();
 
         reticle.SetActive(!menus.isPaused);
     }
@@ -370,6 +384,29 @@ public class GameManager : MonoBehaviour
         playDir.y = 0;
 
         obje.transform.rotation = Quaternion.LookRotation(-playDir);
+
+    }
+
+    public void giveXP(int XP)
+    {
+        experience += XP;
+
+    }
+    
+    public void levelUp()
+    {
+        if(experience >= levelUpCap)
+        {
+            Debug.Log("you have leveled up");
+            level++;
+            experience -= levelUpCap;
+            levelUpCap *= increaseXpCap;
+
+        }
+        else
+        {
+            Debug.LogWarning("this is not working dude");
+        }
 
     }
 
