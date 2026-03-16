@@ -1,17 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
-<<<<<<< HEAD
-using System.Security.Cryptography;
-=======
->>>>>>> Safety
 using TMPro;
-using UnityEditor;
 using UnityEngine;
-<<<<<<< HEAD
-using UnityEngine.ProBuilder.MeshOperations;
-=======
 using UnityEngine.EventSystems;
->>>>>>> Safety
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 

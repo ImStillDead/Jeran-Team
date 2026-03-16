@@ -516,10 +516,6 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
 
             MGs.PlayerHP_bar.fillAmount = Mathf.Lerp(MGs.PlayerHP_bar.fillAmount, tartget, Time.deltaTime * 30);
         }
-<<<<<<< HEAD
-
-=======
->>>>>>> Safety
     }
 
     public void addPlayerMoney(int increase)
