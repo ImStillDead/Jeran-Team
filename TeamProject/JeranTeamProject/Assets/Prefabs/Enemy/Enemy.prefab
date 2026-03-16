@@ -163,6 +163,8 @@ MonoBehaviour:
   HP: 10
   Speed: 6
   faceTargetSpeed: 45
+  killReward: 10
+  experienceReward: 15
   FOV: 65
   roamDist: 15
   roamPauseTime: 3
@@ -177,6 +179,7 @@ MonoBehaviour:
   maxLifeTimer: 25
   enemyHPBar: {fileID: 2492639644381190621}
   enemyHealth: {fileID: 3040305562755383513}
+  forgetPlayerTime: 5
   isRoaming: 0
 --- !u!195 &5672984400017759591
 NavMeshAgent:

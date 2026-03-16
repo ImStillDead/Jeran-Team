@@ -46,6 +46,8 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
     Vector3 playerVel;
     // Start and Update Functions
 
+
+
     GameManager manager;
 
     void Start()
@@ -70,8 +72,6 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
     }
     void Update()
     {
-        if (manager != null && manager.moneyCount != null)
-        manager.moneyCount.text = moneyOnPlayer.ToString();
 
         updatePlayerUI();
         Movement();
@@ -296,38 +296,48 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
     }
     public void updatePlayerUI()
     {
+        
+        GameManager MGs = GameManager.instance;
         float tartget = (float)HP / HPMax;
+        float XPtarget = MGs.experience / MGs.levelUpCap;
 
         if (GameManager.instance != null && GameManager.instance.PlayerHP_bar != null)
         {
-            GameManager MGs = GameManager.instance;
+            
 
             MGs.PlayerHP_bar.fillAmount = Mathf.Lerp(MGs.PlayerHP_bar.fillAmount, tartget, Time.deltaTime * 30);
+            MGs.XP_bar.fillAmount = Mathf.Lerp(MGs.XP_bar.fillAmount, XPtarget, Time.deltaTime * 3);
+            MGs.levelText.text = MGs.level.ToString();
         }
+
+        if (manager != null && manager.moneyCount != null)
+            manager.moneyCount.text = moneyOnPlayer.ToString();
+
     }
 
     public void addPlayerMoney(int increase)
     {
         moneyOnPlayer += increase;
-        Debug.Log(moneyOnPlayer);
+
 
     }
-    public void removePlayerMoney(int decrease)
+    public bool removePlayerMoney(int decrease)
     {
         if ((moneyOnPlayer - decrease) >= 0)
         {
             moneyOnPlayer -= decrease;
+            return true;
         }
         else
         {
             manager.addDialog("you to broke to buy this item");
+            return false;
         }
     }
     public int getplayerMoney()
     {
         return moneyOnPlayer;
     }
-
 
     // Item Interactions
     public void pickUpObject(Pickups item)

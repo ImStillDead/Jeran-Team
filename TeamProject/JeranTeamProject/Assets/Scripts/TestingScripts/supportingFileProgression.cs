@@ -34,15 +34,13 @@ public class supportGameProgression : MonoBehaviour
         }
     }
 
-    public void get10kills()
+    public void get10kills(int kills)
     {
-        if(Manager.killCount == 10)
+        if(kills >= 10 && !unlocked.Contains(progess.get10Kills))
         {
             Debug.LogWarning("*********achievement unlocked************");
             Unlock(progess.get10Kills);
             Manager.addDialog("you killed 10 enemies");
-
-
         }
     }
 
