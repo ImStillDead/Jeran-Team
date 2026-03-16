@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Rendering;
 
 [CreateAssetMenu]
 
@@ -11,6 +12,8 @@ public class GunStats : ScriptableObject
     [Range(1, 500)] public int magSizeMax;
     [Range(0.5f, 10)] public float reloadTime;
 
+
+
     public Bullet bullet;
     public AudioClip[] aud;
     public Vector3 scale;
@@ -19,8 +22,17 @@ public class GunStats : ScriptableObject
     public Quaternion shootRotate;
     public int currentAmmo;
 
-    [Range(1, 500)] public int startingMaxAmmo;
-    [Range(1, 500)] public int maxAmmo;
+    public float spread;
+   
+    public bool isShotgun;
+    public bool isBurst;
+    public float burstTime;
+    public float burstDelay;
+    public float rechamberTime;
+    public int burstAmount;
+    public int pelletAmount;
+
+
     AudioClip[] shotSound;
     [Range(0, 1)] public float shotSoundVol;
 

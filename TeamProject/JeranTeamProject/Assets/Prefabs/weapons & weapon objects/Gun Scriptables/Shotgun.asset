@@ -15,7 +15,7 @@ MonoBehaviour:
   gunModel: {fileID: 9213207902727825114, guid: 4f5571de5cc452e4a8ede22fac89da06, type: 3}
   shootPos: {fileID: 1654672023621191302, guid: f281f9f7368465c43a1933098affbc88, type: 3}
   shootRate: 1.25
-  magSizeMax: 6
+  magSizeMax: 40
   reloadTime: 3
   bullet: {fileID: 11400000, guid: 31d48277d90124040b710faffdb6bc5b, type: 2}
   aud:
@@ -25,6 +25,11 @@ MonoBehaviour:
   rotation: {x: 0, y: 0, z: 0, w: 0}
   shootRotate: {x: 0, y: 0, z: 0, w: 0}
   currentAmmo: 0
-  startingMaxAmmo: 24
-  maxAmmo: 18
+  spread: 15
+  isShotgun: 1
+  isBurst: 0
+  burstTime: 0
+  rechamberTime: 1
+  burstAmount: 0
+  pelletAmount: 5
   shotSoundVol: 0.03

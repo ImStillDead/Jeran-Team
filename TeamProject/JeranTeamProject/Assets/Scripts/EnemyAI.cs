@@ -7,16 +7,17 @@ public class EnemyAI : MonoBehaviour, IDamage
 {
     [SerializeField] Renderer model;
     [SerializeField] NavMeshAgent agent;
-    [Header("Zom Stats")]
+
     [SerializeField] int HP;
     [SerializeField] int Speed;
     [SerializeField] int faceTargetSpeed;
+    [SerializeField] int killReward;
+
     [SerializeField] int FOV;
     [SerializeField] int roamDist;
     [SerializeField] int roamPauseTime;
-    [Header("Zombie Spit")]
+
     [SerializeField] GameObject spit;
-    [SerializeField] bool canSpit = true;
     [SerializeField] float spitRate;
     [SerializeField] Transform spitPos;
     [SerializeField] Transform neckPivot;
@@ -27,7 +28,6 @@ public class EnemyAI : MonoBehaviour, IDamage
     [SerializeField] int meleeDist;
     [SerializeField] int maxLifeTimer;
     [SerializeField] GameObject enemyHPBar;
-
     public Image enemyHealth;
 
     bool hasSpottedPlayer;
@@ -48,8 +48,13 @@ public class EnemyAI : MonoBehaviour, IDamage
     Vector3 startingPos;
     Vector3 playerDir;
 
+    GameManager manager;
+    PlayerController player;
+
     void Start()
     {
+        manager = GameManager.instance;
+        player = GameManager.instance.player.GetComponent<PlayerController>();
         colorOrg = model.material.color;
         HPOrigin = HP;
         stoppingDistanceOrig = agent.stoppingDistance;
@@ -70,6 +75,9 @@ public class EnemyAI : MonoBehaviour, IDamage
         {
             agent.SetDestination(GameManager.instance.player.transform.position);
         }
+
+        if (enemyHPBar != null) manager.guiAlwaysFacePlayer(enemyHPBar);
+
 
         bool canSeePlayer = CanSeePlayer();
 
@@ -175,9 +183,9 @@ public class EnemyAI : MonoBehaviour, IDamage
             {
                 agent.SetDestination(GameManager.instance.player.transform.position);
 
-                if (canSpit && spitTimer >= spitRate && agent.remainingDistance >= meleeDist)
+                if (spitTimer >= spitRate && agent.remainingDistance >= meleeDist)
                 {
-                        shoot(); 
+                    shoot();
                 }
 
                 neckRotate();
@@ -225,15 +233,18 @@ public class EnemyAI : MonoBehaviour, IDamage
 
     void shoot()
     {
-        Instantiate(spit, spitPos.position, spitPos.rotation);
         spitTimer = 0;
+        Instantiate(spit, spitPos.position, transform.rotation);
     }
 
     public void takeDamage(int amount)
     {
         HP -= amount;
 
-        enemyHealth.fillAmount = (float)HP / HPOrigin;
+        if (enemyHealth != null)
+        {
+            enemyHealth.fillAmount = (float)HP / HPOrigin;
+        }
 
         agent.SetDestination(GameManager.instance.player.transform.position);
 
@@ -243,8 +254,11 @@ public class EnemyAI : MonoBehaviour, IDamage
         if (HP <= 0)
         {
             GameManager.instance.enemyBoardCount(-1);
-            Destroy(gameObject);
             GameManager.instance.killCount++;
+
+            player.addPlayerMoney(killReward);
+
+            Destroy(gameObject);
         }
         else
         {
