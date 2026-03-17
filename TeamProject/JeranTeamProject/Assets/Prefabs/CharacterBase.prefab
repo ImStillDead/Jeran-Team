@@ -962,7 +962,7 @@ GameObject:
   - component: {fileID: 6257784447869066656}
   - component: {fileID: 7136655406761469723}
   - component: {fileID: 8287638095323782048}
-  m_Layer: 16
+  m_Layer: 3
   m_Name: CharacterBase
   m_TagString: Player
   m_Icon: {fileID: 0}
@@ -1026,6 +1026,14 @@ MonoBehaviour:
   interactDis: 3
   enemyViewDis: 0
   gravity: 35
+  dashForce: 30
+  dashDur: 0.2
+  dashCD: 1
+  canSlide: 1
+  slideSpeed: 12
+  slideDur: 0.5
+  slideYScale: 0.5
+  slideCD: 1
   weaponPos: {fileID: 2322056319581036704}
   firstPersonCamera: {fileID: 8269506281394273731}
   thirdPersonCamera: {fileID: 3433218060911350080}
@@ -1349,7 +1357,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3766844547119126924, guid: 64b182395c0b6744a920c74bce3ece13, type: 3}
       propertyPath: m_Layer
-      value: 16
+      value: 9
       objectReference: {fileID: 0}
     - target: {fileID: 3977682566442343928, guid: 64b182395c0b6744a920c74bce3ece13, type: 3}
       propertyPath: m_Layer
@@ -1357,7 +1365,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3983322368406506902, guid: 64b182395c0b6744a920c74bce3ece13, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.455
+      value: 0.677
       objectReference: {fileID: 0}
     - target: {fileID: 3983322368406506902, guid: 64b182395c0b6744a920c74bce3ece13, type: 3}
       propertyPath: m_LocalPosition.z
