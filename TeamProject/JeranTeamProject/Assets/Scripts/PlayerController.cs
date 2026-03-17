@@ -1,20 +1,20 @@
-﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
+using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
-using Unity.VisualScripting;
 
-public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
+
+public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDash
 {
     
 
     [SerializeField] CharacterController playerController;
     [SerializeField] LayerMask ignoreLayer;
 
+    [Header("Player Stats")]
     [SerializeField] int HP;
-    [SerializeField] int Armor;
-    [SerializeField] int maxArmor;
     [SerializeField] int speed;
     [SerializeField] int sprintMod;
     [SerializeField] int jumpSpeed;
@@ -22,6 +22,20 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
     [SerializeField] int interactDis;
     [SerializeField] int enemyViewDis;
     [SerializeField] int gravity;
+
+    [Header("Dash Settings")]
+    [SerializeField] float dashForce = 30f;
+    [SerializeField] float dashDur = 0.2f;
+    [SerializeField] float dashCD = 1f; //CD = cooldown
+
+    [Header("Sliding Settings")]
+    [SerializeField] bool canSlide = true;
+    [SerializeField] float slideSpeed = 12f;
+    [SerializeField] float slideDur = 1.5f;
+    [SerializeField] float slideYScale = 0.5f;
+    [SerializeField] float slideCD = 1f;
+
+    [Header("Other Settings")]
     [SerializeField] Transform weaponPos;
     [SerializeField] GameObject firstPersonCamera;
     [SerializeField] GameObject thirdPersonCamera;
@@ -29,16 +43,10 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
     [SerializeField] List<Pickups> itemList = new List<Pickups>();
     [SerializeField] AudioSource aud;
 
-
-    [SerializeField] float armorRegenDelay;
-    [SerializeField] float armorRegenRate;
     [SerializeField] int moneyOnPlayer;
-
 
     Pickups activePick;
     float HPMax;
-    float lastDamageTime;
-    float armorRegenTimer;
     int jumpCount;
     int invPos;
     int gunPos;
@@ -52,6 +60,19 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
     bool torchActive;
     Vector3 moveDir;
     Vector3 playerVel;
+
+    //sliding varibles
+    private Dashing dashingComponent;
+    private bool isSliding;
+    private float slideTimer;
+    private float slideCDTimer;
+    private float originalHeight;
+    private float originalYScale;
+    private Vector3 originalCenter;
+    private Vector3 slideDirection;
+    private CharacterController characterController;
+    private bool slideButtonHeld;
+
     // Start and Update Functions
 
 
@@ -62,9 +83,6 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
     {    
         manager = GameManager.instance;
         manager.player.GetComponent<PlayerController>().spawnPlayer();
-
-        playerArmor();
-
     }
     void Awake()
     {
@@ -73,6 +91,10 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
         {
             playerController = manager.player.GetComponent<CharacterController>();
         }
+
+        SetupDashing(); 
+        SetupSliding();
+
         isFirstPerson = true;
         if(HPMax == 0) 
         HPMax = 50;
@@ -85,12 +107,34 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
         Movement();
         WeaponRotate();
         Sprint();
-        armorRegen();
     }
 
     // Movement and Button Interactions
     void Movement()
     {
+        HandleSliding();
+
+        if (IsDashing()) // checks dashing
+        {
+            playerController.Move(playerVel * Time.deltaTime);
+            playerVel.y -= gravity * Time.deltaTime;
+            return;
+        }
+
+        if (isSliding) // checks sliding
+        {
+            playerVel.y -= gravity * Time.deltaTime;
+            playerController.Move(playerVel * Time.deltaTime);
+            return;
+        }
+        float horizontal = Input.GetAxis("Horizontal");
+        float vertical = Input.GetAxis("Vertical");
+
+        if (horizontal != 0 || vertical != 0)
+        {
+            Debug.Log($"Input detected - H:{horizontal}, V:{vertical}");
+        }
+
         moveDir = Input.GetAxis("Horizontal") * transform.right + (Input.GetAxis("Vertical") * transform.forward);
         playerController.Move(moveDir * speed * Time.deltaTime);
         playerController.Move(playerVel * Time.deltaTime);
@@ -100,6 +144,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
             jumpCount = 0;
             playerVel = Vector3.zero;
         }
+        
         Jump();
         ChangeActiveInventory();
         CameraToggle();
@@ -107,6 +152,155 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
         useItem();
         ToggleTorch();
     }
+
+    void SetupDashing()
+    {
+        dashingComponent = GetComponent<Dashing>();
+        if (dashingComponent == null)
+        {
+            dashingComponent = gameObject.AddComponent<Dashing>();
+        }
+
+        dashingComponent.dashForce = dashForce;
+        dashingComponent.dashDur = dashDur;
+        dashingComponent.dashCD = dashCD;
+    }
+
+    void SetupSliding()
+    {
+        characterController = GetComponent<CharacterController>();
+        originalHeight = characterController.height;
+        originalCenter = characterController.center;
+        originalYScale = transform.localScale.y;
+    }
+
+    void HandleSliding()
+    {
+        if (slideCDTimer > 0)
+            slideCDTimer -= Time.deltaTime;
+
+        float horizontalInput = Input.GetAxisRaw("Horizontal");
+        float verticalInput = Input.GetAxisRaw("Vertical");
+        bool isMoving = (horizontalInput != 0 || verticalInput != 0);
+
+        if (isMoving)
+        {
+            slideDirection = (transform.right * horizontalInput + transform.forward * verticalInput).normalized;
+        }
+
+        if (Input.GetButtonDown("Slide") && canSlide && !isSliding && isMoving && slideCDTimer <= 0 && !IsDashing())
+        {
+            StartSlide();
+        }
+
+        if (Input.GetButtonUp("Slide") && isSliding)
+        {
+            StopSlide();
+        }
+
+        if (isSliding)
+        {
+            SlidingMovement();
+        }
+    }
+
+    void StartSlide()
+    {
+        isSliding = true;
+        slideTimer = slideDur;
+        slideButtonHeld = true;
+
+        characterController.height = originalHeight * slideYScale;
+
+        Vector3 newCenter = originalCenter;
+        newCenter.y = originalCenter.y * slideYScale;
+        characterController.center = newCenter;
+
+        transform.localScale = new Vector3(transform.localScale.x, originalYScale * slideYScale, transform.localScale.z);
+
+        Debug.Log("Slide started");
+    }
+
+    void SlidingMovement()
+    {
+        playerController.Move(slideDirection * slideSpeed * Time.deltaTime);
+
+        playerVel.y -= gravity * Time.deltaTime;
+        playerController.Move(playerVel * Time.deltaTime);
+
+        slideTimer -= Time.deltaTime;
+
+        if (slideTimer <= 0)
+        {
+            StopSlide();
+        }
+    }
+
+    void StopSlide()
+    {
+        isSliding = false;
+        slideCDTimer = slideCD;
+        slideButtonHeld = false;
+
+        characterController.height = originalHeight;
+        characterController.center = originalCenter;
+
+        transform.localScale = new Vector3(transform.localScale.x, originalYScale, transform.localScale.z);
+
+        if (playerController.isGrounded)
+        {
+            playerVel.y = -2f;
+        }
+
+        Debug.Log("Slide stopped");
+    }
+
+    public bool IsSliding()
+    {
+        return isSliding;
+    }
+
+    public int GetSpeed()
+    {
+        return speed;
+    }
+
+    public void SetSpeed(int newSpeed)
+    {
+        speed = newSpeed;
+    }
+
+    public int GetJumpSpeed()
+    {
+        return jumpSpeed;
+    }
+
+    public void SetJumpSpeed(int newJumpSpeed)
+    {
+        jumpSpeed = newJumpSpeed;
+    }
+
+    // IDash Implementation
+    public void StartDash()
+    {
+        if (dashingComponent != null)
+            dashingComponent.StartDash();
+    }
+
+    public bool IsDashing()
+    {
+        return dashingComponent != null && dashingComponent.IsDashing();
+    }
+
+    public float GetDashRemainingCooldown()
+    {
+        return dashingComponent != null ? dashingComponent.GetDashRemainingCooldown() : 0f;
+    }
+    public Vector3 GetVel()
+    {
+        return playerVel;
+    }
+
     void CameraToggle()
     {
         if (Input.GetButtonDown("ToggleCamera"))
@@ -129,7 +323,10 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
     }
     void Jump()
     {
-        if(Input.GetButtonDown("Jump") && jumpCount < jumpMax)
+        if (isSliding)
+            return;
+
+        if (Input.GetButtonDown("Jump") && jumpCount < jumpMax)
         {
             playerVel.y = jumpSpeed;
             jumpCount++;
@@ -137,6 +334,9 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
     }
     void Sprint()
     {
+        if (IsDashing() || isSliding)
+            return;
+
         if (Input.GetButtonDown("Sprint"))
         {
             speed *= sprintMod;
@@ -161,72 +361,68 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
             }
         }
     }
-
-
-
     void ChangeActiveInventory()
     {
-
         // Item Swap
         if (Input.GetButtonDown("Swap"))
         {
-            if (itemList != null && itemList.Count > 0)
+            if (invPos >= itemList.Count - 1)
             {
-                if (invPos >= itemList.Count - 1)
-                    invPos = 0;
-                else
-                    invPos++;
-
-                changeItem(invPos);
+                invPos = 0;
             }
+            else
+            {
+                invPos++;
+            }
+            changeItem(invPos);
         }
-
-        if (Shooting.instance == null || Shooting.instance.gunList == null || Shooting.instance.gunList.Count == 0)
-            return;
-
-
         // Weapon Scroll
         if (Input.GetAxis("Mouse ScrollWheel") > 0)
         {
             if (gunPos >= Shooting.instance.gunList.Count - 1)
+            {
                 gunPos = 0;
+            }
             else
+            {
                 gunPos++;
-
+            }
             updateGun();
         }
         else if (Input.GetAxis("Mouse ScrollWheel") < 0)
         {
             if (gunPos <= 0)
+            {
                 gunPos = Shooting.instance.gunList.Count - 1;
+            }
             else
+            {
                 gunPos--;
-
+            }
             updateGun();
         }
-
         // Weapon Select 1-5
-        if (Input.GetButtonDown("Weapon1") && Shooting.instance.gunList.Count > 0)
+        if (Input.GetButtonDown("Weapon1"))
         {
             gunPos = 0;
             Shooting.instance.changeGun(gunPos);
         }
-        else if (Input.GetButtonDown("Weapon2") && Shooting.instance.gunList.Count > 1)
+        else if (Input.GetButtonDown("Weapon2"))
         {
             gunPos = 1;
             Shooting.instance.changeGun(gunPos);
         }
-        else if (Input.GetButtonDown("Weapon3") && Shooting.instance.gunList.Count > 2)
+        else if (Input.GetButtonDown("Weapon3"))
         {
             gunPos = 2;
             Shooting.instance.changeGun(gunPos);
         }
-        else if (Input.GetButtonDown("Weapon4") && Shooting.instance.gunList.Count > 3)
+        else if (Input.GetButtonDown("Weapon4"))
         {
             gunPos = 3;
             Shooting.instance.changeGun(gunPos);
         }
-        else if (Input.GetButtonDown("Weapon5") && Shooting.instance.gunList.Count > 4)
+        else if (Input.GetButtonDown("Weapon5"))
         {
             gunPos = 4;
             Shooting.instance.changeGun(gunPos);
@@ -292,27 +488,13 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
     // Health and UI interactions
     public void takeDamage(int amount)
     {
-        lastDamageTime = Time.time;
-        armorRegenTimer = 0f;
-
-        if (Armor > 0)
-        {
-            Armor--;
-            manager.removeArmor();
-        }
-        else
-        {
-            HP -= amount;
-        }
-
+        HP -= amount;
         updatePlayerUI();
-        StartCoroutine(flahScreen()); 
-
+        StartCoroutine(flahScreen());
         if (HP <= 0)
         {
             GameManager.instance.menus.youLose();
         }
-
 
     }
     IEnumerator flahScreen()
@@ -324,9 +506,8 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
     public void updatePlayerUI()
     {
         if (manager == null) return;
-
-
-
+        
+       
         float tartget = (float)HP / HPMax;
         float XPtarget = (float)manager.experience / manager.levelUpCap;
 
@@ -353,37 +534,6 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup
         }
 
     }
-
-    void playerArmor()
-    {
-        manager.addArmor(maxArmor);
-        Armor = maxArmor;
-
-    }
-
-    void armorRegen()
-    {
-        // wait after taking damage
-        if (Time.time < lastDamageTime + armorRegenDelay)
-            return;
-
-        // already full
-        if (Armor >= maxArmor)
-            return;
-
-        // build up time
-        armorRegenTimer += Time.deltaTime;
-
-        if (armorRegenTimer >= armorRegenRate)
-        {
-            armorRegenTimer = 0f;
-
-            Armor++;
-            manager.addArmor(1); // 👈 update UI
-        }
-
-    }
-
 
     public void addPlayerMoney(int increase)
     {
