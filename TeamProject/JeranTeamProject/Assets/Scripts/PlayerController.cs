@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -15,6 +15,8 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
 
     [Header("Player Stats")]
     [SerializeField] int HP;
+    [SerializeField] int Armor;
+    [SerializeField] int maxArmor;
     [SerializeField] int speed;
     [SerializeField] int sprintMod;
     [SerializeField] int jumpSpeed;
@@ -43,10 +45,16 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
     [SerializeField] List<Pickups> itemList = new List<Pickups>();
     [SerializeField] AudioSource aud;
 
+
+    [SerializeField] float armorRegenDelay;
+    [SerializeField] float armorRegenRate;
     [SerializeField] int moneyOnPlayer;
+
 
     Pickups activePick;
     float HPMax;
+    float lastDamageTime;
+    float armorRegenTimer;
     int jumpCount;
     int invPos;
     int gunPos;
@@ -83,6 +91,8 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
     {    
         manager = GameManager.instance;
         manager.player.GetComponent<PlayerController>().spawnPlayer();
+
+        playerArmor();
     }
     void Awake()
     {
@@ -107,6 +117,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
         Movement();
         WeaponRotate();
         Sprint();
+        armorRegen();
     }
 
     // Movement and Button Interactions
@@ -363,66 +374,67 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
     }
     void ChangeActiveInventory()
     {
+
         // Item Swap
         if (Input.GetButtonDown("Swap"))
         {
-            if (invPos >= itemList.Count - 1)
+            if (itemList != null && itemList.Count > 0)
             {
-                invPos = 0;
+                if (invPos >= itemList.Count - 1)
+                    invPos = 0;
+                else
+                    invPos++;
+
+                changeItem(invPos);
             }
-            else
-            {
-                invPos++;
-            }
-            changeItem(invPos);
         }
+
+        if (Shooting.instance == null || Shooting.instance.gunList == null || Shooting.instance.gunList.Count == 0)
+            return;
+
+
         // Weapon Scroll
         if (Input.GetAxis("Mouse ScrollWheel") > 0)
         {
             if (gunPos >= Shooting.instance.gunList.Count - 1)
-            {
                 gunPos = 0;
-            }
             else
-            {
                 gunPos++;
-            }
+
             updateGun();
         }
         else if (Input.GetAxis("Mouse ScrollWheel") < 0)
         {
             if (gunPos <= 0)
-            {
                 gunPos = Shooting.instance.gunList.Count - 1;
-            }
             else
-            {
                 gunPos--;
-            }
+
             updateGun();
         }
+
         // Weapon Select 1-5
-        if (Input.GetButtonDown("Weapon1"))
+        if (Input.GetButtonDown("Weapon1") && Shooting.instance.gunList.Count > 0)
         {
             gunPos = 0;
             Shooting.instance.changeGun(gunPos);
         }
-        else if (Input.GetButtonDown("Weapon2"))
+        else if (Input.GetButtonDown("Weapon2") && Shooting.instance.gunList.Count > 1)
         {
             gunPos = 1;
             Shooting.instance.changeGun(gunPos);
         }
-        else if (Input.GetButtonDown("Weapon3"))
+        else if (Input.GetButtonDown("Weapon3") && Shooting.instance.gunList.Count > 2)
         {
             gunPos = 2;
             Shooting.instance.changeGun(gunPos);
         }
-        else if (Input.GetButtonDown("Weapon4"))
+        else if (Input.GetButtonDown("Weapon4") && Shooting.instance.gunList.Count > 3)
         {
             gunPos = 3;
             Shooting.instance.changeGun(gunPos);
         }
-        else if (Input.GetButtonDown("Weapon5"))
+        else if (Input.GetButtonDown("Weapon5") && Shooting.instance.gunList.Count > 4)
         {
             gunPos = 4;
             Shooting.instance.changeGun(gunPos);
@@ -488,13 +500,27 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
     // Health and UI interactions
     public void takeDamage(int amount)
     {
-        HP -= amount;
+        lastDamageTime = Time.time;
+        armorRegenTimer = 0f;
+
+        if (Armor > 0)
+        {
+            Armor--;
+            manager.removeArmor();
+        }
+        else
+        {
+            HP -= amount;
+        }
+
         updatePlayerUI();
         StartCoroutine(flahScreen());
+
         if (HP <= 0)
         {
             GameManager.instance.menus.youLose();
         }
+
 
     }
     IEnumerator flahScreen()
@@ -506,8 +532,9 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
     public void updatePlayerUI()
     {
         if (manager == null) return;
-        
-       
+
+
+
         float tartget = (float)HP / HPMax;
         float XPtarget = (float)manager.experience / manager.levelUpCap;
 
@@ -516,7 +543,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
             manager.PlayerHP_bar.fillAmount = Mathf.Lerp(manager.PlayerHP_bar.fillAmount, tartget, Time.deltaTime * 30);
 
         }
-        if(manager.XP_bar != null)
+        if (manager.XP_bar != null)
         {
             manager.XP_bar.fillAmount = Mathf.Lerp(manager.XP_bar.fillAmount, XPtarget, Time.deltaTime * 3);
             manager.levelText.text = manager.level.ToString();
@@ -526,7 +553,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
         if (manager.moneyCount != null)
             manager.moneyCount.text = moneyOnPlayer.ToString();
 
-        if(manager.heathNum != null && manager.maxHealthNum != null)
+        if (manager.heathNum != null && manager.maxHealthNum != null)
         {
             manager.heathNum.text = Mathf.RoundToInt(HP).ToString();
             manager.maxHealthNum.text = Mathf.RoundToInt(HPMax).ToString();
@@ -534,6 +561,37 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
         }
 
     }
+
+    void playerArmor()
+    {
+        manager.addArmor(maxArmor);
+        Armor = maxArmor;
+
+    }
+
+    void armorRegen()
+    {
+        // wait after taking damage
+        if (Time.time < lastDamageTime + armorRegenDelay)
+            return;
+
+        // already full
+        if (Armor >= maxArmor)
+            return;
+
+        // build up time
+        armorRegenTimer += Time.deltaTime;
+
+        if (armorRegenTimer >= armorRegenRate)
+        {
+            armorRegenTimer = 0f;
+
+            Armor++;
+            manager.addArmor(1); // 👈 update UI
+        }
+
+    }
+
 
     public void addPlayerMoney(int increase)
     {
