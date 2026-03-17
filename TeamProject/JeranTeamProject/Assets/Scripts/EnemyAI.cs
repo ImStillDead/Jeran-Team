@@ -7,38 +7,44 @@ public class EnemyAI : MonoBehaviour, IDamage
 {
     [SerializeField] Renderer model;
     [SerializeField] NavMeshAgent agent;
-
+    [Header("Zombie Stats")]
     [SerializeField] int HP;
     [SerializeField] int Speed;
     [SerializeField] int faceTargetSpeed;
-    [SerializeField] int killReward;
-    [SerializeField] int experienceReward;
+    [SerializeField] int maxLifeTimer;
+    [SerializeField] GameObject enemyHPBar;
+    public Image enemyHealth;
 
+    [Header("Zombie Vision/roam")]
     [SerializeField] int FOV;
     [SerializeField] int roamDist;
     [SerializeField] int roamPauseTime;
+    [SerializeField] float forgetPlayerTime = 5f;
+    public bool isRoaming;
 
+    [Header("Zombie Spit")]
     [SerializeField] GameObject spit;
     [SerializeField] float spitRate;
     [SerializeField] Transform spitPos;
     [SerializeField] Transform neckPivot;
     [SerializeField] int neckRotationSpeed;
-
+    [SerializeField] bool canSpit = true;
+    [Header("Zombie Damage")]
     [SerializeField] int contactDamage;
     [SerializeField] float damageRate;
     [SerializeField] int meleeDist;
-    [SerializeField] int maxLifeTimer;
-    [SerializeField] GameObject enemyHPBar;
-    public Image enemyHealth;
+    [Header("Zombie Exp")]
+    [SerializeField] int killReward;
+    [SerializeField] int experienceReward;
+    [Header("Showcase Mode")]
+    [SerializeField] bool showcaseMode = false;
 
     bool hasSpottedPlayer;
     float timeSinceLastSight;
-    [SerializeField] float forgetPlayerTime = 5f;
-
+   
     float inUseTimer;
     Color colorOrg;
     int HPOrigin;
-    public bool isRoaming;
     float spitTimer;
     float roamTimer;
     float damageTimer;
@@ -64,7 +70,12 @@ public class EnemyAI : MonoBehaviour, IDamage
         hasSpottedPlayer = false;
         timeSinceLastSight = 0f;
 
-        if (!isRoaming)
+        if (showcaseMode)
+        {
+            agent.isStopped = true;
+            agent.enabled = false; // Completely disable navmesh agent
+        }
+        else if (!isRoaming)
         {
             agent.SetDestination(GameManager.instance.player.transform.position);
         }
@@ -72,6 +83,11 @@ public class EnemyAI : MonoBehaviour, IDamage
 
     void Update()
     {
+        if (showcaseMode)
+        {
+            return;
+        }
+
         if (GameManager.instance.objectiveTimer >= 3)
         {
             agent.SetDestination(GameManager.instance.player.transform.position);
@@ -150,6 +166,8 @@ public class EnemyAI : MonoBehaviour, IDamage
 
     void roam()
     {
+        if (showcaseMode) return;
+
         roamTimer = 0;
         agent.stoppingDistance = 0;
 
@@ -163,6 +181,8 @@ public class EnemyAI : MonoBehaviour, IDamage
 
     void CheckRoam()
     {
+        if (showcaseMode) return;
+
         if (agent.remainingDistance < 0.5f && roamTimer >= roamPauseTime)
         {
             roam();
@@ -171,6 +191,8 @@ public class EnemyAI : MonoBehaviour, IDamage
 
     bool CanSeePlayer()
     {
+        if (showcaseMode) return false;
+
         playerDir = GameManager.instance.player.transform.position - transform.position;
         angleToPlayer = Vector3.Angle(playerDir, transform.forward);
 
@@ -184,7 +206,7 @@ public class EnemyAI : MonoBehaviour, IDamage
             {
                 agent.SetDestination(GameManager.instance.player.transform.position);
 
-                if (spitTimer >= spitRate && agent.remainingDistance >= meleeDist)
+                if (canSpit && spitTimer >= spitRate && agent.remainingDistance >= meleeDist)
                 {
                     shoot();
                 }
@@ -216,6 +238,7 @@ public class EnemyAI : MonoBehaviour, IDamage
 
     private void OnTriggerEnter(Collider other)
     {
+        if (showcaseMode) return;
         if (other.CompareTag("Player"))
         {
             playerInTrigger = true;
@@ -226,6 +249,7 @@ public class EnemyAI : MonoBehaviour, IDamage
 
     private void OnTriggerExit(Collider other)
     {
+        if (showcaseMode) return;
         if (other.CompareTag("Player"))
         {
             playerInTrigger = false;
@@ -234,6 +258,7 @@ public class EnemyAI : MonoBehaviour, IDamage
 
     void shoot()
     {
+        if (showcaseMode || !canSpit) return;
         spitTimer = 0;
         Instantiate(spit, spitPos.position, transform.rotation);
     }
@@ -277,6 +302,7 @@ public class EnemyAI : MonoBehaviour, IDamage
 
     void neckRotate()
     {
+        if (showcaseMode) return;
         if (neckPivot == null) return;
 
         Vector3 directionToPlayer = GameManager.instance.player.transform.position - neckPivot.position;
