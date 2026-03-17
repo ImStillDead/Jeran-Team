@@ -24,8 +24,8 @@ public class supportGameProgression : MonoBehaviour
 
     public void Start()
     {
-        Manager = GameManager.instance;
-        player = Manager.playerScript.GetComponent<PlayerController>();
+        Manager = DataManager.manager;
+        player = Manager.playerScript;
 
     }
 

@@ -311,6 +311,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5db4fb51d7e6db14daad3faa6abfad33, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::buttonFunctions
+  UI: {fileID: 0}
+  Player: {fileID: 0}
 --- !u!1 &1049581351733507429
 GameObject:
   m_ObjectHideFlags: 0
@@ -726,21 +728,24 @@ MonoBehaviour:
   - {fileID: 662753362679615104}
   - {fileID: 6044543788700534905}
   - {fileID: 6540267720293026578}
+  baseCharacter: {fileID: 11400000, guid: 41dfe4f56ee288347b6ff0efc4559ff4, type: 2}
   VolumeSlider: {fileID: 4761292616876445622}
-  reticle: {fileID: 8843003007540835084}
-  objectiveTimerDelay: 30
+  UI: {fileID: 3854756262889888773}
   maxSpawn: 20
+  reticle: {fileID: 8843003007540835084}
   magazine_text: {fileID: 5765798503774629887}
   maxMagsize_text: {fileID: 3926703161668546565}
   maxAmmo_text: {fileID: 0}
-  Objective_timer_text: {fileID: 797198743885163937}
   activeColor: {r: 1, g: 0.5329268, b: 0, a: 1}
   oldColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  objectiveTimerDelay: 30
+  Objective_timer_text: {fileID: 797198743885163937}
   dialog_prefab: {fileID: 8870623545037511595, guid: 59b116bf1a98fc34cae323cd148b1236, type: 3}
   dialogParent: {fileID: 4431839148191769487}
   listofDialog: []
   Objective_prefab: {fileID: 5052248408302837368, guid: 3e556e4f1e795e947b6a77515adc0a13, type: 3}
   missonParent: {fileID: 6439483758268440179}
+  pickUpObjects: []
   missions: []
   moneyCount: {fileID: 3541884233840564735}
   PlayerHP_bar: {fileID: 211221783427435726}
@@ -756,6 +761,17 @@ MonoBehaviour:
   doorLights: {fileID: 0}
   playerSpawn: {fileID: 0}
   playerCheckpointPop: {fileID: 8735779706122195384}
+  gameData:
+    sceneIndex: 0
+    playerPos: {x: 0, y: 0, z: 0}
+    currentpickUps: []
+    character: {fileID: 0}
+  hubData:
+    sceneIndex: 0
+    playerPos: {x: 0, y: 0, z: 0}
+    currentpickUps: []
+    character: {fileID: 0}
+  DAYs: 0
   sceneIndex: 0
   enemyCount: 0
   killCount: 0
@@ -959,6 +975,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a93aa9686343abd47b7c1600904e401f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DataManager
+  hubData:
+    sceneIndex: 0
+    playerPos: {x: 0, y: 0, z: 0}
+    currentpickUps: []
+    character: {fileID: 0}
   fileName: saveData.json
 --- !u!1 &2765127732332320864
 GameObject:
@@ -1399,7 +1420,7 @@ GameObject:
   - component: {fileID: 4256750434026166569}
   m_Layer: 5
   m_Name: UI
-  m_TagString: Untagged
+  m_TagString: UI
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

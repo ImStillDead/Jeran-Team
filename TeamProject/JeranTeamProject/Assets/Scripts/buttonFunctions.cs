@@ -1,20 +1,20 @@
 using System;
+using Unity.VisualScripting;
+using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class buttonFunctions : MonoBehaviour
 {
-
-
-
-
+    
+        
     public void resume()
     {
-        GameManager.instance.menus.stateUnpause();
+        DataManager.manager.menus.stateUnpause();
     }
     public void LevelSelect()
     {
-        GameManager.instance.levelSelect(1);
+        DataManager.manager.levelSelect(1);
     }
     public void Settings()
     {
@@ -22,27 +22,30 @@ public class buttonFunctions : MonoBehaviour
     }
     public void respawn()
     {
-        GameManager.instance.playerScript.spawnPlayer();
-        GameManager.instance.menus.stateUnpause();
+        DataManager.manager.playerScript.spawnPlayer();
+        DataManager.manager.menus.stateUnpause();
     }
     public void MainMenu()
     {
-        GameManager.instance.saveCurrentRun();
-        GameManager.instance.loadMain();
+        DataManager.instance.SaveData(DataManager.instance.hubData);
+        DataManager.manager.UpdateRun();
+        DataManager.manager.loadMain();
     }
     public void ContinueRun()
     {
-        if (DataManager.instance.currentLoad != null)
+        if (DataManager.instance.currentRun != null)
         {
-            GameData load = DataManager.instance.currentLoad.Load();
+            GameData load = DataManager.instance.currentRun.LoadRun();
             SceneManager.LoadScene(load.sceneIndex);
-            GameManager.instance.menus.stateUnpause();
+            DataManager.manager.menus.stateUnpause();
+            DataManager.manager.LoadRun();
+
         }
     }
     public void ChooseRun(string fileName)
     {
         DataManager.instance.fileName = fileName;
-        DataManager.instance.currentLoad.Load();
+        DataManager.instance.currentLoad.LoadGame();
     }
     public void Restart()
     {
@@ -51,18 +54,18 @@ public class buttonFunctions : MonoBehaviour
             Debug.LogError("GameManager.instance is null! Cannot restart.");
             return;
         }
-        if (GameManager.instance.playerScript != null)
+        if (DataManager.manager.playerScript != null)
         {
-            GameManager.instance.playerScript.spawnPlayer();
+            DataManager.manager.playerScript.spawnPlayer();
         }
-        if (GameManager.instance.menus != null)
+        if (DataManager.manager.menus != null)
         {
-            GameManager.instance.menus.stateUnpause();
+            DataManager.manager.menus.stateUnpause();
         }
     }
     public void Quit()
     {
-        //Save();
+        DataManager.manager.UpdateRun();
         #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
         #else
@@ -71,7 +74,8 @@ public class buttonFunctions : MonoBehaviour
     }
     public void NewGame()
     {
-
+        SceneManager.LoadScene(2);
+        DataManager.instance.NewGame();
     }
 
     public void StartGame()
@@ -80,32 +84,17 @@ public class buttonFunctions : MonoBehaviour
     }
     public void nextLevel()
     {
+
         int index = SceneManager.GetActiveScene().buildIndex;
         index += 1;
         SceneManager.LoadScene(index);
-        GameManager.instance.sceneIndex = index;
-        GameManager.instance.resetObjective();
-        GameManager.instance.playerScript.updateGun();
-        GameManager.instance.saveCurrentRun();
-        GameManager.instance.playerScript.spawnPlayer();
-        GameManager.instance.menus.stateUnpause();
+        DataManager.manager.sceneIndex = index;
+        DataManager.manager.resetObjective();
+        DataManager.manager.UpdateRun();
+        DataManager.manager.playerScript.spawnPlayer();
+        DataManager.manager.menus.stateUnpause();
     }
-    public void levelOne()
-    {
-        GameManager.instance.levelSelect(2);
-    }
-    public void levelTwo()
-    {
-        GameManager.instance.levelSelect(3);
-    }
-    public void levelThree()
-    {
-        GameManager.instance.levelSelect(4);
-    }
-    public void levelFour()
-    {
-        GameManager.instance.levelSelect(5);
-    }
+    
 
 
     

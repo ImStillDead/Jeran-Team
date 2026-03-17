@@ -13,12 +13,12 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
 
-
     public MenuController menus;
     [SerializeField] List<GameObject> itemsCase;
+    [SerializeField] CharacterSelect baseCharacter;
 
     [SerializeField] GameObject VolumeSlider;
-    
+    [SerializeField] public GameObject UI;
 
     
     [SerializeField] int maxSpawn;
@@ -40,6 +40,7 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] GameObject Objective_prefab;
     [SerializeField] Transform missonParent;
+    public List<GameObject> pickUpObjects = new List<GameObject>();
     public List<TMP_Text> missions = new List<TMP_Text> { }; //wip
     int maxTextprefabs = 5;
     
@@ -53,10 +54,6 @@ public class GameManager : MonoBehaviour
     public TMP_Text maxHealthNum;
     public TMP_Text killCount_text;
 
-
-
-    public GameData currentGameData;
-
     public GameObject player;
     public PlayerController playerScript;
     public Light objectiveLight;
@@ -64,6 +61,8 @@ public class GameManager : MonoBehaviour
     public GameObject playerSpawn;
     public GameObject playerCheckpointPop;
 
+    public GameData gameData;
+    public GameData hubData;
 
     public int DAYs;
     public int sceneIndex;
@@ -92,33 +91,31 @@ public class GameManager : MonoBehaviour
         {
             Time.timeScale = 1f;
         }
-
-        instance = this;
-
         if (instance == null)
         {
             instance = this;
         }
+        if (instance.player == null)
+        {
+            instance.player = GameObject.FindWithTag("Player");
+        }
+        if (instance.player != null)
+        {
+            instance.playerScript = instance.player.GetComponent<PlayerController>();
+            instance.playerSpawn = GameObject.FindWithTag("PlayerSpawn");
+        }
 
-        if (player == null)
-        {
-            player = GameObject.FindWithTag("Player");
-        }
-        if (player != null)
-        {
-            playerSpawn = GameObject.FindWithTag("PlayerSpawn");
-            playerScript = player.GetComponent<PlayerController>();
-        }
 
     }
 
     void Start()
     {
         menus = Object.FindAnyObjectByType<MenuController>();
+        GameManager.instance.menus = menus;
         menus.stateUnpause();
-
         moneyCount.text = playerScript.getplayerMoney().ToString();
         prog = GetComponent<supportGameProgression>();
+        StartData();
     }
 
     void Update()
@@ -359,23 +356,8 @@ public class GameManager : MonoBehaviour
         itemIndex = index;
         itemsCase[index].SetActive(true);
     }
+   
     
-    public void saveCurrentRun()
-    {
-        if(currentGameData == null)
-        {
-            currentGameData = new GameData();
-        }
-        currentGameData.sceneIndex = sceneIndex;
-        currentGameData.player = player;
-        currentGameData.playerScript = playerScript;
-        DataManager.instance.Save(currentGameData);
-    }
-    public void loadCurrentRun()
-    {
-        player = currentGameData.player;
-        playerScript = currentGameData.playerScript;
-    }
 
     public int randomNumberPicker(int amount)
     {
@@ -385,7 +367,7 @@ public class GameManager : MonoBehaviour
         return item;
     }
 
-     public void guiAlwaysFacePlayer(GameObject obje)
+    public void guiAlwaysFacePlayer(GameObject obje)
     {
         if (obje == null) return;
 
@@ -461,6 +443,42 @@ public class GameManager : MonoBehaviour
         return stat;
     }
 
-
-
+    public void SaveData(GameData data)
+    {
+        DataManager.instance.SaveData(data);
+    }
+    public void StartData()
+    {
+        gameData = new GameData();
+        hubData = new GameData();
+        hubData.character = baseCharacter;
+        DataManager.instance.UpdateHub(hubData);
+        if (DataManager.manager == null)
+        {
+            DataManager.manager = this;
+        }
+        if (playerScript.manager == null)
+        {
+            playerScript.manager = DataManager.manager;
+        }
+        playerScript.playerData = new PlayerData();
+        playerScript.UpdatePlayerStats(hubData.character);
+        
+    }
+    public void SaveRun(GameData data)
+    {
+        DataManager.instance.SaveRun(data);
+    }
+    public void UpdateRun()
+    {
+        gameData.sceneIndex = sceneIndex;
+        gameData.currentpickUps = pickUpObjects;
+        gameData.playerPos = player.transform.position;
+        SaveRun(gameData);
+    }
+    public void LoadRun()
+    {
+        gameData = DataManager.instance.LoadRun();
+        player.transform.position = gameData.playerPos;
+    }
 }
