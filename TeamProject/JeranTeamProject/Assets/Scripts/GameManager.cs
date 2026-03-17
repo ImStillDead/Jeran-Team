@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
@@ -19,20 +18,22 @@ public class GameManager : MonoBehaviour
     [SerializeField] List<GameObject> itemsCase;
 
     [SerializeField] GameObject VolumeSlider;
-    [SerializeField] GameObject reticle;
+    
 
-    [SerializeField] int objectiveTimerDelay;
+    
     [SerializeField] int maxSpawn;
-
+    [Header("Weapon Handle")]
+    [SerializeField] GameObject reticle;
     [SerializeField] TMP_Text magazine_text;
     [SerializeField] TMP_Text maxMagsize_text;
     [SerializeField] TMP_Text maxAmmo_text;
-    [SerializeField] TMP_Text Objective_timer_text;
-
     [SerializeField] Color activeColor = Color.white;
     [SerializeField] Color oldColor = Color.gray;
 
+    [Header("Npc/Missons")]
 
+    [SerializeField] int objectiveTimerDelay;
+    [SerializeField] TMP_Text Objective_timer_text;
     [SerializeField] GameObject dialog_prefab;
     [SerializeField] Transform dialogParent;
     public List<TMP_Text> listofDialog = new List<TMP_Text> { }; //wip
@@ -41,7 +42,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] Transform missonParent;
     public List<TMP_Text> missions = new List<TMP_Text> { }; //wip
     int maxTextprefabs = 5;
-
+    
+    [Header("Image/Text INPUTS")]
     public TMP_Text moneyCount;
     public Image PlayerHP_bar;
     public Image XP_bar;
