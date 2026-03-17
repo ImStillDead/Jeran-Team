@@ -392,6 +392,31 @@ public class GameManager : MonoBehaviour
 
     public void updateItem(int index)
     {
+        StartCoroutine(FlashTextCoroutine(text, flashColor, duration));
+    }
+
+    private IEnumerator FlashTextCoroutine(TMP_Text text, Color flashColor, float duration)
+    {
+        if (text == null) yield break;
+
+        float elapsed = 0f;
+
+        Color original = Color.white;
+        Color target = flashColor;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            text.color = Color.Lerp(original, target, elapsed / duration);
+            yield return null;
+        }
+
+        text.color = original;        
+    }
+
+
+    public void updateItem(int index)
+    {
         itemsCase[itemIndex].SetActive(false);
         itemIndex = index;
         itemsCase[index].SetActive(true);
@@ -483,7 +508,19 @@ public class GameManager : MonoBehaviour
         return stat;
     }
 
-<<<<<<< HEAD
+    public void addArmor(int input)
+    {
+        for(int index = 0; index < input; index++)
+        {
+            tempArmor = Instantiate(armorPrefab, armorParent.transform);
+            armors.Add(tempArmor);
+        }
+    }
+    public void removeArmor()
+    {
+        if (armors.Count > 0)
+        {
+            Image lastArmor = armors[armors.Count - 1];
     public void SaveData(GameData data)
     {
         DataManager.instance.SaveData(data);
@@ -522,7 +559,6 @@ public class GameManager : MonoBehaviour
         gameData = DataManager.instance.LoadRun();
         player.transform.position = gameData.playerPos;
     }
-=======
     public void addArmor(int input)
     {
         for(int index = 0; index < input; index++)
@@ -548,5 +584,4 @@ public class GameManager : MonoBehaviour
 
     
 
->>>>>>> origin/DevBranchCristobal
 }
