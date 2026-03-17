@@ -386,9 +386,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Cameracontroller
   player: {fileID: 2787569801988584938}
-  sens: 300
-  lockVertMin: -45
-  lockVertMax: 45
+  sens: 600
+  lockVertMin: -80
+  lockVertMax: 80
   invertY: 0
   camRotX: 0
 --- !u!1 &4727789486289319341
@@ -615,6 +615,13 @@ MonoBehaviour:
   volume: 0
   spread: 0
   recoil: {fileID: 0}
+  isShotgun: 0
+  isBurst: 0
+  burstTime: 0
+  rechamberTime: 0
+  burstAmount: 0
+  pelletAmount: 0
+  burstDelay: 0
 --- !u!33 &998449188199442081
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -1007,7 +1014,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 702bea551e769674e8677faba3484417, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
-  instance: {fileID: 0}
   playerController: {fileID: 7136655406761469723}
   ignoreLayer:
     serializedVersion: 2
@@ -1026,7 +1032,7 @@ MonoBehaviour:
   torch: {fileID: 5439904606205444925}
   itemList: []
   aud: {fileID: 8287638095323782048}
-  moneyOnPlayer: 23
+  moneyOnPlayer: 50
 --- !u!33 &6094603833308852184
 MeshFilter:
   m_ObjectHideFlags: 0

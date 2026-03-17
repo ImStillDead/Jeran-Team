@@ -8,7 +8,7 @@ using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDash
 {
-    public PlayerController instance;
+    
 
     [SerializeField] CharacterController playerController;
     [SerializeField] LayerMask ignoreLayer;
@@ -46,7 +46,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
     [SerializeField] int moneyOnPlayer;
 
     Pickups activePick;
-    int HPMax;
+    float HPMax;
     int jumpCount;
     int invPos;
     int gunPos;
@@ -80,32 +80,29 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
     GameManager manager;
 
     void Start()
-    {
+    {    
         manager = GameManager.instance;
-        spawnPlayer();
+        manager.player.GetComponent<PlayerController>().spawnPlayer();
     }
     void Awake()
     {
-        if (instance == null)
-        {
-            instance = this;
-        }
+
         if(playerController == null)
         {
-            playerController = instance.GetComponent<CharacterController>();
+            playerController = manager.player.GetComponent<CharacterController>();
         }
 
         SetupDashing(); 
         SetupSliding();
 
         isFirstPerson = true;
-        HPMax = HP;
+        if(HPMax == 0) 
+        HPMax = 50;
         speedOrigin = speed;
         updatePlayerUI();
     }
     void Update()
     {
-
         updatePlayerUI();
         Movement();
         WeaponRotate();
@@ -508,22 +505,33 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
     }
     public void updatePlayerUI()
     {
+        if (manager == null) return;
         
-        GameManager MGs = GameManager.instance;
+       
         float tartget = (float)HP / HPMax;
-        float XPtarget = MGs.experience / MGs.levelUpCap;
+        float XPtarget = (float)manager.experience / manager.levelUpCap;
 
-        if (GameManager.instance != null && GameManager.instance.PlayerHP_bar != null)
+        if (manager.PlayerHP_bar != null)
         {
-            
+            manager.PlayerHP_bar.fillAmount = Mathf.Lerp(manager.PlayerHP_bar.fillAmount, tartget, Time.deltaTime * 30);
 
-            MGs.PlayerHP_bar.fillAmount = Mathf.Lerp(MGs.PlayerHP_bar.fillAmount, tartget, Time.deltaTime * 30);
-            MGs.XP_bar.fillAmount = Mathf.Lerp(MGs.XP_bar.fillAmount, XPtarget, Time.deltaTime * 3);
-            MGs.levelText.text = MGs.level.ToString();
+        }
+        if(manager.XP_bar != null)
+        {
+            manager.XP_bar.fillAmount = Mathf.Lerp(manager.XP_bar.fillAmount, XPtarget, Time.deltaTime * 3);
+            manager.levelText.text = manager.level.ToString();
+
         }
 
-        if (manager != null && manager.moneyCount != null)
+        if (manager.moneyCount != null)
             manager.moneyCount.text = moneyOnPlayer.ToString();
+
+        if(manager.heathNum != null && manager.maxHealthNum != null)
+        {
+            manager.heathNum.text = Mathf.RoundToInt(HP).ToString();
+            manager.maxHealthNum.text = Mathf.RoundToInt(HPMax).ToString();
+
+        }
 
     }
 
@@ -545,6 +553,14 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
             manager.addDialog("you to broke to buy this item");
             return false;
         }
+    }
+    public void setMaxHp(float input)
+    {
+        HPMax = input;
+    }
+    public float getMaxHP()
+    {
+        return HPMax;
     }
     public int getplayerMoney()
     {
@@ -628,11 +644,11 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
 
     public void Heal(int amount)
     {
-        HPMax += amount;
+        HP += amount;
+
         if (HP > HPMax)
-        {
-            HP = HPMax;
-        }
+            HP = (int)HPMax;
+
         updatePlayerUI();
     }
     IEnumerator dmgBoost() 
@@ -659,7 +675,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
     {
         playerController.transform.position = GameManager.instance.playerSpawn.transform.position;
         Physics.SyncTransforms();
-        HP = HPMax;
+        HP = (int)HPMax;
         updatePlayerUI();
 
         if(manager.menus != null) manager.menus.stateUnpause();

@@ -1315,7 +1315,7 @@ MonoBehaviour:
   m_PreserveMeshAssetOnDestroy: 0
   assetGuid: 
   m_Mesh: {fileID: 0}
-  m_VersionIndex: 130
+  m_VersionIndex: 118
   m_IsSelectable: 1
   m_SelectedFaces: 
   m_SelectedEdges: []
@@ -2339,7 +2339,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7391403877321609025}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 16.95, y: 1.9, z: 125.62}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -2364,14 +2364,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::EnemyAI
   model: {fileID: 1383632741299032061}
   agent: {fileID: 6438487049217479987}
-  HP: 7
-  Speed: 3
+  HP: 5
+  Speed: 7
   faceTargetSpeed: 1
-  FOV: 360
+  killReward: 0
+  experienceReward: 0
+  FOV: 65
   roamDist: 15
   roamPauseTime: 3
   spit: {fileID: 7398234212651272795, guid: 229986870f567754283d079147199970, type: 3}
-  spitRate: 1.5
+  spitRate: 1
   spitPos: {fileID: 6364869330390085958}
   neckPivot: {fileID: 6926723725406826465}
   neckRotationSpeed: 15
@@ -2381,6 +2383,7 @@ MonoBehaviour:
   maxLifeTimer: 0
   enemyHPBar: {fileID: 3942883864272483843}
   enemyHealth: {fileID: 6485073116435268024}
+  forgetPlayerTime: 5
   isRoaming: 1
 --- !u!195 &6438487049217479987
 NavMeshAgent:
@@ -2471,10 +2474,10 @@ CapsuleCollider:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 9793
+    m_Bits: 1601
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 4096
+    m_Bits: 0
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0

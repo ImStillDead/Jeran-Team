@@ -1,12 +1,15 @@
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SocialPlatforms.Impl;
 
 public enum progess
 {
-    doDamage,
-    get10Kills, get100kills, get1000kills,
+
+    get10Kills,get50kills, get100kills,get500kills, get1000kills,
     findAcommonWeapon,findAUncommon,findARare, findAPerfected, findAExotic,
+    survive1Day, survive5days, survive10days, survive15days, completeArun,
+
 
 
 
@@ -16,12 +19,13 @@ public class supportGameProgression : MonoBehaviour
 {
     PlayerController player;
     GameManager Manager;
+    Shooting guns;
     private HashSet<progess> unlocked = new HashSet<progess>();
 
     public void Start()
     {
         Manager = GameManager.instance;
-        player = Manager.player.GetComponent<PlayerController>();
+        player = Manager.playerScript.GetComponent<PlayerController>();
 
     }
 
@@ -34,14 +38,77 @@ public class supportGameProgression : MonoBehaviour
         }
     }
 
-    public void get10kills(int kills)
+    public void getkills(int kills)
     {
         if(kills >= 10 && !unlocked.Contains(progess.get10Kills))
         {
             Debug.LogWarning("*********achievement unlocked************");
             Unlock(progess.get10Kills);
-            Manager.addDialog("you killed 10 enemies");
+            Manager.addDialog("you killed 10 enemies"); //the addition to the dialog is temp for testing, it will be updated for a notif bar that willpop up and slide away.
         }
+
+        if (kills >= 50 && !unlocked.Contains(progess.get50kills))
+        {
+            Debug.LogWarning("*********achievement unlocked************");
+            Unlock(progess.get50kills);
+            Manager.addDialog("you killed 50 enemies");
+        }
+
+        if (kills >= 100 && !unlocked.Contains(progess.get100kills))
+        {
+            Debug.LogWarning("*********achievement unlocked************");
+            Unlock(progess.get100kills);
+            Manager.addDialog("you killed 100 enemies");
+        }
+        if (kills >= 500 && !unlocked.Contains(progess.get500kills))
+        {
+            Debug.LogWarning("*********achievement unlocked************");
+            Unlock(progess.get500kills);
+            Manager.addDialog("you killed 500 enemies");
+        }
+
+    }
+
+    public void FindItem()
+    {
+        for(int index = 0; index < guns.gunList.Count; index++)
+        {
+            if (guns.gunList[index] == GameObject.FindGameObjectWithTag("Common") && !unlocked.Contains(progess.findAcommonWeapon))
+            {
+
+                Debug.LogWarning("*********achievement unlocked************");
+                Unlock(progess.findAcommonWeapon);
+                Manager.addDialog("you found a Common weapon");
+            }
+
+            if (guns.gunList[index] == GameObject.FindGameObjectWithTag("Uncommon") && !unlocked.Contains(progess.findAUncommon))
+            {
+
+                Debug.LogWarning("*********achievement unlocked************");
+                Unlock(progess.findAUncommon);
+                Manager.addDialog("you found a Uncommon weapon");
+            }
+
+        }
+
+    }
+
+    public void surviveDays()
+    {
+        if(Manager.DAYs == 1 && !unlocked.Contains(progess.survive1Day))
+        {
+            Unlock(progess.survive1Day);
+            Manager.addDialog("you survived 1 day");
+
+        }
+        if (Manager.DAYs == 5 && !unlocked.Contains(progess.survive5days))
+        {
+            Unlock(progess.survive5days);
+            Manager.addDialog("you survived 1 day");
+
+        }
+
+
     }
 
 
