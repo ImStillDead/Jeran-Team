@@ -9,7 +9,7 @@ public enum progess
     get10Kills,get50kills, get100kills,get500kills, get1000kills,
     findAcommonWeapon,findAUncommon,findARare, findAPerfected, findAExotic,
     survive1Day, survive5days, survive10days, survive15days, completeArun,
-
+    PerfectRun, masochist, 
 }
 
 public class supportGameProgression : MonoBehaviour
