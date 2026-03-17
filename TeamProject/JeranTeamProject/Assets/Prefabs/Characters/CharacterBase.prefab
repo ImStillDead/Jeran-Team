@@ -1019,6 +1019,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 1015
   HP: 50
+  Armor: 1
+  maxArmor: 3
   speed: 8
   sprintMod: 2
   jumpSpeed: 10
@@ -1042,6 +1044,8 @@ MonoBehaviour:
   torch: {fileID: 5439904606205444925}
   itemList: []
   aud: {fileID: 8287638095323782048}
+  armorRegenDelay: 3
+  armorRegenRate: 1
   moneyOnPlayer: 50
   canPickup: 0
   canSwap: 0

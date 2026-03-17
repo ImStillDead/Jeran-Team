@@ -1,3 +1,4 @@
+using Mono.Cecil.Cil;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -54,6 +55,18 @@ public class GameManager : MonoBehaviour
     public TMP_Text maxHealthNum;
     public TMP_Text killCount_text;
 
+<<<<<<< HEAD
+=======
+
+    public GameObject armorParent;
+    public Image armorPrefab;
+    private Image tempArmor;
+    private List<Image> armors = new List<Image>();
+
+
+    public GameData currentGameData;
+
+>>>>>>> origin/DevBranchCristobal
     public GameObject player;
     public PlayerController playerScript;
     public Light objectiveLight;
@@ -308,7 +321,7 @@ public class GameManager : MonoBehaviour
             {
                 oldDialog.color = oldColor;
                 oldDialog.fontSize = 40;
-                StartCoroutine(fadeText(oldDialog, 3));
+                StartCoroutine(fadeTextThenDestory(oldDialog, 3, Color.gray));
             }
 
             GameObject obj = Instantiate(dialog_prefab, dialogParent);
@@ -317,7 +330,7 @@ public class GameManager : MonoBehaviour
             text.color = activeColor;
             text.fontSize = 60;
             obj.transform.SetAsLastSibling();
-            StartCoroutine(fadeText(text, 9));
+            StartCoroutine(fadeTextThenDestory(text, 9,Color.clear));
 
             listofDialog.Add(text);
 
@@ -330,14 +343,14 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    IEnumerator fadeText(TMP_Text Text, float duration)
+    IEnumerator fadeTextThenDestory(TMP_Text Text, float duration, Color color)
     {
         if (Text == null) yield break;
 
         float elapsed = 0f;
 
         Color original = Color.white;
-        Color target = Color.clear;
+        Color target = color;
 
         while (elapsed < duration)
         {
@@ -350,6 +363,33 @@ public class GameManager : MonoBehaviour
         if (Text != null)
             Destroy(Text.gameObject);
     }
+
+
+    public void FlashText(TMP_Text text, Color flashColor, float duration)
+    {
+        StartCoroutine(FlashTextCoroutine(text, flashColor, duration));
+    }
+
+    private IEnumerator FlashTextCoroutine(TMP_Text text, Color flashColor, float duration)
+    {
+        if (text == null) yield break;
+
+        float elapsed = 0f;
+
+        Color original = Color.white;
+        Color target = flashColor;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            text.color = Color.Lerp(original, target, elapsed / duration);
+            yield return null;
+        }
+
+        text.color = original;        
+    }
+
+
     public void updateItem(int index)
     {
         itemsCase[itemIndex].SetActive(false);
@@ -397,7 +437,7 @@ public class GameManager : MonoBehaviour
             level++;
             experience -= levelUpCap;
             levelUpCap *= increaseXpCap;
-
+            FlashText(levelText, Color.yellow, 2);
             playerScript.setMaxHp(playerStatUpgrade(tempMaxHP));
             playerScript.Heal((int)tempMaxHP/4);
 
@@ -443,6 +483,7 @@ public class GameManager : MonoBehaviour
         return stat;
     }
 
+<<<<<<< HEAD
     public void SaveData(GameData data)
     {
         DataManager.instance.SaveData(data);
@@ -481,4 +522,31 @@ public class GameManager : MonoBehaviour
         gameData = DataManager.instance.LoadRun();
         player.transform.position = gameData.playerPos;
     }
+=======
+    public void addArmor(int input)
+    {
+        for(int index = 0; index < input; index++)
+        {
+            tempArmor = Instantiate(armorPrefab, armorParent.transform);
+            armors.Add(tempArmor);
+        }
+    }
+    public void removeArmor()
+    {
+        if (armors.Count > 0)
+        {
+            Image lastArmor = armors[armors.Count - 1];
+
+            armors.RemoveAt(armors.Count - 1);
+
+            if (lastArmor != null)
+                Destroy(lastArmor.gameObject);
+        }
+
+
+    }
+
+    
+
+>>>>>>> origin/DevBranchCristobal
 }
