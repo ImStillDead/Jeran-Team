@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -15,19 +15,16 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
 
     [Header("Player Stats")]
     [SerializeField] int HP;
-<<<<<<< HEAD:TeamProject/JeranTeamProject/Assets/Scripts/Player/PlayerController.cs
     [SerializeField] float speed;
     [SerializeField] float sprintMod;
     [SerializeField] float jumpSpeed;
     [SerializeField] float jumpChargeMax;
     [SerializeField] float jumpChargeRate;
-=======
     [SerializeField] int Armor;
     [SerializeField] int maxArmor;
     [SerializeField] int speed;
     [SerializeField] int sprintMod;
     [SerializeField] int jumpSpeed;
->>>>>>> origin/DevBranchCristobal:TeamProject/JeranTeamProject/Assets/Scripts/PlayerController.cs
     [SerializeField] int jumpMax;
     [SerializeField] int interactDis;
     [SerializeField] int enemyViewDis;
@@ -52,13 +49,10 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
     [SerializeField] GameObject torch;
     [SerializeField] public List<Pickups> itemList = new List<Pickups>();
     [SerializeField] AudioSource aud;
-<<<<<<< HEAD:TeamProject/JeranTeamProject/Assets/Scripts/Player/PlayerController.cs
-=======
 
 
     [SerializeField] float armorRegenDelay;
     [SerializeField] float armorRegenRate;
->>>>>>> origin/DevBranchCristobal:TeamProject/JeranTeamProject/Assets/Scripts/PlayerController.cs
     [SerializeField] int moneyOnPlayer;
 
 
@@ -106,22 +100,18 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
     public PlayerData playerData;
     void Start()
     {    
-<<<<<<< HEAD:TeamProject/JeranTeamProject/Assets/Scripts/Player/PlayerController.cs
         spawnPlayer();
         if(gameData == null)
         {
             gameData = new GameData();
         }
-=======
         manager = GameManager.instance;
         manager.player.GetComponent<PlayerController>().spawnPlayer();
 
         playerArmor();
->>>>>>> origin/DevBranchCristobal:TeamProject/JeranTeamProject/Assets/Scripts/PlayerController.cs
     }
     void Awake()
     {
-
         if(playerController == null)
         {
             playerController = manager.player.GetComponent<CharacterController>();
@@ -143,11 +133,8 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
         Movement();
         WeaponRotate();
         Sprint();
-<<<<<<< HEAD:TeamProject/JeranTeamProject/Assets/Scripts/Player/PlayerController.cs
         Charge();
-=======
         armorRegen();
->>>>>>> origin/DevBranchCristobal:TeamProject/JeranTeamProject/Assets/Scripts/PlayerController.cs
     }
 
     // Movement and Button Interactions
