@@ -10,9 +10,6 @@ public enum progess
     findAcommonWeapon,findAUncommon,findARare, findAPerfected, findAExotic,
     survive1Day, survive5days, survive10days, survive15days, completeArun,
 
-
-
-
 }
 
 public class supportGameProgression : MonoBehaviour

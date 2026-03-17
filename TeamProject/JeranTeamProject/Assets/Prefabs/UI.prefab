@@ -222,7 +222,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: -18.712524, y: -173.06}
+  m_AnchoredPosition: {x: -560.48, y: -991.06}
   m_SizeDelta: {x: 400, y: 10}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!222 &2872933773835525567
@@ -756,6 +756,7 @@ MonoBehaviour:
   doorLights: {fileID: 0}
   playerSpawn: {fileID: 0}
   playerCheckpointPop: {fileID: 8735779706122195384}
+  DAYs: 0
   sceneIndex: 0
   enemyCount: 0
   killCount: 0
@@ -2287,6 +2288,7 @@ GameObject:
   - component: {fileID: 3557059669922437331}
   - component: {fileID: 6447489046927274963}
   - component: {fileID: 7485220639235267180}
+  - component: {fileID: 5386133897708431568}
   m_Layer: 5
   m_Name: level text
   m_TagString: Untagged
@@ -2310,7 +2312,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 43.25, y: 288.38}
+  m_AnchoredPosition: {x: -51.210022, y: -457.865}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6447489046927274963
@@ -2368,8 +2370,8 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 60
-  m_fontSizeBase: 60
+  m_fontSize: 40
+  m_fontSizeBase: 40
   m_fontWeight: 400
   m_enableAutoSizing: 0
   m_fontSizeMin: 18
@@ -2413,6 +2415,22 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
+--- !u!111 &5386133897708431568
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5529433182498278383}
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Animation: {fileID: 0}
+  m_Animations: []
+  m_WrapMode: 0
+  m_PlayAutomatically: 1
+  m_AnimatePhysics: 0
+  m_UpdateMode: 0
+  m_CullingType: 0
 --- !u!1 &5803262495070739225
 GameObject:
   m_ObjectHideFlags: 0
