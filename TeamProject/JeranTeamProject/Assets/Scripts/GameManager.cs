@@ -1,4 +1,3 @@
-using Mono.Cecil.Cil;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -14,12 +13,12 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
 
-
     public MenuController menus;
     [SerializeField] List<GameObject> itemsCase;
+    [SerializeField] CharacterSelect baseCharacter;
 
     [SerializeField] GameObject VolumeSlider;
-    
+    [SerializeField] public GameObject UI;
 
     
     [SerializeField] int maxSpawn;
@@ -41,6 +40,7 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] GameObject Objective_prefab;
     [SerializeField] Transform missonParent;
+    public List<GameObject> pickUpObjects = new List<GameObject>();
     public List<TMP_Text> missions = new List<TMP_Text> { }; //wip
     int maxTextprefabs = 5;
     
@@ -54,15 +54,6 @@ public class GameManager : MonoBehaviour
     public TMP_Text maxHealthNum;
     public TMP_Text killCount_text;
 
-
-    public GameObject armorParent;
-    public Image armorPrefab;
-    private Image tempArmor;
-    private List<Image> armors = new List<Image>();
-
-
-    public GameData currentGameData;
-
     public GameObject player;
     public PlayerController playerScript;
     public Light objectiveLight;
@@ -70,6 +61,8 @@ public class GameManager : MonoBehaviour
     public GameObject playerSpawn;
     public GameObject playerCheckpointPop;
 
+    public GameData gameData;
+    public GameData hubData;
 
     public int DAYs;
     public int sceneIndex;
@@ -98,33 +91,31 @@ public class GameManager : MonoBehaviour
         {
             Time.timeScale = 1f;
         }
-
-        instance = this;
-
         if (instance == null)
         {
             instance = this;
         }
+        if (instance.player == null)
+        {
+            instance.player = GameObject.FindWithTag("Player");
+        }
+        if (instance.player != null)
+        {
+            instance.playerScript = instance.player.GetComponent<PlayerController>();
+            instance.playerSpawn = GameObject.FindWithTag("PlayerSpawn");
+        }
 
-        if (player == null)
-        {
-            player = GameObject.FindWithTag("Player");
-        }
-        if (player != null)
-        {
-            playerSpawn = GameObject.FindWithTag("PlayerSpawn");
-            playerScript = player.GetComponent<PlayerController>();
-        }
 
     }
 
     void Start()
     {
         menus = Object.FindAnyObjectByType<MenuController>();
+        GameManager.instance.menus = menus;
         menus.stateUnpause();
-
         moneyCount.text = playerScript.getplayerMoney().ToString();
         prog = GetComponent<supportGameProgression>();
+        StartData();
     }
 
     void Update()
@@ -317,7 +308,7 @@ public class GameManager : MonoBehaviour
             {
                 oldDialog.color = oldColor;
                 oldDialog.fontSize = 40;
-                StartCoroutine(fadeTextThenDestory(oldDialog, 3, Color.gray));
+                StartCoroutine(fadeText(oldDialog, 3));
             }
 
             GameObject obj = Instantiate(dialog_prefab, dialogParent);
@@ -326,7 +317,7 @@ public class GameManager : MonoBehaviour
             text.color = activeColor;
             text.fontSize = 60;
             obj.transform.SetAsLastSibling();
-            StartCoroutine(fadeTextThenDestory(text, 9,Color.clear));
+            StartCoroutine(fadeText(text, 9));
 
             listofDialog.Add(text);
 
@@ -339,14 +330,14 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    IEnumerator fadeTextThenDestory(TMP_Text Text, float duration, Color color)
+    IEnumerator fadeText(TMP_Text Text, float duration)
     {
         if (Text == null) yield break;
 
         float elapsed = 0f;
 
         Color original = Color.white;
-        Color target = color;
+        Color target = Color.clear;
 
         while (elapsed < duration)
         {
@@ -359,56 +350,14 @@ public class GameManager : MonoBehaviour
         if (Text != null)
             Destroy(Text.gameObject);
     }
-
-
-    public void FlashText(TMP_Text text, Color flashColor, float duration)
-    {
-        StartCoroutine(FlashTextCoroutine(text, flashColor, duration));
-    }
-
-    private IEnumerator FlashTextCoroutine(TMP_Text text, Color flashColor, float duration)
-    {
-        if (text == null) yield break;
-
-        float elapsed = 0f;
-
-        Color original = Color.white;
-        Color target = flashColor;
-
-        while (elapsed < duration)
-        {
-            elapsed += Time.deltaTime;
-            text.color = Color.Lerp(original, target, elapsed / duration);
-            yield return null;
-        }
-
-        text.color = original;        
-    }
-
-
     public void updateItem(int index)
     {
         itemsCase[itemIndex].SetActive(false);
         itemIndex = index;
         itemsCase[index].SetActive(true);
     }
+   
     
-    public void saveCurrentRun()
-    {
-        if(currentGameData == null)
-        {
-            currentGameData = new GameData();
-        }
-        currentGameData.sceneIndex = sceneIndex;
-        currentGameData.player = player;
-        currentGameData.playerScript = playerScript;
-        DataManager.instance.Save(currentGameData);
-    }
-    public void loadCurrentRun()
-    {
-        player = currentGameData.player;
-        playerScript = currentGameData.playerScript;
-    }
 
     public int randomNumberPicker(int amount)
     {
@@ -418,7 +367,7 @@ public class GameManager : MonoBehaviour
         return item;
     }
 
-     public void guiAlwaysFacePlayer(GameObject obje)
+    public void guiAlwaysFacePlayer(GameObject obje)
     {
         if (obje == null) return;
 
@@ -448,7 +397,7 @@ public class GameManager : MonoBehaviour
             level++;
             experience -= levelUpCap;
             levelUpCap *= increaseXpCap;
-            FlashText(levelText, Color.yellow, 2);
+
             playerScript.setMaxHp(playerStatUpgrade(tempMaxHP));
             playerScript.Heal((int)tempMaxHP/4);
 
@@ -494,29 +443,42 @@ public class GameManager : MonoBehaviour
         return stat;
     }
 
-    public void addArmor(int input)
+    public void SaveData(GameData data)
     {
-        for(int index = 0; index < input; index++)
-        {
-            tempArmor = Instantiate(armorPrefab, armorParent.transform);
-            armors.Add(tempArmor);
-        }
+        DataManager.instance.SaveData(data);
     }
-    public void removeArmor()
+    public void StartData()
     {
-        if (armors.Count > 0)
+        gameData = new GameData();
+        hubData = new GameData();
+        hubData.character = baseCharacter;
+        DataManager.instance.UpdateHub(hubData);
+        if (DataManager.manager == null)
         {
-            Image lastArmor = armors[armors.Count - 1];
-
-            armors.RemoveAt(armors.Count - 1);
-
-            if (lastArmor != null)
-                Destroy(lastArmor.gameObject);
+            DataManager.manager = this;
         }
-
-
+        if (playerScript.manager == null)
+        {
+            playerScript.manager = DataManager.manager;
+        }
+        playerScript.playerData = new PlayerData();
+        playerScript.UpdatePlayerStats(hubData.character);
+        
     }
-
-    
-
+    public void SaveRun(GameData data)
+    {
+        DataManager.instance.SaveRun(data);
+    }
+    public void UpdateRun()
+    {
+        gameData.sceneIndex = sceneIndex;
+        gameData.currentpickUps = pickUpObjects;
+        gameData.playerPos = player.transform.position;
+        SaveRun(gameData);
+    }
+    public void LoadRun()
+    {
+        gameData = DataManager.instance.LoadRun();
+        player.transform.position = gameData.playerPos;
+    }
 }

@@ -1024,6 +1024,8 @@ MonoBehaviour:
   speed: 8
   sprintMod: 2
   jumpSpeed: 10
+  jumpChargeMax: 3
+  jumpChargeRate: 2
   jumpMax: 1
   interactDis: 3
   enemyViewDis: 0
@@ -1045,6 +1047,8 @@ MonoBehaviour:
   armorRegenDelay: 3
   armorRegenRate: 1
   moneyOnPlayer: 50
+  canPickup: 0
+  canSwap: 0
 --- !u!33 &6094603833308852184
 MeshFilter:
   m_ObjectHideFlags: 0

@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 
 
-public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDash
+public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDash, ICharacters
 {
     
 
@@ -15,11 +15,11 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
 
     [Header("Player Stats")]
     [SerializeField] int HP;
-    [SerializeField] int Armor;
-    [SerializeField] int maxArmor;
-    [SerializeField] int speed;
-    [SerializeField] int sprintMod;
-    [SerializeField] int jumpSpeed;
+    [SerializeField] float speed;
+    [SerializeField] float sprintMod;
+    [SerializeField] float jumpSpeed;
+    [SerializeField] float jumpChargeMax;
+    [SerializeField] float jumpChargeRate;
     [SerializeField] int jumpMax;
     [SerializeField] int interactDis;
     [SerializeField] int enemyViewDis;
@@ -42,30 +42,28 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
     [SerializeField] GameObject firstPersonCamera;
     [SerializeField] GameObject thirdPersonCamera;
     [SerializeField] GameObject torch;
-    [SerializeField] List<Pickups> itemList = new List<Pickups>();
+    [SerializeField] public List<Pickups> itemList = new List<Pickups>();
     [SerializeField] AudioSource aud;
-
-
-    [SerializeField] float armorRegenDelay;
-    [SerializeField] float armorRegenRate;
     [SerializeField] int moneyOnPlayer;
-
 
     Pickups activePick;
     float HPMax;
-    float lastDamageTime;
-    float armorRegenTimer;
     int jumpCount;
     int invPos;
     int gunPos;
+    int gunMax;
     int itemIndex;
     float boostTime;
+    float jumpCharge;
     int tempOrginDmg;
-    int speedOrigin;
+    float speedOrigin;
+    float jumpSpeedOrigin;
     bool dmgBoosting;
-    int tempOrginSpeed;
+    bool isJumping;
     bool isFirstPerson;
     bool torchActive;
+    public bool canPickup;
+    public bool canSwap;
     Vector3 moveDir;
     Vector3 playerVel;
 
@@ -85,14 +83,16 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
 
 
 
-    GameManager manager;
-
+    public GameManager manager;
+    GameData gameData;
+    public PlayerData playerData;
     void Start()
     {    
-        manager = GameManager.instance;
-        manager.player.GetComponent<PlayerController>().spawnPlayer();
-
-        playerArmor();
+        spawnPlayer();
+        if(gameData == null)
+        {
+            gameData = new GameData();
+        }
     }
     void Awake()
     {
@@ -108,16 +108,17 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
         isFirstPerson = true;
         if(HPMax == 0) 
         HPMax = 50;
+        gunMax = 2;
         speedOrigin = speed;
-        updatePlayerUI();
+        jumpSpeedOrigin = jumpSpeed;
     }
     void Update()
     {
-        updatePlayerUI();
+        //updatePlayerUI();
         Movement();
         WeaponRotate();
         Sprint();
-        armorRegen();
+        Charge();
     }
 
     // Movement and Button Interactions
@@ -271,22 +272,22 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
         return isSliding;
     }
 
-    public int GetSpeed()
+    public float GetSpeed()
     {
         return speed;
     }
 
-    public void SetSpeed(int newSpeed)
+    public void SetSpeed(float newSpeed)
     {
         speed = newSpeed;
     }
 
-    public int GetJumpSpeed()
+    public float GetJumpSpeed()
     {
         return jumpSpeed;
     }
 
-    public void SetJumpSpeed(int newJumpSpeed)
+    public void SetJumpSpeed(float newJumpSpeed)
     {
         jumpSpeed = newJumpSpeed;
     }
@@ -339,8 +340,22 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
 
         if (Input.GetButtonDown("Jump") && jumpCount < jumpMax)
         {
-            playerVel.y = jumpSpeed;
+            isJumping = true;
+        }
+        if (Input.GetButtonUp("Jump") && jumpCount < jumpMax)
+        {
+            jumpCharge *= jumpChargeRate;
+            isJumping = false;
+            playerVel.y = jumpSpeed + jumpCharge;
             jumpCount++;
+            jumpCharge = 0;
+        }
+    }
+    void Charge()
+    {
+        if (jumpCharge < jumpChargeMax && isJumping)
+        {
+            jumpCharge += Time.deltaTime;
         }
     }
     void Sprint()
@@ -374,67 +389,66 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
     }
     void ChangeActiveInventory()
     {
-
         // Item Swap
         if (Input.GetButtonDown("Swap"))
         {
-            if (itemList != null && itemList.Count > 0)
+            if (invPos >= itemList.Count - 1)
             {
-                if (invPos >= itemList.Count - 1)
-                    invPos = 0;
-                else
-                    invPos++;
-
-                changeItem(invPos);
+                invPos = 0;
             }
+            else
+            {
+                invPos++;
+            }
+            changeItem(invPos);
         }
-
-        if (Shooting.instance == null || Shooting.instance.gunList == null || Shooting.instance.gunList.Count == 0)
-            return;
-
-
         // Weapon Scroll
         if (Input.GetAxis("Mouse ScrollWheel") > 0)
         {
             if (gunPos >= Shooting.instance.gunList.Count - 1)
+            {
                 gunPos = 0;
+            }
             else
+            {
                 gunPos++;
-
+            }
             updateGun();
         }
         else if (Input.GetAxis("Mouse ScrollWheel") < 0)
         {
             if (gunPos <= 0)
+            {
                 gunPos = Shooting.instance.gunList.Count - 1;
+            }
             else
+            {
                 gunPos--;
-
+            }
             updateGun();
         }
-
         // Weapon Select 1-5
-        if (Input.GetButtonDown("Weapon1") && Shooting.instance.gunList.Count > 0)
+        if (Input.GetButtonDown("Weapon1"))
         {
             gunPos = 0;
             Shooting.instance.changeGun(gunPos);
         }
-        else if (Input.GetButtonDown("Weapon2") && Shooting.instance.gunList.Count > 1)
+        else if (Input.GetButtonDown("Weapon2"))
         {
             gunPos = 1;
             Shooting.instance.changeGun(gunPos);
         }
-        else if (Input.GetButtonDown("Weapon3") && Shooting.instance.gunList.Count > 2)
+        else if (Input.GetButtonDown("Weapon3"))
         {
             gunPos = 2;
             Shooting.instance.changeGun(gunPos);
         }
-        else if (Input.GetButtonDown("Weapon4") && Shooting.instance.gunList.Count > 3)
+        else if (Input.GetButtonDown("Weapon4"))
         {
             gunPos = 3;
             Shooting.instance.changeGun(gunPos);
         }
-        else if (Input.GetButtonDown("Weapon5") && Shooting.instance.gunList.Count > 4)
+        else if (Input.GetButtonDown("Weapon5"))
         {
             gunPos = 4;
             Shooting.instance.changeGun(gunPos);
@@ -458,7 +472,6 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
                 }
             }
         }
-
     }
 
     // Gun interactions
@@ -466,10 +479,14 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
     {
         if (Shooting.instance.gunList.Contains(gun))
         {
-
+            canPickup = false;
+        }else if (Shooting.instance.gunList.Count >= gunMax)
+        {
+            canPickup = false;
         }
         else
         {
+            canPickup = true;
             Shooting.instance.gunList.Add(gun);
             gunPos = Shooting.instance.gunList.Count - 1;
             if (Shooting.instance.gunList.Count == 1)
@@ -478,6 +495,11 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
             }
         }
 
+    }
+    public void SwapGunPickup(GunStats gun)
+    {
+        Shooting.instance.gunList[gunPos] = gun;
+        Shooting.instance.changeGun(gunPos);
     }
     public void updateGun()
     {
@@ -500,27 +522,13 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
     // Health and UI interactions
     public void takeDamage(int amount)
     {
-        lastDamageTime = Time.time;
-        armorRegenTimer = 0f;
-
-        if (Armor > 0)
-        {
-            Armor--;
-            manager.removeArmor();
-        }
-        else
-        {
-            HP -= amount;
-        }
-
+        HP -= amount;
         updatePlayerUI();
         StartCoroutine(flahScreen());
-
         if (HP <= 0)
         {
             GameManager.instance.menus.youLose();
         }
-
 
     }
     IEnumerator flahScreen()
@@ -532,9 +540,8 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
     public void updatePlayerUI()
     {
         if (manager == null) return;
-
-
-
+        
+       
         float tartget = (float)HP / HPMax;
         float XPtarget = (float)manager.experience / manager.levelUpCap;
 
@@ -543,7 +550,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
             manager.PlayerHP_bar.fillAmount = Mathf.Lerp(manager.PlayerHP_bar.fillAmount, tartget, Time.deltaTime * 30);
 
         }
-        if (manager.XP_bar != null)
+        if(manager.XP_bar != null)
         {
             manager.XP_bar.fillAmount = Mathf.Lerp(manager.XP_bar.fillAmount, XPtarget, Time.deltaTime * 3);
             manager.levelText.text = manager.level.ToString();
@@ -553,7 +560,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
         if (manager.moneyCount != null)
             manager.moneyCount.text = moneyOnPlayer.ToString();
 
-        if (manager.heathNum != null && manager.maxHealthNum != null)
+        if(manager.heathNum != null && manager.maxHealthNum != null)
         {
             manager.heathNum.text = Mathf.RoundToInt(HP).ToString();
             manager.maxHealthNum.text = Mathf.RoundToInt(HPMax).ToString();
@@ -561,37 +568,6 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
         }
 
     }
-
-    void playerArmor()
-    {
-        manager.addArmor(maxArmor);
-        Armor = maxArmor;
-
-    }
-
-    void armorRegen()
-    {
-        // wait after taking damage
-        if (Time.time < lastDamageTime + armorRegenDelay)
-            return;
-
-        // already full
-        if (Armor >= maxArmor)
-            return;
-
-        // build up time
-        armorRegenTimer += Time.deltaTime;
-
-        if (armorRegenTimer >= armorRegenRate)
-        {
-            armorRegenTimer = 0f;
-
-            Armor++;
-            manager.addArmor(1); // 👈 update UI
-        }
-
-    }
-
 
     public void addPlayerMoney(int increase)
     {
@@ -721,23 +697,20 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
     }
     IEnumerator speedBoost()
     {
-        tempOrginSpeed = speed;
         boostTime = activePick.boostDur;
         speed *= (int)activePick.speedBoost;
         yield return new WaitForSeconds((float)boostTime);
-        speed = tempOrginSpeed;
+        speed = speedOrigin;
     }
 
     // World Interactions
     public void spawnPlayer()
     {
-        playerController.transform.position = GameManager.instance.playerSpawn.transform.position;
+        playerController.transform.position = manager.playerSpawn.transform.position;
         Physics.SyncTransforms();
         HP = (int)HPMax;
-        updatePlayerUI();
-
+        //updatePlayerUI();
         if(manager.menus != null) manager.menus.stateUnpause();
-
     }
     public void playAudio(AudioClip clip, float volume)
     {
@@ -746,6 +719,36 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
 
     // Data Management
  
- 
-   
+    public void UpdatePlayerStats(CharacterSelect data)
+    {
+        playerData.HP = data.HP;
+        playerData.speed = data.speed;
+        playerData.speedMod = data.speedMod;
+        playerData.jumpSpeed = data.jumpSpeed;
+        playerData.jumpMax = data.jumpMax;
+        playerData.jumpChargeRate = data.jumpChargeRate;
+        playerData.jumpChargeMax = data.jumpChargeMax;
+        playerData.itemList = data.itemList;
+        playerData.gunList = data.gunList;
+        SetStats(playerData);
+    }
+    public void SetStats(PlayerData data)
+    {
+        HPMax = data.HP;
+        speed = data.speed;
+        sprintMod = data.speedMod;
+        jumpSpeed = data.jumpSpeed;
+        jumpMax = data.jumpMax;
+        jumpChargeRate = data.jumpChargeRate;
+        jumpChargeMax = data.jumpChargeMax;
+        itemList = data.itemList;
+        Shooting.instance.GunListSwap(data.gunList);
+        updatePlayerUI();
+    }
+    public void SwapCharacter(CharacterSelect character)
+    {
+        UpdatePlayerStats(character);
+        gameData.character = character;
+        DataManager.instance.UpdateHub(gameData);
+    }
 }

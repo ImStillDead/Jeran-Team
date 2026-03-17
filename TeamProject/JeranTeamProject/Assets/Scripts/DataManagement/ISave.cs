@@ -2,8 +2,11 @@ using UnityEngine;
 
 public interface ISave
 {
-    void Load(GameData data);
+    void LoadGame();
 
-    void Save(GameData data);
+
+    void SaveGame(GameData data);
+
+    void SaveRun(GameData data);
 }
     

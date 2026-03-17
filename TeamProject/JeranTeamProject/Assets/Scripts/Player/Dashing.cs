@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class Dashing : MonoBehaviour , IDash
+public class Dashing : MonoBehaviour, IDash
 {
     [HideInInspector] public float dashForce = 30f;
     [HideInInspector] public float dashDur = 0.2f;
@@ -13,8 +13,8 @@ public class Dashing : MonoBehaviour , IDash
     private bool isDashing;
     private Vector3 dashDir;
 
-    private int originalSpeed;
-    private int originalJumpSpeed;
+    private float originalSpeed;
+    private float originalJumpSpeed;
 
 
     void Start()
