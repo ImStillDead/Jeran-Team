@@ -1,10 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
-using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
+using UnityEngine.SubsystemsImplementation;
 using UnityEngine.UI;
 
 
@@ -13,41 +13,46 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
 
-
     public MenuController menus;
     [SerializeField] List<GameObject> itemsCase;
+    [SerializeField] CharacterSelect baseCharacter;
 
     [SerializeField] GameObject VolumeSlider;
-    [SerializeField] GameObject reticle;
+    [SerializeField] public GameObject UI;
 
-    [SerializeField] int objectiveTimerDelay;
+    
     [SerializeField] int maxSpawn;
-
+    [Header("Weapon Handle")]
+    [SerializeField] GameObject reticle;
     [SerializeField] TMP_Text magazine_text;
     [SerializeField] TMP_Text maxMagsize_text;
     [SerializeField] TMP_Text maxAmmo_text;
-    [SerializeField] TMP_Text Objective_timer_text;
-
     [SerializeField] Color activeColor = Color.white;
     [SerializeField] Color oldColor = Color.gray;
 
+    [Header("Npc/Missons")]
 
+    [SerializeField] int objectiveTimerDelay;
+    [SerializeField] TMP_Text Objective_timer_text;
     [SerializeField] GameObject dialog_prefab;
     [SerializeField] Transform dialogParent;
     public List<TMP_Text> listofDialog = new List<TMP_Text> { }; //wip
 
     [SerializeField] GameObject Objective_prefab;
     [SerializeField] Transform missonParent;
+    public List<GameObject> pickUpObjects = new List<GameObject>();
     public List<TMP_Text> missions = new List<TMP_Text> { }; //wip
     int maxTextprefabs = 5;
-
-
+    
+    [Header("Image/Text INPUTS")]
+    public TMP_Text moneyCount;
     public Image PlayerHP_bar;
+    public Image XP_bar;
+    public TMP_Text levelText;
     public GameObject playerDamageFlash;
-
+    public TMP_Text heathNum;
+    public TMP_Text maxHealthNum;
     public TMP_Text killCount_text;
-
-    public GameData currentGameData;
 
     public GameObject player;
     public PlayerController playerScript;
@@ -55,6 +60,11 @@ public class GameManager : MonoBehaviour
     public GameObject doorLights;
     public GameObject playerSpawn;
     public GameObject playerCheckpointPop;
+
+    public GameData gameData;
+    public GameData hubData;
+
+    public int DAYs;
     public int sceneIndex;
     int itemIndex;
     public int enemyCount;
@@ -66,76 +76,71 @@ public class GameManager : MonoBehaviour
     int magSize;
     int maxMagSize;
 
+    public float experience;
+    public float levelUpCap = 50f;
+    float increaseXpCap = 1.25f;
+    public float level;
 
+    private supportGameProgression prog;
 
     void Awake()
     {
-        sceneIndex = SceneManager.GetActiveScene().buildIndex;
+        sceneIndex = SceneManager.GetActiveScene().buildIndex; //did alittle clean up for the awake method, had alot of sceneIndex within it. and mulitple player = gameobject---- 
+
         if(Time.timeScale == 0)
         {
             Time.timeScale = 1f;
         }
-
-        instance = this;
-
-        sceneIndex = SceneManager.GetActiveScene().buildIndex;
-
-        player = GameObject.FindWithTag("Player");
-        if (player != null)
-
-            if (instance == null)
-            {
-                instance = this;
-            }
-        sceneIndex = SceneManager.GetActiveScene().buildIndex;
-        if (player == null)
+        if (instance == null)
         {
-            player = GameObject.FindWithTag("Player");
+            instance = this;
         }
-        if (player != null)
+        if (instance.player == null)
         {
-            playerSpawn = GameObject.FindWithTag("PlayerSpawn");
-            playerScript = player.GetComponent<PlayerController>();
+            instance.player = GameObject.FindWithTag("Player");
         }
+        if (instance.player != null)
+        {
+            instance.playerScript = instance.player.GetComponent<PlayerController>();
+            instance.playerSpawn = GameObject.FindWithTag("PlayerSpawn");
+        }
+
+
     }
 
     void Start()
     {
         menus = Object.FindAnyObjectByType<MenuController>();
-        if(playerSpawn == null && player != null)
-        {
-            playerSpawn = GameObject.FindWithTag("PlayerSpawn");
-            playerScript.spawnPlayer();
-        }
+        GameManager.instance.menus = menus;
+        menus.stateUnpause();
+        moneyCount.text = playerScript.getplayerMoney().ToString();
+        prog = GetComponent<supportGameProgression>();
+        StartData();
     }
 
     void Update()
     {
         if (Input.GetButtonDown("Cancel"))
         {
-            Debug.LogWarning("tried opening pause menu");
-
             menus.pauseMenu();
-
         }
+
+        if (prog != null)
+        {
+            prog.getkills(killCount);
+        }
+
         if (player != null)
         {
             startMission();
         }
 
+        levelUp();
+
         reticle.SetActive(!menus.isPaused);
     }
 
-    public void menuButtonController(GameObject menuNameHere)
-    {
-
-
-        Button firstButton = menuNameHere.GetComponentInChildren<Button>();
-        EventSystem.current.SetSelectedGameObject(null);
-        EventSystem.current.SetSelectedGameObject(firstButton.gameObject);
-
-    }  //gives menus the ability to be controlled by keyboard input, has to be called each time you call a new menu
-
+   
     private void startMission()
     {
         if (startTimer || objectiveCompleted) Objective_timer_text.gameObject.SetActive(true);
@@ -351,21 +356,129 @@ public class GameManager : MonoBehaviour
         itemIndex = index;
         itemsCase[index].SetActive(true);
     }
+   
     
-    public void saveCurrentRun()
+
+    public int randomNumberPicker(int amount)
     {
-        if(currentGameData == null)
-        {
-            currentGameData = new GameData();
-        }
-        currentGameData.sceneIndex = sceneIndex;
-        currentGameData.player = player;
-        currentGameData.playerScript = playerScript;
-        DataManager.instance.Save(currentGameData);
+        int item = Random.Range(0, amount);
+
+
+        return item;
     }
-    public void loadCurrentRun()
+
+    public void guiAlwaysFacePlayer(GameObject obje)
     {
-        player = currentGameData.player;
-        playerScript = currentGameData.playerScript;
+        if (obje == null) return;
+
+
+        Vector3 playDir = player.transform.position - obje.transform.position;
+        
+        playDir.y = 0;
+
+        obje.transform.rotation = Quaternion.LookRotation(-playDir);
+
+    }
+
+    public void giveXP(int XP)
+    {
+        experience += XP;
+
+    }
+    
+    public void levelUp()
+    {
+        float tempMaxHP = playerScript.getMaxHP();
+
+
+        if(experience >= levelUpCap)
+        {
+            Debug.Log("you have leveled up");
+            level++;
+            experience -= levelUpCap;
+            levelUpCap *= increaseXpCap;
+
+            playerScript.setMaxHp(playerStatUpgrade(tempMaxHP));
+            playerScript.Heal((int)tempMaxHP/4);
+
+        }
+
+
+    }
+
+    public float playerStatUpgrade(float stat)
+    {
+        float statMultiplier = 1.15f;
+
+        if (level >= 20)
+        {
+            statMultiplier = 1.01f; 
+        }
+        else if (level >= 15)
+        {
+            statMultiplier = 1.05f;
+        }
+        else if (level >= 10)
+        {
+            statMultiplier = 1.10f; 
+        }
+        else
+        {
+            statMultiplier = 1.15f; 
+        }
+
+
+        stat *= statMultiplier;
+
+        Debug.Log("increase " + stat);
+
+        return stat;
+    }
+    public float enemytatUpgrade(float stat)
+    {
+        float statMultiplier = 1.05f; //maybe do a system where it edits how fast the zombies addabt to the player.
+
+        stat *= statMultiplier;
+
+        return stat;
+    }
+
+    public void SaveData(GameData data)
+    {
+        DataManager.instance.SaveData(data);
+    }
+    public void StartData()
+    {
+        gameData = new GameData();
+        hubData = new GameData();
+        hubData.character = baseCharacter;
+        DataManager.instance.UpdateHub(hubData);
+        if (DataManager.manager == null)
+        {
+            DataManager.manager = this;
+        }
+        if (playerScript.manager == null)
+        {
+            playerScript.manager = DataManager.manager;
+        }
+        playerScript.playerData = new PlayerData();
+        playerScript.UpdatePlayerStats(hubData.character);
+        
+    }
+    public void SaveRun(GameData data)
+    {
+        DataManager.instance.SaveRun(data);
+    }
+    public void UpdateRun()
+    {
+        gameData.sceneIndex = sceneIndex;
+        gameData.currentpickUps = pickUpObjects;
+        gameData.playerPos = player.transform.position;
+        SaveRun(gameData);
+    }
+    public void LoadRun()
+    {
+        gameData = DataManager.instance.LoadRun();
+        player.transform.position = gameData.playerPos;
     }
 }
