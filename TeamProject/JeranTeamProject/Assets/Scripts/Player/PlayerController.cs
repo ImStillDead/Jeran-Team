@@ -22,9 +22,6 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
     [SerializeField] float jumpChargeRate;
     [SerializeField] int Armor;
     [SerializeField] int maxArmor;
-    [SerializeField] int speed;
-    [SerializeField] int sprintMod;
-    [SerializeField] int jumpSpeed;
     [SerializeField] int jumpMax;
     [SerializeField] int interactDis;
     [SerializeField] int enemyViewDis;

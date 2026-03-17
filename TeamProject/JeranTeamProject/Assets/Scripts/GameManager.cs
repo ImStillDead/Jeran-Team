@@ -1,4 +1,3 @@
-using Mono.Cecil.Cil;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
@@ -55,9 +54,6 @@ public class GameManager : MonoBehaviour
     public TMP_Text maxHealthNum;
     public TMP_Text killCount_text;
 
-<<<<<<< HEAD
-=======
-
     public GameObject armorParent;
     public Image armorPrefab;
     private Image tempArmor;
@@ -66,7 +62,6 @@ public class GameManager : MonoBehaviour
 
     public GameData currentGameData;
 
->>>>>>> origin/DevBranchCristobal
     public GameObject player;
     public PlayerController playerScript;
     public Light objectiveLight;
@@ -521,6 +516,9 @@ public class GameManager : MonoBehaviour
         if (armors.Count > 0)
         {
             Image lastArmor = armors[armors.Count - 1];
+        
+        }
+    }
     public void SaveData(GameData data)
     {
         DataManager.instance.SaveData(data);
