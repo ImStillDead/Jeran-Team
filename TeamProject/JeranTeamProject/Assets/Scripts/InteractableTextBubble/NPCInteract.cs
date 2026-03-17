@@ -2,25 +2,27 @@ using UnityEngine;
 using TMPro;
 using JetBrains.Annotations;
 using UnityEngine.UI;
+using System.Reflection;
 
 public class NPCInteract : MonoBehaviour, iInteract
 {
     [SerializeField] private GameObject bubbleObject;
     [SerializeField] private TMP_Text bubbleText;
 
+    [SerializeField] private GameObject chatWindow;
+    [SerializeField] private TMP_Text chatWindowText;
+    [SerializeField] private Button nextButton;
+    [SerializeField] private Button skipButton;
+
+    [SerializeField] private GameObject skipConfirmPanel;
+    [SerializeField] private Button skipYesButton;
+    [SerializeField] private Button  skipNoButton;
+
     [SerializeField] private GameObject interactPrompt;
 
     [TextArea(2, 5)]
     [SerializeField] private string[] messages;
 
-    [System.Serializable]
-    public class PlayerChoice
-    {
-        public string choiceText;
-
-        [TextArea(2, 5)]
-        public string responseText;
-    }
 
     private bool bubbleShowing = false;
     private int currentPage = 0;
@@ -33,9 +35,24 @@ public class NPCInteract : MonoBehaviour, iInteract
 
         if (bubbleObject != null)
             bubbleObject.SetActive(false);
+        if (chatWindow != null)
+            chatWindow.SetActive(false);
+        if (skipConfirmPanel != null)
+            skipConfirmPanel.SetActive(false);
 
         if (bubbleText != null && messages != null && messages.Length > 0)
             bubbleText.text = messages[0];
+        if (chatWindowText != null && messages != null && messages.Length > 0)
+            chatWindowText.text = messages[0];
+
+        if (nextButton != null)
+            nextButton.onClick.AddListener(NextPage);
+        if (skipButton != null)
+            skipButton.onClick.AddListener(OpenSkipConfirm);
+        if (skipYesButton != null)
+            skipYesButton.onClick.AddListener(ConfirmSkip);
+        if (skipNoButton != null)
+            skipNoButton.onClick.AddListener(CancelSkip);
     }
 
     void Update()
@@ -59,32 +76,51 @@ public class NPCInteract : MonoBehaviour, iInteract
 
             if (bubbleObject != null)
                 bubbleObject.SetActive(true);
+            if (chatWindow != null)
+                chatWindow.SetActive(true);
+            if (interactPrompt != null)
+                interactPrompt.SetActive(false);
 
             ShowCurrentPage();
             return;
         }
-
-        // Go to next page
-        currentPage++;
-
-        // If there are still pages left, show next page
-        if (currentPage < messages.Length)
-        {
-            ShowCurrentPage();
-        }
-        else
-        {
-            // End of dialogue
-            StopInteraction();
-        }
+        NextPage();
     }
 
     private void ShowCurrentPage()
     {
         if (bubbleText != null)
             bubbleText.text = messages[currentPage];
-    }
 
+        if (chatWindowText != null)
+            chatWindowText.text = messages[currentPage];
+    }
+    public void NextPage()
+    {
+        currentPage++;
+        if (currentPage < messages.Length)
+        {
+            ShowCurrentPage();
+        }
+        else
+        {
+            StopInteraction();
+        }
+    }
+    public void OpenSkipConfirm()
+    {
+        if (skipConfirmPanel != null)
+            skipConfirmPanel.SetActive(true);
+    }
+    public void CancelSkip()
+    {
+        if (skipConfirmPanel != null)
+            skipConfirmPanel.SetActive(false);
+    }
+    public void ConfirmSkip()
+    {
+        StopInteraction();
+    }
     public void StopInteraction()
     {
         bubbleShowing = false;
@@ -92,5 +128,11 @@ public class NPCInteract : MonoBehaviour, iInteract
 
         if (bubbleObject != null)
             bubbleObject.SetActive(false);
+        if (chatWindow != null)
+            chatWindow.SetActive(false);
+        if (skipConfirmPanel != null)
+            skipConfirmPanel.SetActive(false);
+        if (interactPrompt != null)
+            interactPrompt.SetActive(true);
     }
 }
