@@ -46,6 +46,14 @@ public class MenuController : MonoBehaviour
 
     }
 
+    public void Update()
+    {
+        if(statePause(false)) stateUnpause();
+
+
+    }
+
+
     public void pauseMenu()
     {
         if (isPaused)
@@ -70,12 +78,26 @@ public class MenuController : MonoBehaviour
         Debug.Log(menuActive + " is active");
     }
 
+    public void openMenuButton(GameObject menu)
+    {
+        statePause(true);                                     
+        menuActive = menu;
+        menuActive.SetActive(true);
+
+        menuButtonController(menuActive);
+        Debug.Log(menuActive + " is active");
+    }
+
     public bool statePause(bool activeRet)
     {
-        isPaused = true;
-        Time.timeScale = 0;
-        Cursor.visible = true;
-        Cursor.lockState = CursorLockMode.None;
+        if (activeRet == true)
+        {
+            isPaused = true;
+            Time.timeScale = 0;
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
+            
+        }
 
         return activeRet;
     }

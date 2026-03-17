@@ -33,13 +33,25 @@ public class Shooting : MonoBehaviour
 
     public Recoil recoil;
 
+    public bool isShotgun;
+    public bool isBurst;
+    public float burstTime;
+    public float rechamberTime;
+    public int burstAmount;
+    public int pelletAmount;
+    public float burstDelay;
+
     // Other Variables
     bool reloading;
     int activeGun;
+    int pelletCount;
+
+    bool burstFiring = true;
+    bool shotgunFiring;
 
     void Awake()
     {
-        if(instance == null)
+        if (instance == null)
         {
             instance = this;
         }
@@ -53,22 +65,42 @@ public class Shooting : MonoBehaviour
     void Update()
     {
         shootTimer += Time.deltaTime;
-       
+
         /*  Gets the input of the fire button and checks if the shoot timer is greater than
             equal to the shoot rate. If it is it calls the Shoot() method(function) */
-        if (Input.GetButton("Fire1") && shootTimer >= shootRate && currentAmmo > 0)
+
+        if (Input.GetButton("Fire1") && shootTimer >= shootRate && currentAmmo > 0 && isShotgun)
+        {
+            shotgunFiring = true;
+
+            while(shotgunFiring)
+            {
+                while(pelletCount != pelletAmount)
+                {
+                    ShotgunShot();
+                }
+                StartCoroutine(BurstPellet());              
+                shotgunFiring = false;
+            }
+
+        }
+        else if (Input.GetButton("Fire1") && shootTimer >= shootRate && currentAmmo > 0 && isBurst && burstFiring)
+        {
+            StartCoroutine(Burst());
+        }
+        else if (Input.GetButton("Fire1") && shootTimer >= shootRate && currentAmmo > 0 && !isBurst && !isShotgun)
         {
             Shoot();
         }
 
         /*  Checks to see if currentAmmo is less than or equal to 0 and if the player is not reloading.
-            If so, it calls the Reload() method(function) */    
+            If so, it calls the Reload() method(function) */
         if (currentAmmo <= 0 && !reloading)
-        {       
-            StartCoroutine(Reload());       
+        {
+            StartCoroutine(Reload());
         }
 
-        if(Input.GetButton("Reload") && !reloading)
+        if (Input.GetButton("Reload") && !reloading)
         {
             StartCoroutine(Reload());
         }
@@ -104,6 +136,14 @@ public class Shooting : MonoBehaviour
 
         spread = gunList[gunPos].spread;
 
+        isShotgun = gunList[gunPos].isShotgun;
+        isBurst = gunList[gunPos].isBurst;
+        burstTime = gunList[gunPos].burstTime;
+        rechamberTime = gunList[gunPos].rechamberTime;
+        burstAmount = gunList[gunPos].burstAmount;
+        pelletAmount = gunList[gunPos].pelletAmount;
+        burstDelay = gunList[gunPos].burstDelay;
+
         gunModel.GetComponent<MeshFilter>().sharedMesh = instance.gunList[gunPos].gunModel.GetComponent<MeshFilter>().sharedMesh;
         gunModel.GetComponent<MeshRenderer>().sharedMaterial = instance.gunList[gunPos].gunModel.GetComponent<MeshRenderer>().sharedMaterial;
         gunModel.transform.localScale = gunList[gunPos].scale;
@@ -119,27 +159,58 @@ public class Shooting : MonoBehaviour
     {
         /*  Checks to see if the player is not reloading. If they are not, it fires a projectile
             and decreases current ammo by 1 */
-        if(!reloading)
+
+        if (!reloading)
         {
             shootTimer = 0;
             GameManager.instance.playerScript.playAudio(aud[0], volume);
 
 
-            Quaternion spreadRotation = shootPos.transform.rotation * 
+            Quaternion spreadRotation = shootPos.transform.rotation *
                 Quaternion.Euler(Random.Range(-spread, spread), Random.Range(-spread, spread), 0);
 
 
             Instantiate(bullet, shootPos.position, spreadRotation);
-            
-            
+
+
             currentAmmo = currentAmmo - 1;
             callAmmo();
-            
+
             recoil.RecoilFire();
         }
 
+
     }
 
+    public void ShotgunShot()
+    {
+        /*  Checks to see if the player is not reloading. If they are not, it fires a projectile
+            and decreases current ammo by 1 */
+
+        if (!reloading)
+        {
+            shootTimer = 0;
+            GameManager.instance.playerScript.playAudio(aud[0], volume);
+
+
+            Quaternion spreadRotation = shootPos.transform.rotation *
+                Quaternion.Euler(Random.Range(-spread, spread), Random.Range(-spread, spread), 0);
+
+
+            Instantiate(bullet, shootPos.position, spreadRotation);
+
+
+            currentAmmo = currentAmmo - 1;
+            callAmmo();
+
+            recoil.RecoilFire();
+            pelletCount++;
+        }
+
+
+    }
+    
+    
     // Called in Update if the currentAmmo is less than or equal to 0 and the player is not reloading
     IEnumerator Reload()
     {
@@ -148,5 +219,25 @@ public class Shooting : MonoBehaviour
         currentAmmo = magSizeMax;                   // Sets currentAmmo equal to the max ammo
         callAmmo();
         reloading = false;                              // Sets reloading back to false so the player can shoot again
+    }
+
+    IEnumerator Burst()
+    {
+       burstFiring = false;
+
+        for (int i = 0; i < burstAmount; i++)
+        {
+           Shoot();
+           yield return new WaitForSeconds(burstTime);
+        }
+
+       yield return new WaitForSeconds(burstDelay);
+       burstFiring = true;
+    }
+
+    IEnumerator BurstPellet()
+    {
+        yield return new WaitForSeconds(rechamberTime);
+        pelletCount = 0;
     }
 }

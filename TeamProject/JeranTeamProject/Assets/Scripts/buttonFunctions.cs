@@ -4,6 +4,10 @@ using UnityEngine.SceneManagement;
 
 public class buttonFunctions : MonoBehaviour
 {
+
+
+
+
     public void resume()
     {
         GameManager.instance.menus.stateUnpause();
@@ -81,7 +85,7 @@ public class buttonFunctions : MonoBehaviour
         SceneManager.LoadScene(index);
         GameManager.instance.sceneIndex = index;
         GameManager.instance.resetObjective();
-        GameManager.instance.playerScript.instance.updateGun();
+        GameManager.instance.playerScript.updateGun();
         GameManager.instance.saveCurrentRun();
         GameManager.instance.playerScript.spawnPlayer();
         GameManager.instance.menus.stateUnpause();

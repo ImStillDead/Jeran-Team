@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Rendering;
 
 [CreateAssetMenu]
 
@@ -22,9 +23,16 @@ public class GunStats : ScriptableObject
     public int currentAmmo;
 
     public float spread;
+   
+    public bool isShotgun;
+    public bool isBurst;
+    public float burstTime;
+    public float burstDelay;
+    public float rechamberTime;
+    public int burstAmount;
+    public int pelletAmount;
 
-    [Range(1, 500)] public int startingMaxAmmo;
-    [Range(1, 500)] public int maxAmmo;
+
     AudioClip[] shotSound;
     [Range(0, 1)] public float shotSoundVol;
 

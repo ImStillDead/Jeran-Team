@@ -5,6 +5,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
+using UnityEngine.SubsystemsImplementation;
 using UnityEngine.UI;
 
 
@@ -43,9 +44,14 @@ public class GameManager : MonoBehaviour
 
     public TMP_Text moneyCount;
     public Image PlayerHP_bar;
+    public Image XP_bar;
+    public TMP_Text levelText;
     public GameObject playerDamageFlash;
-
+    public TMP_Text heathNum;
+    public TMP_Text maxHealthNum;
     public TMP_Text killCount_text;
+
+
 
     public GameData currentGameData;
 
@@ -55,6 +61,9 @@ public class GameManager : MonoBehaviour
     public GameObject doorLights;
     public GameObject playerSpawn;
     public GameObject playerCheckpointPop;
+
+
+    public int DAYs;
     public int sceneIndex;
     int itemIndex;
     public int enemyCount;
@@ -66,6 +75,12 @@ public class GameManager : MonoBehaviour
     int magSize;
     int maxMagSize;
 
+    public float experience;
+    public float levelUpCap = 50f;
+    float increaseXpCap = 1.25f;
+    public float level;
+
+    private supportGameProgression prog;
 
     void Awake()
     {
@@ -92,6 +107,7 @@ public class GameManager : MonoBehaviour
             playerSpawn = GameObject.FindWithTag("PlayerSpawn");
             playerScript = player.GetComponent<PlayerController>();
         }
+
     }
 
     void Start()
@@ -100,7 +116,7 @@ public class GameManager : MonoBehaviour
         menus.stateUnpause();
 
         moneyCount.text = playerScript.getplayerMoney().ToString();
-
+        prog = GetComponent<supportGameProgression>();
     }
 
     void Update()
@@ -110,11 +126,17 @@ public class GameManager : MonoBehaviour
             menus.pauseMenu();
         }
 
-   
+        if (prog != null)
+        {
+            prog.getkills(killCount);
+        }
+
         if (player != null)
         {
             startMission();
         }
+
+        levelUp();
 
         reticle.SetActive(!menus.isPaused);
     }
@@ -373,6 +395,70 @@ public class GameManager : MonoBehaviour
         obje.transform.rotation = Quaternion.LookRotation(-playDir);
 
     }
+
+    public void giveXP(int XP)
+    {
+        experience += XP;
+
+    }
+    
+    public void levelUp()
+    {
+        float tempMaxHP = playerScript.getMaxHP();
+
+
+        if(experience >= levelUpCap)
+        {
+            Debug.Log("you have leveled up");
+            level++;
+            experience -= levelUpCap;
+            levelUpCap *= increaseXpCap;
+
+            playerScript.setMaxHp(playerStatUpgrade(tempMaxHP));
+            playerScript.Heal((int)tempMaxHP/4);
+
+        }
+
+
+    }
+
+    public float playerStatUpgrade(float stat)
+    {
+        float statMultiplier = 1.15f;
+
+        if (level >= 20)
+        {
+            statMultiplier = 1.01f; 
+        }
+        else if (level >= 15)
+        {
+            statMultiplier = 1.05f;
+        }
+        else if (level >= 10)
+        {
+            statMultiplier = 1.10f; 
+        }
+        else
+        {
+            statMultiplier = 1.15f; 
+        }
+
+
+        stat *= statMultiplier;
+
+        Debug.Log("increase " + stat);
+
+        return stat;
+    }
+    public float enemytatUpgrade(float stat)
+    {
+        float statMultiplier = 1.05f; //maybe do a system where it edits how fast the zombies addabt to the player.
+
+        stat *= statMultiplier;
+
+        return stat;
+    }
+
 
 
 }
