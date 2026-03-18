@@ -59,8 +59,6 @@ public class GameManager : MonoBehaviour
     public TMP_Text maxHealthNum;
     public TMP_Text killCount_text;
 
-    public GameData currentGameData;
-
     public GameObject player;
     public PlayerController playerScript;
     public Light objectiveLight;
@@ -94,7 +92,7 @@ public class GameManager : MonoBehaviour
     {
         sceneIndex = SceneManager.GetActiveScene().buildIndex; //did alittle clean up for the awake method, had alot of sceneIndex within it. and mulitple player = gameobject---- 
 
-        if(Time.timeScale !> 0)
+        if(Time.timeScale == 0)
         {
             Time.timeScale = 1f;
         }
