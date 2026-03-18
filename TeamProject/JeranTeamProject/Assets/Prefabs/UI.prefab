@@ -755,6 +755,19 @@ MonoBehaviour:
   heathNum: {fileID: 8490032000039084733}
   maxHealthNum: {fileID: 7295755091475559631}
   killCount_text: {fileID: 4675162484356823955}
+  currentGameData:
+    sceneIndex: 0
+    playerPos: {x: 0, y: 0, z: 0}
+    currentpickUps: []
+    HP: 0
+    speed: 0
+    sprintMod: 0
+    jumpSpeed: 0
+    jumpChargeMax: 0
+    jumpChargeRate: 0
+    jumpMax: 0
+    gunList: []
+    itemList: []
   player: {fileID: 0}
   playerScript: {fileID: 0}
   objectiveLight: {fileID: 0}
@@ -765,12 +778,28 @@ MonoBehaviour:
     sceneIndex: 0
     playerPos: {x: 0, y: 0, z: 0}
     currentpickUps: []
-    character: {fileID: 0}
+    HP: 0
+    speed: 0
+    sprintMod: 0
+    jumpSpeed: 0
+    jumpChargeMax: 0
+    jumpChargeRate: 0
+    jumpMax: 0
+    gunList: []
+    itemList: []
   hubData:
     sceneIndex: 0
     playerPos: {x: 0, y: 0, z: 0}
     currentpickUps: []
-    character: {fileID: 0}
+    HP: 0
+    speed: 0
+    sprintMod: 0
+    jumpSpeed: 0
+    jumpChargeMax: 0
+    jumpChargeRate: 0
+    jumpMax: 0
+    gunList: []
+    itemList: []
   DAYs: 0
   sceneIndex: 0
   enemyCount: 0
@@ -979,7 +1008,15 @@ MonoBehaviour:
     sceneIndex: 0
     playerPos: {x: 0, y: 0, z: 0}
     currentpickUps: []
-    character: {fileID: 0}
+    HP: 0
+    speed: 0
+    sprintMod: 0
+    jumpSpeed: 0
+    jumpChargeMax: 0
+    jumpChargeRate: 0
+    jumpMax: 0
+    gunList: []
+    itemList: []
   fileName: saveData.json
 --- !u!1 &2765127732332320864
 GameObject:

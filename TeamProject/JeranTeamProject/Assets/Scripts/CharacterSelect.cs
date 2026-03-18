@@ -8,7 +8,7 @@ using UnityEngine;
 [Serializable]
 public class CharacterSelect : ScriptableObject
 {
-    public int HP;
+    public float HP;
     public float speed;
     public float speedMod;
     public int jumpMax;

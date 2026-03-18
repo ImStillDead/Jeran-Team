@@ -7,7 +7,7 @@ public class ChangeCharacter : MonoBehaviour
     {
         ICharacters characterPick = other.GetComponent<ICharacters>();
 
-        if (character != null)
+        if (characterPick != null)
         {
             characterPick.SwapCharacter(character);
             Destroy(gameObject);

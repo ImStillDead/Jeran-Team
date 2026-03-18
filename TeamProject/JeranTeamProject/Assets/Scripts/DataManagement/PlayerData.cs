@@ -5,7 +5,7 @@ using UnityEngine;
 [Serializable]
 public class PlayerData 
 {
-    public int HP;
+    public float HP;
     public float speed;
     public float speedMod;
     public int jumpMax;

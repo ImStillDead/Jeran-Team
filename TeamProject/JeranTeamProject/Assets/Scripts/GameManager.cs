@@ -59,6 +59,8 @@ public class GameManager : MonoBehaviour
     public TMP_Text maxHealthNum;
     public TMP_Text killCount_text;
 
+    public GameData currentGameData;
+
     public GameObject player;
     public PlayerController playerScript;
     public Light objectiveLight;
@@ -116,8 +118,8 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         menus = Object.FindAnyObjectByType<MenuController>();
-        prog = GetComponent<supportGameProgression>();
         menus.stateUnpause();
+        prog = GetComponent<supportGameProgression>();
         if (moneyCount != null && playerScript != null)
             moneyCount.text = playerScript.getplayerMoney().ToString();
         StartData();
@@ -501,18 +503,15 @@ public class GameManager : MonoBehaviour
     {
         gameData = new GameData();
         hubData = new GameData();
-        hubData.character = baseCharacter;
-
-        if (DataManager.instance != null)
-        {
-            DataManager.instance.UpdateHub(hubData);
-        }
-
         if (DataManager.manager == null)
         {
             DataManager.manager = this;
         }
 
+        if (DataManager.instance != null)
+        {
+            //DataManager.instance.UpdateHub(hubData);
+        }
         if (playerScript != null)
         {
             if (playerScript.manager == null)
@@ -521,7 +520,7 @@ public class GameManager : MonoBehaviour
             }
 
             playerScript.playerData = new PlayerData();
-            playerScript.UpdatePlayerStats(hubData.character);
+            //playerScript.UpdatePlayerStats(DataManager.instance.hubData);
         }
 
     }

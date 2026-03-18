@@ -14,7 +14,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
     [SerializeField] LayerMask ignoreLayer;
 
     [Header("Player Stats")]
-    [SerializeField] int HP;
+    [SerializeField] float HP;
     [SerializeField] int Armor;
     [SerializeField] int maxArmor;
     [SerializeField] float speed;
@@ -99,18 +99,14 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
     void Start()
     {
         manager = GameManager.instance;
-
-        if (manager != null && manager.player != null)
-        {
-            manager.player.GetComponent<PlayerController>().spawnPlayer();
-        }
+        manager.player.GetComponent<PlayerController>().spawnPlayer();
 
         playerArmor();
     }
 
     void Awake()
     {
-
+        gameData = new GameData();
         SetupDashing(); 
         SetupSliding();
 
@@ -128,6 +124,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
         WeaponRotate();
         Sprint();
         armorRegen();
+        Charge();
     }
 
     // Movement and Button Interactions
@@ -775,15 +772,16 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
 
     // Data Management
  
-    public void UpdatePlayerStats(CharacterSelect data)
+    public void UpdatePlayerStats(GameData data)
     {
+        playerData = new PlayerData();
         if(data == null) return;
         else
         {
 
-            playerData.HP = data.HP;
+        playerData.HP = data.HP;
         playerData.speed = data.speed;
-        playerData.speedMod = data.speedMod;
+        playerData.speedMod = data.sprintMod;
         playerData.jumpSpeed = data.jumpSpeed;
         playerData.jumpMax = data.jumpMax;
         playerData.jumpChargeRate = data.jumpChargeRate;
@@ -791,6 +789,24 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
         playerData.itemList = data.itemList;
         playerData.gunList = data.gunList;
         SetStats(playerData);
+        }
+    }
+    public void UpdatePlayerStats(CharacterSelect data)
+    {
+        if (data == null) return;
+        else
+        {
+
+            playerData.HP = data.HP;
+            playerData.speed = data.speed;
+            playerData.speedMod = data.speedMod;
+            playerData.jumpSpeed = data.jumpSpeed;
+            playerData.jumpMax = data.jumpMax;
+            playerData.jumpChargeRate = data.jumpChargeRate;
+            playerData.jumpChargeMax = data.jumpChargeMax;
+            playerData.itemList = data.itemList;
+            playerData.gunList = data.gunList;
+            SetStats(playerData);
         }
     }
     public void SetStats(PlayerData data)
@@ -804,12 +820,19 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
         jumpChargeMax = data.jumpChargeMax;
         itemList = data.itemList;
         Shooting.instance.GunListSwap(data.gunList);
+        //gameData.HP = data.HP;
+        //gameData.speed = data.speed;
+        //gameData.jumpSpeed = data.jumpSpeed;
+        //gameData.jumpMax = data.jumpMax;
+        //gameData.jumpChargeRate = data.jumpChargeRate;
+        //gameData.jumpChargeMax = data.jumpChargeMax;
+        //gameData.itemList = data.itemList;
+        //gameData.gunList = data.gunList;
+        //DataManager.instance.UpdateHub(gameData);
         updatePlayerUI();
     }
     public void SwapCharacter(CharacterSelect character)
     {
         UpdatePlayerStats(character);
-        gameData.character = character;
-        DataManager.instance.UpdateHub(gameData);
     }
 }

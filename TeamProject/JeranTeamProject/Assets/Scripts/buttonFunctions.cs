@@ -11,7 +11,7 @@ public class buttonFunctions : MonoBehaviour
 
     public void Start()
     {
-        manager = GameManager.instance.GetComponent<GameManager>();
+        manager = GameManager.instance;
     }
     public void resume()
     {
