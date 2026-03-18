@@ -59,6 +59,8 @@ public class GameManager : MonoBehaviour
     public TMP_Text maxHealthNum;
     public TMP_Text killCount_text;
 
+    public GameData currentGameData;
+
     public GameObject player;
     public PlayerController playerScript;
     public Light objectiveLight;
