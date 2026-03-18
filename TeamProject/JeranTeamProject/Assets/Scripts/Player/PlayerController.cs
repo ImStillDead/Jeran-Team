@@ -99,11 +99,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
     void Start()
     {
         manager = GameManager.instance;
-
-        if (manager != null && manager.player != null)
-        {
-            manager.player.GetComponent<PlayerController>().spawnPlayer();
-        }
+        manager.player.GetComponent<PlayerController>().spawnPlayer();
 
         playerArmor();
     }
