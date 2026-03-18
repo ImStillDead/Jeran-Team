@@ -139,7 +139,7 @@ public class Shooting : MonoBehaviour
             volume = gunList[gunPos].shotSoundVol;
 
             spread = gunList[gunPos].spread;
-            recoil = gunList[gunPos].gunRecoil;
+            
 
             isShotgun = gunList[gunPos].isShotgun;
             isBurst = gunList[gunPos].isBurst;

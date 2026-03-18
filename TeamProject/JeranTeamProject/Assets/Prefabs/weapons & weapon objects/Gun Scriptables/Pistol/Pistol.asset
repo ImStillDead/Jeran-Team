@@ -24,8 +24,15 @@ MonoBehaviour:
   postion: {x: 0.011, y: 0.091, z: 0.322}
   rotation: {x: 0, y: 0, z: 0, w: 1}
   shootRotate: {x: 0, y: 0, z: 0, w: 0}
-  currentAmmo: 9
+  currentAmmo: 8
   spread: 5.5
-  startingMaxAmmo: 27
-  maxAmmo: 27
+  isShotgun: 0
+  isBurst: 0
+  burstTime: 0
+  burstDelay: 0
+  rechamberTime: 0
+  burstAmount: 0
+  pelletAmount: 0
+  gunRarity: 0
+  gunRecoil: {fileID: 3959864331085172780, guid: 07cceed3113725e49aba09dd400b7c7c, type: 3}
   shotSoundVol: 0.03
