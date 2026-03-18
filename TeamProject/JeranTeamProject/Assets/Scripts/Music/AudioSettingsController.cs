@@ -3,30 +3,33 @@ using UnityEngine.Audio;
 using UnityEngine.UI;
 public class AudioSettingsController : MonoBehaviour
 {
-    [SerializeField] private AudioMixer audioMixer;
+    [SerializeField] Slider soundsSlider;
+    [SerializeField] AudioMixer masterMixer;
 
-    [SerializeField] private Slider masterSlider;
-    [SerializeField] private Slider musicSlider;
-    [SerializeField] private Slider sfxSlider;
-
-
-    void Start()
+    private void Start()
     {
-       masterSlider.onValueChanged.AddListener(SetMasterVolume);
-       musicSlider.onValueChanged.AddListener(SetMusicVolume);
-       sfxSlider.onValueChanged.AddListener(SetSFXVolume);
+        SetVolume(PlayerPrefs.GetFloat("SavedMasterVolume", 100));
     }
 
-    public void SetMasterVolume(float volume)
+    public void SetVolume(float value)
     {
-        audioMixer.SetFloat("MasterVolume", Mathf.Log10(volume) * 20);
+        if (value < 1)
+            value = 0.001f;
+
+        RefreshSlider(value);
+
+        PlayerPrefs.SetFloat("SavedMasterVolume", value);
+
+        masterMixer.SetFloat("MasterVolume", Mathf.Log10(value / 100) * 20f);
     }
-    public void SetMusicVolume(float volume)
+
+    public void SetVolumeFromSlider()
     {
-        audioMixer.SetFloat("MusicVolume", Mathf.Log10(volume) * 20);
+        SetVolume(soundsSlider.value);
     }
-    public void SetSFXVolume(float volume)
+
+    public void RefreshSlider(float value)
     {
-        audioMixer.SetFloat("SFXVolume", Mathf.Log10(volume) * 20);
+        soundsSlider.value = value;
     }
 }
