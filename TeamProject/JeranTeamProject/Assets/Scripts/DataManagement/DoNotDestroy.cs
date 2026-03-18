@@ -1,9 +1,11 @@
 using System.Runtime.CompilerServices;
 using UnityEngine;
+using UnityEngine.Rendering;
+using UnityEngine.SceneManagement;
 
 public class DoNotDestroy : MonoBehaviour
 {
-    private static GameObject[] persistentObjects = new GameObject[3];
+    public static GameObject[] persistentObjects = new GameObject[3];
     public int persistentIndex;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Awake()
@@ -17,7 +19,7 @@ public class DoNotDestroy : MonoBehaviour
         {
             Destroy(gameObject);
         }
-    }
-       
 
+    }
+   
 }

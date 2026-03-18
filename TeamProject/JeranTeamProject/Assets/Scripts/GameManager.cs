@@ -13,12 +13,12 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
 
-
     public MenuController menus;
     [SerializeField] List<GameObject> itemsCase;
+    [SerializeField] CharacterSelect baseCharacter;
 
     [SerializeField] GameObject VolumeSlider;
-    
+    [SerializeField] public GameObject UI;
 
     
     [SerializeField] int maxSpawn;
@@ -40,9 +40,15 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] GameObject Objective_prefab;
     [SerializeField] Transform missonParent;
+    public List<GameObject> pickUpObjects = new List<GameObject>();
     public List<TMP_Text> missions = new List<TMP_Text> { }; //wip
     int maxTextprefabs = 5;
-    
+
+    public GameObject armorParent;
+    public Image armorPrefab;
+    private Image tempArmor;
+    private List<Image> armors = new List<Image>();
+
     [Header("Image/Text INPUTS")]
     public TMP_Text moneyCount;
     public Image PlayerHP_bar;
@@ -53,10 +59,6 @@ public class GameManager : MonoBehaviour
     public TMP_Text maxHealthNum;
     public TMP_Text killCount_text;
 
-
-
-    public GameData currentGameData;
-
     public GameObject player;
     public PlayerController playerScript;
     public Light objectiveLight;
@@ -64,6 +66,8 @@ public class GameManager : MonoBehaviour
     public GameObject playerSpawn;
     public GameObject playerCheckpointPop;
 
+    public GameData gameData;
+    public GameData hubData;
 
     public int DAYs;
     public int sceneIndex;
@@ -92,23 +96,20 @@ public class GameManager : MonoBehaviour
         {
             Time.timeScale = 1f;
         }
-
-        instance = this;
-
         if (instance == null)
         {
             instance = this;
         }
+        if (instance.player == null)
+        {
+            instance.player = GameObject.FindWithTag("Player");
+        }
+        if (instance.player != null)
+        {
+            instance.playerScript = instance.player.GetComponent<PlayerController>();
+            instance.playerSpawn = GameObject.FindWithTag("PlayerSpawn");
+        }
 
-        if (player == null)
-        {
-            player = GameObject.FindWithTag("Player");
-        }
-        if (player != null)
-        {
-            playerSpawn = GameObject.FindWithTag("PlayerSpawn");
-            playerScript = player.GetComponent<PlayerController>();
-        }
 
     }
 
@@ -116,9 +117,10 @@ public class GameManager : MonoBehaviour
     {
         menus = Object.FindAnyObjectByType<MenuController>();
         menus.stateUnpause();
-
-        moneyCount.text = playerScript.getplayerMoney().ToString();
         prog = GetComponent<supportGameProgression>();
+        if (moneyCount != null && playerScript != null)
+            moneyCount.text = playerScript.getplayerMoney().ToString();
+        StartData();
     }
 
     void Update()
@@ -353,29 +355,38 @@ public class GameManager : MonoBehaviour
         if (Text != null)
             Destroy(Text.gameObject);
     }
+
+    public void FlashText(TMP_Text text, Color flashColor, float duration)
+    {
+        StartCoroutine(FlashTextCoroutine(text, flashColor, duration));
+    }
+
+    private IEnumerator FlashTextCoroutine(TMP_Text text, Color flashColor, float duration)
+    {
+        if (text == null) yield break;
+
+        float elapsed = 0f;
+
+        Color original = Color.white;
+        Color target = flashColor;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            text.color = Color.Lerp(original, target, elapsed / duration);
+            yield return null;
+        }
+
+        text.color = original;
+    }
     public void updateItem(int index)
     {
         itemsCase[itemIndex].SetActive(false);
         itemIndex = index;
         itemsCase[index].SetActive(true);
     }
+   
     
-    public void saveCurrentRun()
-    {
-        if(currentGameData == null)
-        {
-            currentGameData = new GameData();
-        }
-        currentGameData.sceneIndex = sceneIndex;
-        currentGameData.player = player;
-        currentGameData.playerScript = playerScript;
-        DataManager.instance.Save(currentGameData);
-    }
-    public void loadCurrentRun()
-    {
-        player = currentGameData.player;
-        playerScript = currentGameData.playerScript;
-    }
 
     public int randomNumberPicker(int amount)
     {
@@ -385,7 +396,7 @@ public class GameManager : MonoBehaviour
         return item;
     }
 
-     public void guiAlwaysFacePlayer(GameObject obje)
+    public void guiAlwaysFacePlayer(GameObject obje)
     {
         if (obje == null) return;
 
@@ -403,21 +414,21 @@ public class GameManager : MonoBehaviour
         experience += XP;
 
     }
-    
+
     public void levelUp()
     {
+        if (playerScript == null) return;
+
         float tempMaxHP = playerScript.getMaxHP();
-
-
-        if(experience >= levelUpCap)
+        if (experience >= levelUpCap)
         {
             Debug.Log("you have leveled up");
             level++;
             experience -= levelUpCap;
             levelUpCap *= increaseXpCap;
-
+            FlashText(levelText, Color.yellow, 2);
             playerScript.setMaxHp(playerStatUpgrade(tempMaxHP));
-            playerScript.Heal((int)tempMaxHP/4);
+            playerScript.Heal((int)tempMaxHP / 4);
 
         }
 
@@ -430,7 +441,7 @@ public class GameManager : MonoBehaviour
 
         if (level >= 20)
         {
-            statMultiplier = 1.01f; 
+            statMultiplier = 1.01f;
         }
         else if (level >= 15)
         {
@@ -438,11 +449,11 @@ public class GameManager : MonoBehaviour
         }
         else if (level >= 10)
         {
-            statMultiplier = 1.10f; 
+            statMultiplier = 1.10f;
         }
         else
         {
-            statMultiplier = 1.15f; 
+            statMultiplier = 1.15f;
         }
 
 
@@ -461,6 +472,73 @@ public class GameManager : MonoBehaviour
         return stat;
     }
 
+    public void addArmor(int input)
+    {
+        for (int index = 0; index < input; index++)
+        {
+            tempArmor = Instantiate(armorPrefab, armorParent.transform);
+            armors.Add(tempArmor);
+        }
+    }
+    public void removeArmor()
+    {
+        if (armors.Count > 0)
+        {
+            Image lastArmor = armors[armors.Count - 1];
 
+            armors.RemoveAt(armors.Count - 1);
 
+            if (lastArmor != null)
+                Destroy(lastArmor.gameObject);
+        }
+    }
+
+    public void SaveData(GameData data)
+    {
+        DataManager.instance.SaveData(data);
+    }
+    public void StartData()
+    {
+        gameData = new GameData();
+        hubData = new GameData();
+        hubData.character = baseCharacter;
+
+        if (DataManager.instance != null)
+        {
+            DataManager.instance.UpdateHub(hubData);
+        }
+
+        if (DataManager.manager == null)
+        {
+            DataManager.manager = this;
+        }
+
+        if (playerScript != null)
+        {
+            if (playerScript.manager == null)
+            {
+                playerScript.manager = DataManager.manager;
+            }
+
+            playerScript.playerData = new PlayerData();
+            playerScript.UpdatePlayerStats(hubData.character);
+        }
+
+    }
+    public void SaveRun(GameData data)
+    {
+        DataManager.instance.SaveRun(data);
+    }
+    public void UpdateRun()
+    {
+        gameData.sceneIndex = sceneIndex;
+        gameData.currentpickUps = pickUpObjects;
+        gameData.playerPos = player.transform.position;
+        SaveRun(gameData);
+    }
+    public void LoadRun()
+    {
+        gameData = DataManager.instance.LoadRun();
+        player.transform.position = gameData.playerPos;
+    }
 }

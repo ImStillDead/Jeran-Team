@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Net.Mail;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering;
@@ -24,6 +25,7 @@ public class Shooting : MonoBehaviour
 
     //Public variables
     public List<GunStats> gunList = new List<GunStats>();
+    public List<Attachment> attachmentList = new List<Attachment>();
     public int currentAmmo;
     public int startingMaxAmmo;
     public static float shootTimer;
@@ -108,7 +110,7 @@ public class Shooting : MonoBehaviour
     }
     public void callAmmo()
     {
-        GameManager.instance.ammocount(currentAmmo, magSizeMax);
+        DataManager.manager.ammocount(currentAmmo, magSizeMax);
         if (gunList.Count > 0)
         {
             gunList[activeGun].currentAmmo = currentAmmo;
@@ -154,7 +156,11 @@ public class Shooting : MonoBehaviour
         changeBullet();
         callAmmo();
     }
+    public void addAttachment(Attachment attach)
+    {
 
+
+    }
     public void Shoot()
     {
         /*  Checks to see if the player is not reloading. If they are not, it fires a projectile
@@ -163,6 +169,7 @@ public class Shooting : MonoBehaviour
         if (!reloading)
         {
             shootTimer = 0;
+            if (aud[0] != null) 
             GameManager.instance.playerScript.playAudio(aud[0], volume);
 
 
@@ -239,5 +246,16 @@ public class Shooting : MonoBehaviour
     {
         yield return new WaitForSeconds(rechamberTime);
         pelletCount = 0;
+    }
+
+    public GunStats Swap()
+    {
+        return gunList[activeGun];
+    }
+
+    public void GunListSwap(List<GunStats> listSwap)
+    {
+        gunList = listSwap;
+        changeGun(0);
     }
 }
