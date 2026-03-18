@@ -2653,10 +2653,10 @@ MonoBehaviour:
   playerController: {fileID: 7709777452405699691}
   ignoreLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 8
   HP: 50
   Armor: 0
-  maxArmor: 0
+  maxArmor: 3
   speed: 8
   sprintMod: 2
   jumpSpeed: 10
@@ -2680,9 +2680,9 @@ MonoBehaviour:
   torch: {fileID: 0}
   itemList: []
   aud: {fileID: 7967669273735130920}
-  moneyOnPlayer: 0
-  armorRegenDelay: 0
-  armorRegenRate: 0
+  moneyOnPlayer: 40
+  armorRegenDelay: 3
+  armorRegenRate: 1
   canPickup: 0
   canSwap: 0
   manager: {fileID: 0}
