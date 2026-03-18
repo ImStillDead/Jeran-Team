@@ -1876,7 +1876,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1039705809827871674}
-  - component: {fileID: 2360436557999691548}
+  - component: {fileID: 7506061371083004502}
   m_Layer: 3
   m_Name: CameraRot
   m_TagString: Untagged
@@ -1900,7 +1900,7 @@ Transform:
   - {fileID: 2432325609343026195}
   m_Father: {fileID: 2552789030766678744}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &2360436557999691548
+--- !u!114 &7506061371083004502
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1909,13 +1909,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 6056277950681428499}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dfdac9d962f2b69428afb37ee0975821, type: 3}
+  m_Script: {fileID: 11500000, guid: e09c3b913828eb54bac8804178c574b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraController
-  player: {fileID: 4571722508075737141}
+  player: {fileID: 0}
   sens: 300
-  lockVertMin: -65
-  lockVertMax: 65
+  lockVertMin: -70
+  lockVertMax: 70
   invertY: 0
   camRotX: 0
 --- !u!1 &6227995068177771766
@@ -2647,24 +2647,24 @@ MonoBehaviour:
   m_GameObject: {fileID: 8593092689105773739}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f98eda37df222a1499b66261321f1cde, type: 3}
+  m_Script: {fileID: 11500000, guid: aef7aa55284bc54468f18d3a871516d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
   playerController: {fileID: 7709777452405699691}
   ignoreLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 8
   HP: 50
-  Armor: 10
+  Armor: 0
   maxArmor: 3
-  speed: 8
-  sprintMod: 2
-  jumpSpeed: 10
-  jumpChargeMax: 3
+  speed: 15
+  sprintMod: 1.5
+  jumpSpeed: 8
+  jumpChargeMax: 4
   jumpChargeRate: 2
   jumpMax: 1
-  interactDis: 5
-  enemyViewDis: 0
+  interactDis: 4
+  enemyViewDis: 30
   gravity: 35
   dashForce: 30
   dashDur: 0.2
@@ -2674,15 +2674,15 @@ MonoBehaviour:
   slideDur: 1.5
   slideYScale: 0.5
   slideCD: 1
-  weaponPos: {fileID: 6718390287254165713}
+  weaponPos: {fileID: 1504375674951491945}
   firstPersonCamera: {fileID: 6056277950681428499}
   thirdPersonCamera: {fileID: 0}
-  torch: {fileID: 2657794373020211425}
+  torch: {fileID: 0}
   itemList: []
   aud: {fileID: 7967669273735130920}
-  moneyOnPlayer: 0
-  armorRegenDelay: 0
-  armorRegenRate: 0
+  moneyOnPlayer: 40
+  armorRegenDelay: 3
+  armorRegenRate: 1
   canPickup: 0
   canSwap: 0
   manager: {fileID: 0}

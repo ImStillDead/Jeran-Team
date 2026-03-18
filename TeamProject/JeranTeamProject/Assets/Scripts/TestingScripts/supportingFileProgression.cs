@@ -6,8 +6,8 @@ using UnityEngine.SocialPlatforms.Impl;
 public enum progess
 {
 
-    get10Kills,get50kills, get100kills,get500kills, get1000kills,
-    findAcommonWeapon,findAUncommon,findARare, findAPerfected, findAExotic,
+    get10Kills,get50kills, get100kills,get500kills, get1000kills, get40000kills,
+    findAcommonWeapon,findAUncommon,findARare, findAPerfected, findAExotic, findASpecial,
     survive1Day, survive5days, survive10days, survive15days, completeArun,
     PerfectRun, masochist, 
 }
