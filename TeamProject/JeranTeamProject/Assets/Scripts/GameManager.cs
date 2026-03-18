@@ -43,7 +43,12 @@ public class GameManager : MonoBehaviour
     public List<GameObject> pickUpObjects = new List<GameObject>();
     public List<TMP_Text> missions = new List<TMP_Text> { }; //wip
     int maxTextprefabs = 5;
-    
+
+    public GameObject armorParent;
+    public Image armorPrefab;
+    private Image tempArmor;
+    private List<Image> armors = new List<Image>();
+
     [Header("Image/Text INPUTS")]
     public TMP_Text moneyCount;
     public Image PlayerHP_bar;
@@ -111,10 +116,10 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         menus = Object.FindAnyObjectByType<MenuController>();
-        GameManager.instance.menus = menus;
         menus.stateUnpause();
-        moneyCount.text = playerScript.getplayerMoney().ToString();
         prog = GetComponent<supportGameProgression>();
+        if (moneyCount != null && playerScript != null)
+            moneyCount.text = playerScript.getplayerMoney().ToString();
         StartData();
     }
 
@@ -350,6 +355,30 @@ public class GameManager : MonoBehaviour
         if (Text != null)
             Destroy(Text.gameObject);
     }
+
+    public void FlashText(TMP_Text text, Color flashColor, float duration)
+    {
+        StartCoroutine(FlashTextCoroutine(text, flashColor, duration));
+    }
+
+    private IEnumerator FlashTextCoroutine(TMP_Text text, Color flashColor, float duration)
+    {
+        if (text == null) yield break;
+
+        float elapsed = 0f;
+
+        Color original = Color.white;
+        Color target = flashColor;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.deltaTime;
+            text.color = Color.Lerp(original, target, elapsed / duration);
+            yield return null;
+        }
+
+        text.color = original;
+    }
     public void updateItem(int index)
     {
         itemsCase[itemIndex].SetActive(false);
@@ -385,21 +414,21 @@ public class GameManager : MonoBehaviour
         experience += XP;
 
     }
-    
+
     public void levelUp()
     {
+        if (playerScript == null) return;
+
         float tempMaxHP = playerScript.getMaxHP();
-
-
-        if(experience >= levelUpCap)
+        if (experience >= levelUpCap)
         {
             Debug.Log("you have leveled up");
             level++;
             experience -= levelUpCap;
             levelUpCap *= increaseXpCap;
-
+            FlashText(levelText, Color.yellow, 2);
             playerScript.setMaxHp(playerStatUpgrade(tempMaxHP));
-            playerScript.Heal((int)tempMaxHP/4);
+            playerScript.Heal((int)tempMaxHP / 4);
 
         }
 
@@ -412,7 +441,7 @@ public class GameManager : MonoBehaviour
 
         if (level >= 20)
         {
-            statMultiplier = 1.01f; 
+            statMultiplier = 1.01f;
         }
         else if (level >= 15)
         {
@@ -420,11 +449,11 @@ public class GameManager : MonoBehaviour
         }
         else if (level >= 10)
         {
-            statMultiplier = 1.10f; 
+            statMultiplier = 1.10f;
         }
         else
         {
-            statMultiplier = 1.15f; 
+            statMultiplier = 1.15f;
         }
 
 
@@ -443,6 +472,27 @@ public class GameManager : MonoBehaviour
         return stat;
     }
 
+    public void addArmor(int input)
+    {
+        for (int index = 0; index < input; index++)
+        {
+            tempArmor = Instantiate(armorPrefab, armorParent.transform);
+            armors.Add(tempArmor);
+        }
+    }
+    public void removeArmor()
+    {
+        if (armors.Count > 0)
+        {
+            Image lastArmor = armors[armors.Count - 1];
+
+            armors.RemoveAt(armors.Count - 1);
+
+            if (lastArmor != null)
+                Destroy(lastArmor.gameObject);
+        }
+    }
+
     public void SaveData(GameData data)
     {
         DataManager.instance.SaveData(data);
@@ -452,18 +502,28 @@ public class GameManager : MonoBehaviour
         gameData = new GameData();
         hubData = new GameData();
         hubData.character = baseCharacter;
-        DataManager.instance.UpdateHub(hubData);
+
+        if (DataManager.instance != null)
+        {
+            DataManager.instance.UpdateHub(hubData);
+        }
+
         if (DataManager.manager == null)
         {
             DataManager.manager = this;
         }
-        if (playerScript.manager == null)
+
+        if (playerScript != null)
         {
-            playerScript.manager = DataManager.manager;
+            if (playerScript.manager == null)
+            {
+                playerScript.manager = DataManager.manager;
+            }
+
+            playerScript.playerData = new PlayerData();
+            playerScript.UpdatePlayerStats(hubData.character);
         }
-        playerScript.playerData = new PlayerData();
-        playerScript.UpdatePlayerStats(hubData.character);
-        
+
     }
     public void SaveRun(GameData data)
     {

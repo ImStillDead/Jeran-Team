@@ -6,8 +6,13 @@ using UnityEngine.SceneManagement;
 
 public class buttonFunctions : MonoBehaviour
 {
-    
-        
+    GameManager manager;
+
+
+    public void Start()
+    {
+        manager = GameManager.instance.GetComponent<GameManager>();
+    }
     public void resume()
     {
         DataManager.manager.menus.stateUnpause();
@@ -65,12 +70,21 @@ public class buttonFunctions : MonoBehaviour
     }
     public void Quit()
     {
-        DataManager.manager.UpdateRun();
-        #if UNITY_EDITOR
+        if (DataManager.instance != null)
+        {
+            // Add this method to DataManager if it doesn't exist yet
+            manager.UpdateRun();
+        }
+        else
+        {
+            Debug.LogWarning("DataManager.instance is null! Skipping UpdateRun.");
+        }
+
+#if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
-        #else
-        Application.Quit();
-        #endif
+#else
+    Application.Quit();
+#endif
     }
     public void NewGame()
     {

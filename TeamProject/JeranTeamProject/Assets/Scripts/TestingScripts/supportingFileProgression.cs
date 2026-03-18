@@ -19,10 +19,13 @@ public class supportGameProgression : MonoBehaviour
     Shooting guns;
     private HashSet<progess> unlocked = new HashSet<progess>();
 
-    public void Start()
+    public void Awake()
     {
         Manager = DataManager.manager;
-        player = Manager.playerScript;
+        if (Manager != null && Manager.playerScript != null)
+        {
+            player = Manager.playerScript;
+        }
 
     }
 
