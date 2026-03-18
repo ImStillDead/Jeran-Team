@@ -127,34 +127,37 @@ public class Shooting : MonoBehaviour
     }
     public void changeGun(int gunPos)
     {
-        activeGun = gunPos;
-        currentAmmo = gunList[gunPos].currentAmmo;
-        magSizeMax = gunList[gunPos].magSizeMax;
-        bulletScript = gunList[gunPos].bullet;
-        shootRate = gunList[gunPos].shootRate;
-        reloadTime = gunList[gunPos].reloadTime;
-        aud = gunList[gunPos].aud;
-        volume = gunList[gunPos].shotSoundVol;
+        if (gunList.Count > 0)
+        {
+            activeGun = gunPos;
+            currentAmmo = gunList[gunPos].currentAmmo;
+            magSizeMax = gunList[gunPos].magSizeMax;
+            bulletScript = gunList[gunPos].bullet;
+            shootRate = gunList[gunPos].shootRate;
+            reloadTime = gunList[gunPos].reloadTime;
+            aud = gunList[gunPos].aud;
+            volume = gunList[gunPos].shotSoundVol;
 
-        spread = gunList[gunPos].spread;
+            spread = gunList[gunPos].spread;
 
-        isShotgun = gunList[gunPos].isShotgun;
-        isBurst = gunList[gunPos].isBurst;
-        burstTime = gunList[gunPos].burstTime;
-        rechamberTime = gunList[gunPos].rechamberTime;
-        burstAmount = gunList[gunPos].burstAmount;
-        pelletAmount = gunList[gunPos].pelletAmount;
-        burstDelay = gunList[gunPos].burstDelay;
+            isShotgun = gunList[gunPos].isShotgun;
+            isBurst = gunList[gunPos].isBurst;
+            burstTime = gunList[gunPos].burstTime;
+            rechamberTime = gunList[gunPos].rechamberTime;
+            burstAmount = gunList[gunPos].burstAmount;
+            pelletAmount = gunList[gunPos].pelletAmount;
+            burstDelay = gunList[gunPos].burstDelay;
 
-        gunModel.GetComponent<MeshFilter>().sharedMesh = instance.gunList[gunPos].gunModel.GetComponent<MeshFilter>().sharedMesh;
-        gunModel.GetComponent<MeshRenderer>().sharedMaterial = instance.gunList[gunPos].gunModel.GetComponent<MeshRenderer>().sharedMaterial;
-        gunModel.transform.localScale = gunList[gunPos].scale;
-        gunModel.transform.localPosition = gunList[gunPos].postion;
-        gunModel.transform.localRotation = gunList[gunPos].rotation;
-        shootPos.transform.localPosition = gunList[gunPos].shootPos.transform.localPosition;
-        shootPos.transform.localRotation = gunList[gunPos].shootRotate;
-        changeBullet();
-        callAmmo();
+            gunModel.GetComponent<MeshFilter>().sharedMesh = instance.gunList[gunPos].gunModel.GetComponent<MeshFilter>().sharedMesh;
+            gunModel.GetComponent<MeshRenderer>().sharedMaterial = instance.gunList[gunPos].gunModel.GetComponent<MeshRenderer>().sharedMaterial;
+            gunModel.transform.localScale = gunList[gunPos].scale;
+            gunModel.transform.localPosition = gunList[gunPos].postion;
+            gunModel.transform.localRotation = gunList[gunPos].rotation;
+            shootPos.transform.localPosition = gunList[gunPos].shootPos.transform.localPosition;
+            shootPos.transform.localRotation = gunList[gunPos].shootRotate;
+            changeBullet();
+            callAmmo();
+        }
     }
     public void addAttachment(Attachment attach)
     {
@@ -255,7 +258,11 @@ public class Shooting : MonoBehaviour
 
     public void GunListSwap(List<GunStats> listSwap)
     {
-        gunList = listSwap;
+        gunList.Clear();
+        foreach(GunStats gun in listSwap)
+        {
+            gunList.Add(gun);
+        }
         changeGun(0);
     }
 }

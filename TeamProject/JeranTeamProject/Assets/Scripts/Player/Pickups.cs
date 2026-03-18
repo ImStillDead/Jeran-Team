@@ -3,7 +3,6 @@ using UnityEngine;
 using UnityEngine.UI;
 
 [CreateAssetMenu]
-[Serializable]
 public class Pickups : ScriptableObject
 {
 

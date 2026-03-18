@@ -360,6 +360,29 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: b06d87a896d137244a22ed3278d18204, type: 3}
+--- !u!1 &283107252 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6056277950681428499, guid: 9e7c957d6da57f145bf5f4d4b2f3537b, type: 3}
+  m_PrefabInstance: {fileID: 1899328297}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &283107255
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 283107252}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2355b56fd1765ee48b1234063e47abeb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CameraController
+  player: {fileID: 0}
+  sens: 300
+  lockVertMin: -65
+  lockVertMax: 65
+  invertY: 0
+  camRotX: 0
 --- !u!1 &344993980
 GameObject:
   m_ObjectHideFlags: 0
@@ -389,7 +412,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 344993980}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e65d4c41de0a8d240aa5a6fd52b5a425, type: 3}
+  m_Script: {fileID: 11500000, guid: 1869e8bc75b0cea48a0137b5edf0f0b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ChangeCharacter
   character: {fileID: 0}
@@ -494,6 +517,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 929828983799658613, guid: 1871e5117a43b6a428afeb2ec882ee0e, type: 3}
+      propertyPath: baseCharacter
+      value: 
+      objectReference: {fileID: 11400000, guid: 7c716a9f235784447a45b1ccfd998aad, type: 2}
     - target: {fileID: 3854756262889888773, guid: 1871e5117a43b6a428afeb2ec882ee0e, type: 3}
       propertyPath: m_Name
       value: UI
@@ -923,24 +950,6 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 513835870}
   m_SourcePrefab: {fileID: 100100000, guid: 1d3ed2d81460f384f928458e79759927, type: 3}
---- !u!1 &1337414006 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8593092689105773739, guid: 9e7c957d6da57f145bf5f4d4b2f3537b, type: 3}
-  m_PrefabInstance: {fileID: 1899328297}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1337414017
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1337414006}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a155524e32b4fb24bbd2e844795e02d0, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DoNotDestroy
-  persistentIndex: 0
 --- !u!1 &1368163257
 GameObject:
   m_ObjectHideFlags: 0
@@ -1042,10 +1051,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1391853952}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e65d4c41de0a8d240aa5a6fd52b5a425, type: 3}
+  m_Script: {fileID: 11500000, guid: 1869e8bc75b0cea48a0137b5edf0f0b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ChangeCharacter
-  character: {fileID: 0}
+  character: {fileID: 11400000, guid: 7c716a9f235784447a45b1ccfd998aad, type: 2}
 --- !u!65 &1391853954
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1168,10 +1177,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1418150145}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e65d4c41de0a8d240aa5a6fd52b5a425, type: 3}
+  m_Script: {fileID: 11500000, guid: 1869e8bc75b0cea48a0137b5edf0f0b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ChangeCharacter
-  character: {fileID: 0}
+  character: {fileID: 11400000, guid: 5135e7aabeb99964f9c95bc92fc4781c, type: 2}
 --- !u!65 &1418150147
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1370,25 +1379,25 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 8593092689105773739, guid: 9e7c957d6da57f145bf5f4d4b2f3537b, type: 3}
-      propertyPath: m_Name
-      value: CharacterPlayer
-      objectReference: {fileID: 0}
-    - target: {fileID: 9032412059722442069, guid: 9e7c957d6da57f145bf5f4d4b2f3537b, type: 3}
+    - target: {fileID: 4571722508075737141, guid: 9e7c957d6da57f145bf5f4d4b2f3537b, type: 3}
       propertyPath: Armor
       value: 3
       objectReference: {fileID: 0}
-    - target: {fileID: 9032412059722442069, guid: 9e7c957d6da57f145bf5f4d4b2f3537b, type: 3}
-      propertyPath: maxArmor
-      value: 3
+    - target: {fileID: 4571722508075737141, guid: 9e7c957d6da57f145bf5f4d4b2f3537b, type: 3}
+      propertyPath: ignoreLayer.m_Bits
+      value: 128
+      objectReference: {fileID: 0}
+    - target: {fileID: 8593092689105773739, guid: 9e7c957d6da57f145bf5f4d4b2f3537b, type: 3}
+      propertyPath: m_Name
+      value: CharacterPlayer
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 8593092689105773739, guid: 9e7c957d6da57f145bf5f4d4b2f3537b, type: 3}
+    - targetCorrespondingSourceObject: {fileID: 6056277950681428499, guid: 9e7c957d6da57f145bf5f4d4b2f3537b, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1337414017}
+      addedObject: {fileID: 283107255}
   m_SourcePrefab: {fileID: 100100000, guid: 9e7c957d6da57f145bf5f4d4b2f3537b, type: 3}
 --- !u!1001 &1430315978113882027
 PrefabInstance:

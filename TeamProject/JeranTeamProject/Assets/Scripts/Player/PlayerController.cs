@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 
 
-public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDash
+public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDash, ICharacters
 {
 
 
@@ -99,9 +99,9 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
     void Start()
     {
         manager = GameManager.instance;
-        manager.player.GetComponent<PlayerController>().spawnPlayer();
-
+        spawnPlayer();
         playerArmor();
+        updatePlayerUI();
     }
 
     void Awake()
@@ -111,15 +111,17 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
         SetupSliding();
 
         isFirstPerson = true;
-        if (HPMax == 0)
+        if(HPMax == 0)
+        {
             HPMax = 50;
+        }
         gunMax = 2;
         speedOrigin = speed;
         jumpSpeedOrigin = jumpSpeed;
     }
     void Update()
     {
-        updatePlayerUI();
+        //updatePlayerUI();
         Movement();
         WeaponRotate();
         Sprint();
@@ -761,11 +763,14 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
     // World Interactions
     public void spawnPlayer()
     {
-        playerController.transform.position = manager.playerSpawn.transform.position;
-        Physics.SyncTransforms();
-        HP = (int)HPMax;
-        //updatePlayerUI();
-        if (manager.menus != null) manager.menus.stateUnpause();
+        if (GameManager.instance.playerSpawn != null)
+        {
+            playerController.transform.position = manager.playerSpawn.transform.position;
+            Physics.SyncTransforms();
+            HP = (int)HPMax;
+            updatePlayerUI();
+            if (manager.menus != null) manager.menus.stateUnpause();
+        }
     }
     public void playAudio(AudioClip clip, float volume)
     {
@@ -776,40 +781,38 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
 
     public void UpdatePlayerStats(GameData data)
     {
-        playerData = new PlayerData();
-        if (data == null) return;
-        else
-        {
+        if (playerData == null) playerData = new PlayerData();
+        if(data == null) return;
 
-            playerData.HP = data.HP;
-            playerData.speed = data.speed;
-            playerData.speedMod = data.sprintMod;
-            playerData.jumpSpeed = data.jumpSpeed;
-            playerData.jumpMax = data.jumpMax;
-            playerData.jumpChargeRate = data.jumpChargeRate;
-            playerData.jumpChargeMax = data.jumpChargeMax;
-            playerData.itemList = data.itemList;
-            playerData.gunList = data.gunList;
-            SetStats(playerData);
-        }
+        playerData.HP = data.HP;
+        playerData.speed = data.speed;
+        playerData.speedMod = data.sprintMod;
+        playerData.jumpSpeed = data.jumpSpeed;
+        playerData.jumpMax = data.jumpMax;
+        playerData.jumpChargeRate = data.jumpChargeRate;
+        playerData.jumpChargeMax = data.jumpChargeMax;
+        playerData.itemList = data.itemList;
+        playerData.gunList = data.gunList;
+        SetStats(playerData);
     }
     public void UpdatePlayerStats(CharacterSelect data)
     {
         if (data == null) return;
-        else
-        {
 
-            playerData.HP = data.HP;
-            playerData.speed = data.speed;
-            playerData.speedMod = data.speedMod;
-            playerData.jumpSpeed = data.jumpSpeed;
-            playerData.jumpMax = data.jumpMax;
-            playerData.jumpChargeRate = data.jumpChargeRate;
-            playerData.jumpChargeMax = data.jumpChargeMax;
-            playerData.itemList = data.itemList;
-            playerData.gunList = data.gunList;
-            SetStats(playerData);
+        playerData.HP = data.HP;
+        playerData.speed = data.speed;
+        playerData.speedMod = data.speedMod;
+        playerData.jumpSpeed = data.jumpSpeed;
+        playerData.jumpMax = data.jumpMax;
+        playerData.jumpChargeRate = data.jumpChargeRate;
+        playerData.jumpChargeMax = data.jumpChargeMax;
+        playerData.itemList = data.itemList;
+        playerData.gunList.Clear();
+        foreach (GunStats gun in data.gunList)
+        {
+            playerData.gunList.Add(gun);
         }
+        SetStats(playerData);
     }
     public void SetStats(PlayerData data)
     {
@@ -821,16 +824,28 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
         jumpChargeRate = data.jumpChargeRate;
         jumpChargeMax = data.jumpChargeMax;
         itemList = data.itemList;
-        Shooting.instance.GunListSwap(data.gunList);
-        //gameData.HP = data.HP;
-        //gameData.speed = data.speed;
-        //gameData.jumpSpeed = data.jumpSpeed;
-        //gameData.jumpMax = data.jumpMax;
-        //gameData.jumpChargeRate = data.jumpChargeRate;
-        //gameData.jumpChargeMax = data.jumpChargeMax;
-        //gameData.itemList = data.itemList;
-        //gameData.gunList = data.gunList;
-        //DataManager.instance.UpdateHub(gameData);
+        Shooting.instance.gunList.Clear();
+        foreach (GunStats gun in data.gunList)
+        {
+            Shooting.instance.gunList.Add(gun);
+        }
+        Shooting.instance.changeGun(0);
+        if(gameData == null)
+        {
+            gameData = new GameData();
+        }
+        gameData.HP = HPMax;
+        gameData.speed = speed;
+        gameData.jumpSpeed = jumpSpeed;
+        gameData.jumpMax = jumpMax;
+        gameData.jumpChargeRate = jumpChargeRate;
+        gameData.jumpChargeMax = jumpChargeMax;
+        gameData.itemList = itemList;
+        foreach(GunStats gun in data.gunList)
+        {
+            gameData.gunList.Add(gun);
+        }
+        DataManager.instance.UpdateHub(gameData);
         updatePlayerUI();
     }
     public void SwapCharacter(CharacterSelect character)
