@@ -59,6 +59,14 @@ public class GameManager : MonoBehaviour
     public TMP_Text maxHealthNum;
     public TMP_Text killCount_text;
 
+    public GameObject armorParent;
+    public Image armorPrefab;
+    private Image tempArmor;
+    private List<Image> armors = new List<Image>();
+
+
+    public GameData currentGameData;
+
     public GameObject player;
     public PlayerController playerScript;
     public Light objectiveLight;

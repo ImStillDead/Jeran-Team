@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
@@ -22,6 +22,8 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
     [SerializeField] float jumpSpeed;
     [SerializeField] float jumpChargeMax;
     [SerializeField] float jumpChargeRate;
+    [SerializeField] int Armor;
+    [SerializeField] int maxArmor;
     [SerializeField] int jumpMax;
     [SerializeField] int interactDis;
     [SerializeField] int enemyViewDis;
