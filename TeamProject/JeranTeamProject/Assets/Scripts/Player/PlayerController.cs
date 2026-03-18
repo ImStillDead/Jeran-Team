@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 
 
-public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDash, ICharacters
+public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDash 
 {
     
 
@@ -820,15 +820,22 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
         jumpChargeMax = data.jumpChargeMax;
         itemList = data.itemList;
         Shooting.instance.GunListSwap(data.gunList);
-        //gameData.HP = data.HP;
-        //gameData.speed = data.speed;
-        //gameData.jumpSpeed = data.jumpSpeed;
-        //gameData.jumpMax = data.jumpMax;
-        //gameData.jumpChargeRate = data.jumpChargeRate;
-        //gameData.jumpChargeMax = data.jumpChargeMax;
-        //gameData.itemList = data.itemList;
-        //gameData.gunList = data.gunList;
-        //DataManager.instance.UpdateHub(gameData);
+        if(gameData == null)
+        {
+            gameData = new GameData();
+        }
+        gameData.HP = HPMax;
+        gameData.speed = speed;
+        gameData.jumpSpeed = jumpSpeed;
+        gameData.jumpMax = jumpMax;
+        gameData.jumpChargeRate = jumpChargeRate;
+        gameData.jumpChargeMax = jumpChargeMax;
+        gameData.itemList = itemList;
+        foreach(GunStats gun in data.gunList)
+        {
+            gameData.gunList.Add(gun);
+        }
+        DataManager.instance.UpdateHub(gameData);
         updatePlayerUI();
     }
     public void SwapCharacter(CharacterSelect character)

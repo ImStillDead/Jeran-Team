@@ -8,7 +8,7 @@ public class PlayerSpawn : MonoBehaviour
         if(GameManager.instance.playerSpawn != gameObject)
         {
             GameManager.instance.playerSpawn = gameObject;
-            GameManager.instance.playerScript.spawnPlayer();
+            //GameManager.instance.playerScript.spawnPlayer();
         }
     }
 

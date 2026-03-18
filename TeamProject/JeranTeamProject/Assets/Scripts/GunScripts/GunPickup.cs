@@ -12,7 +12,7 @@ public class GunPickup : MonoBehaviour
         this.GetComponent<MeshRenderer>().sharedMaterial = gun.gunModel.GetComponent<MeshRenderer>().sharedMaterial;
         this.transform.localScale = gun.scale * 3;
         this.transform.localRotation = gun.rotation;
-        GameManager.instance.pickUpObjects.Add(this.gameObject);
+        GameManager.instance.pickUpObjects.Add(gameObject);
     }
     private void OnTriggerEnter(Collider other)
     {

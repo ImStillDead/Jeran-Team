@@ -510,7 +510,7 @@ public class GameManager : MonoBehaviour
 
         if (DataManager.instance != null)
         {
-            //DataManager.instance.UpdateHub(hubData);
+            DataManager.instance.UpdateHub(hubData);
         }
         if (playerScript != null)
         {
@@ -520,7 +520,7 @@ public class GameManager : MonoBehaviour
             }
 
             playerScript.playerData = new PlayerData();
-            //playerScript.UpdatePlayerStats(DataManager.instance.hubData);
+            playerScript.UpdatePlayerStats(DataManager.instance.hubData);
         }
 
     }

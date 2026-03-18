@@ -255,7 +255,11 @@ public class Shooting : MonoBehaviour
 
     public void GunListSwap(List<GunStats> listSwap)
     {
-        gunList = listSwap;
+        gunList.Clear();
+        foreach(GunStats gun in listSwap)
+        {
+            gunList.Add(gun);
+        }
         changeGun(0);
     }
 }
