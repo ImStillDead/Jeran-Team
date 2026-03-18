@@ -108,8 +108,8 @@ public class GameManager : MonoBehaviour
         }
         if (instance.player != null)
         {
-            instance.playerScript = instance.player.GetComponent<PlayerController>();
-            instance.playerSpawn = GameObject.FindWithTag("PlayerSpawn");
+            playerScript = instance.player.GetComponent<PlayerController>();
+            playerSpawn = GameObject.FindWithTag("PlayerSpawn");
         }
 
 
