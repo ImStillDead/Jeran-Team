@@ -92,7 +92,7 @@ public class GameManager : MonoBehaviour
     {
         sceneIndex = SceneManager.GetActiveScene().buildIndex; //did alittle clean up for the awake method, had alot of sceneIndex within it. and mulitple player = gameobject---- 
 
-        if(Time.timeScale == 0)
+        if(Time.timeScale !> 0)
         {
             Time.timeScale = 1f;
         }
@@ -116,8 +116,8 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         menus = Object.FindAnyObjectByType<MenuController>();
-        menus.stateUnpause();
         prog = GetComponent<supportGameProgression>();
+        menus.stateUnpause();
         if (moneyCount != null && playerScript != null)
             moneyCount.text = playerScript.getplayerMoney().ToString();
         StartData();

@@ -726,7 +726,9 @@ MonoBehaviour:
   - {fileID: 662753362679615104}
   - {fileID: 6044543788700534905}
   - {fileID: 6540267720293026578}
+  baseCharacter: {fileID: 0}
   VolumeSlider: {fileID: 4761292616876445622}
+  UI: {fileID: 0}
   maxSpawn: 20
   reticle: {fileID: 8843003007540835084}
   magazine_text: {fileID: 5765798503774629887}
@@ -741,7 +743,10 @@ MonoBehaviour:
   listofDialog: []
   Objective_prefab: {fileID: 5052248408302837368, guid: 3e556e4f1e795e947b6a77515adc0a13, type: 3}
   missonParent: {fileID: 6439483758268440179}
+  pickUpObjects: []
   missions: []
+  armorParent: {fileID: 6540021706397428629}
+  armorPrefab: {fileID: 3330813911204929002, guid: ae410feadbf6589488215fef266fe056, type: 3}
   moneyCount: {fileID: 3541884233840564735}
   PlayerHP_bar: {fileID: 211221783427435726}
   XP_bar: {fileID: 3071158010338413166}
@@ -750,14 +755,22 @@ MonoBehaviour:
   heathNum: {fileID: 8490032000039084733}
   maxHealthNum: {fileID: 7295755091475559631}
   killCount_text: {fileID: 4675162484356823955}
-  armorParent: {fileID: 6540021706397428629}
-  armorPrefab: {fileID: 3330813911204929002, guid: ae410feadbf6589488215fef266fe056, type: 3}
   player: {fileID: 0}
   playerScript: {fileID: 0}
   objectiveLight: {fileID: 0}
   doorLights: {fileID: 0}
   playerSpawn: {fileID: 0}
   playerCheckpointPop: {fileID: 8735779706122195384}
+  gameData:
+    sceneIndex: 0
+    playerPos: {x: 0, y: 0, z: 0}
+    currentpickUps: []
+    character: {fileID: 0}
+  hubData:
+    sceneIndex: 0
+    playerPos: {x: 0, y: 0, z: 0}
+    currentpickUps: []
+    character: {fileID: 0}
   DAYs: 0
   sceneIndex: 0
   enemyCount: 0
@@ -962,6 +975,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a93aa9686343abd47b7c1600904e401f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DataManager
+  hubData:
+    sceneIndex: 0
+    playerPos: {x: 0, y: 0, z: 0}
+    currentpickUps: []
+    character: {fileID: 0}
   fileName: saveData.json
 --- !u!1 &2765127732332320864
 GameObject:

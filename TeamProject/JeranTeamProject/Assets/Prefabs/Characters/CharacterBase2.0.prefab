@@ -713,7 +713,6 @@ GameObject:
   - component: {fileID: 1241357709300632157}
   - component: {fileID: 6700606914352280236}
   - component: {fileID: 9045195498966277358}
-  - component: {fileID: 5269277393113434949}
   m_Layer: 3
   m_Name: CharacterBase2.0
   m_TagString: Player
@@ -1014,64 +1013,6 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
---- !u!114 &5269277393113434949
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2052172109115734351}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aef7aa55284bc54468f18d3a871516d3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::PlayerController
-  playerController: {fileID: 6700606914352280236}
-  ignoreLayer:
-    serializedVersion: 2
-    m_Bits: 0
-  HP: 0
-  Armor: 0
-  maxArmor: 0
-  speed: 0
-  sprintMod: 0
-  jumpSpeed: 0
-  jumpChargeMax: 0
-  jumpChargeRate: 0
-  jumpMax: 0
-  interactDis: 0
-  enemyViewDis: 0
-  gravity: 0
-  dashForce: 30
-  dashDur: 0.2
-  dashCD: 1
-  canSlide: 1
-  slideSpeed: 12
-  slideDur: 1.5
-  slideYScale: 0.5
-  slideCD: 1
-  weaponPos: {fileID: 0}
-  firstPersonCamera: {fileID: 0}
-  thirdPersonCamera: {fileID: 0}
-  torch: {fileID: 0}
-  itemList: []
-  aud: {fileID: 0}
-  moneyOnPlayer: 0
-  armorRegenDelay: 0
-  armorRegenRate: 0
-  canPickup: 0
-  canSwap: 0
-  manager: {fileID: 0}
-  playerData:
-    HP: 50
-    speed: 8
-    speedMod: 2
-    jumpMax: 1
-    jumpSpeed: 10
-    jumpChargeMax: 3
-    jumpChargeRate: 2
-    gunList: []
-    itemList: []
 --- !u!1 &2219429186303288509
 GameObject:
   m_ObjectHideFlags: 0
@@ -2527,7 +2468,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79adcfcaa012aee4e9e5bf9bf8d553e0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraController
-  player: {fileID: 0}
+  player: {fileID: 7424859288577979019}
   sens: 0
   lockVertMin: 0
   lockVertMax: 0
