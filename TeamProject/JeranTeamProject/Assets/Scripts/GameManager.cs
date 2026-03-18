@@ -503,18 +503,15 @@ public class GameManager : MonoBehaviour
     {
         gameData = new GameData();
         hubData = new GameData();
-        hubData.character = baseCharacter;
-
-        if (DataManager.instance != null)
-        {
-            DataManager.instance.UpdateHub(hubData);
-        }
-
         if (DataManager.manager == null)
         {
             DataManager.manager = this;
         }
 
+        if (DataManager.instance != null)
+        {
+            //DataManager.instance.UpdateHub(hubData);
+        }
         if (playerScript != null)
         {
             if (playerScript.manager == null)
@@ -523,7 +520,7 @@ public class GameManager : MonoBehaviour
             }
 
             playerScript.playerData = new PlayerData();
-            playerScript.UpdatePlayerStats(hubData.character);
+            //playerScript.UpdatePlayerStats(DataManager.instance.hubData);
         }
 
     }
