@@ -116,8 +116,8 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         menus = Object.FindAnyObjectByType<MenuController>();
-        menus.stateUnpause();
         prog = GetComponent<supportGameProgression>();
+        menus.stateUnpause();
         if (moneyCount != null && playerScript != null)
             moneyCount.text = playerScript.getplayerMoney().ToString();
         StartData();
