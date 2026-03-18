@@ -6,9 +6,9 @@ using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 
 
-public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDash, ICharacters
+public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDash
 {
-    
+
 
     [SerializeField] CharacterController playerController;
     [SerializeField] LayerMask ignoreLayer;
@@ -107,7 +107,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
     void Awake()
     {
         gameData = new GameData();
-        SetupDashing(); 
+        SetupDashing();
         SetupSliding();
 
         isFirstPerson = true;
@@ -164,7 +164,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
             jumpCount = 0;
             playerVel = Vector3.zero;
         }
-        
+
         Jump();
         ChangeActiveInventory();
         CameraToggle();
@@ -374,7 +374,8 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
         if (Input.GetButtonDown("Sprint"))
         {
             speed *= sprintMod;
-        } else if (Input.GetButtonUp("Sprint"))
+        }
+        else if (Input.GetButtonUp("Sprint"))
         {
             speed /= sprintMod;
         }
@@ -489,7 +490,8 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
         if (Shooting.instance.gunList.Contains(gun))
         {
             canPickup = false;
-        }else if (Shooting.instance.gunList.Count >= gunMax)
+        }
+        else if (Shooting.instance.gunList.Count >= gunMax)
         {
             canPickup = false;
         }
@@ -618,7 +620,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
             armorRegenTimer = 0f;
 
             Armor++;
-            manager.addArmor(1); // 👈 update UI
+            manager.addArmor(1); // ?? update UI
         }
 
     }
@@ -696,7 +698,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
             //temp Boost dmg
             if (activePick.dmgBoost > 0)
             {
-                if(dmgBoosting == false)
+                if (dmgBoosting == false)
                 {
                     activePick.uesage--;
                     StartCoroutine(dmgBoost());
@@ -705,7 +707,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
             //temp speed Boost
             if (activePick.speedBoost > 0)
             {
-                if(speed != speedOrigin)
+                if (speed != speedOrigin)
                 {
                     activePick.uesage--;
                     StartCoroutine(speedBoost());
@@ -740,7 +742,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
 
         updatePlayerUI();
     }
-    IEnumerator dmgBoost() 
+    IEnumerator dmgBoost()
     {
         dmgBoosting = true;
         tempOrginDmg = Shooting.instance.gunList[gunPos].bullet.damageAmount;
@@ -776,7 +778,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
     }
 
     // Data Management
- 
+
     public void UpdatePlayerStats(GameData data)
     {
         if (playerData == null) playerData = new PlayerData();
