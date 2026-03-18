@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 
 
-public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDash//, ICharacters
+public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDash, ICharacters
 {
 
 
