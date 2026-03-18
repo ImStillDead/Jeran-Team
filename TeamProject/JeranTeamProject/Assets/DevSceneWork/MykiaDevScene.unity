@@ -419,6 +419,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d1035a7fbead28b4d94b636a16625b61, type: 3}
+--- !u!1 &430565090 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2931383310522466045, guid: 1871e5117a43b6a428afeb2ec882ee0e, type: 3}
+  m_PrefabInstance: {fileID: 2083281408}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &508590464
 GameObject:
   m_ObjectHideFlags: 0
@@ -463,6 +468,17 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &525318899 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 14805425647850256, guid: be1e904868c18ad4aac89736c43f3e59, type: 3}
+  m_PrefabInstance: {fileID: 2780093452206450298}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 909868c72091a174692bbdef5edc00f2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NPCInteract
 --- !u!1001 &548440167
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1922,6 +1938,17 @@ Mesh:
       - serializedVersion: 1
         m_IndexStart: 0
         m_IndexCount: 0
+--- !u!114 &906465388 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 742716675594981476, guid: 1871e5117a43b6a428afeb2ec882ee0e, type: 3}
+  m_PrefabInstance: {fileID: 2083281408}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
 --- !u!1001 &984484743
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2628,11 +2655,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5eb66ab96063d4f4c883034300bcb000, type: 3}
---- !u!1 &1310889651 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 2298638958956877366, guid: be1e904868c18ad4aac89736c43f3e59, type: 3}
-  m_PrefabInstance: {fileID: 2780093452206450298}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1311187261
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3556,17 +3578,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5eb66ab96063d4f4c883034300bcb000, type: 3}
---- !u!114 &1966656960 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 5668627289642861012, guid: be1e904868c18ad4aac89736c43f3e59, type: 3}
-  m_PrefabInstance: {fileID: 2780093452206450298}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Unity.TextMeshPro::TMPro.TextMeshProUGUI
 --- !u!1001 &2030872669
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3768,6 +3779,54 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 692371866275202191, guid: 1871e5117a43b6a428afeb2ec882ee0e, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 692371866275202191, guid: 1871e5117a43b6a428afeb2ec882ee0e, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 692371866275202191, guid: 1871e5117a43b6a428afeb2ec882ee0e, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 525318899}
+    - target: {fileID: 692371866275202191, guid: 1871e5117a43b6a428afeb2ec882ee0e, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: ConfirmSkip
+      objectReference: {fileID: 0}
+    - target: {fileID: 692371866275202191, guid: 1871e5117a43b6a428afeb2ec882ee0e, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: NPCInteract, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 692371866275202191, guid: 1871e5117a43b6a428afeb2ec882ee0e, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 2919270955651136177, guid: 1871e5117a43b6a428afeb2ec882ee0e, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2919270955651136177, guid: 1871e5117a43b6a428afeb2ec882ee0e, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2919270955651136177, guid: 1871e5117a43b6a428afeb2ec882ee0e, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 525318899}
+    - target: {fileID: 2919270955651136177, guid: 1871e5117a43b6a428afeb2ec882ee0e, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: NextPage
+      objectReference: {fileID: 0}
+    - target: {fileID: 2919270955651136177, guid: 1871e5117a43b6a428afeb2ec882ee0e, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: NPCInteract, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 2919270955651136177, guid: 1871e5117a43b6a428afeb2ec882ee0e, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 3854756262889888773, guid: 1871e5117a43b6a428afeb2ec882ee0e, type: 3}
       propertyPath: m_Name
       value: UI
@@ -3852,18 +3911,6 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 5816567618466879621, guid: 1871e5117a43b6a428afeb2ec882ee0e, type: 3}
-      propertyPath: m_IsActive
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 7295755091475559631, guid: 1871e5117a43b6a428afeb2ec882ee0e, type: 3}
-      propertyPath: m_text
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 8490032000039084733, guid: 1871e5117a43b6a428afeb2ec882ee0e, type: 3}
-      propertyPath: m_text
-      value: 
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -3880,9 +3927,17 @@ PrefabInstance:
     - target: {fileID: 14805425647850256, guid: be1e904868c18ad4aac89736c43f3e59, type: 3}
       propertyPath: bubbleText
       value: 
-      objectReference: {fileID: 1966656960}
+      objectReference: {fileID: 0}
     - target: {fileID: 14805425647850256, guid: be1e904868c18ad4aac89736c43f3e59, type: 3}
       propertyPath: chatWindow
+      value: 
+      objectReference: {fileID: 430565090}
+    - target: {fileID: 14805425647850256, guid: be1e904868c18ad4aac89736c43f3e59, type: 3}
+      propertyPath: nextButton
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 14805425647850256, guid: be1e904868c18ad4aac89736c43f3e59, type: 3}
+      propertyPath: skipButton
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 14805425647850256, guid: be1e904868c18ad4aac89736c43f3e59, type: 3}
@@ -3896,7 +3951,7 @@ PrefabInstance:
     - target: {fileID: 14805425647850256, guid: be1e904868c18ad4aac89736c43f3e59, type: 3}
       propertyPath: bubbleObject
       value: 
-      objectReference: {fileID: 1310889651}
+      objectReference: {fileID: 0}
     - target: {fileID: 14805425647850256, guid: be1e904868c18ad4aac89736c43f3e59, type: 3}
       propertyPath: parentObject
       value: 
@@ -3904,7 +3959,7 @@ PrefabInstance:
     - target: {fileID: 14805425647850256, guid: be1e904868c18ad4aac89736c43f3e59, type: 3}
       propertyPath: chatWindowText
       value: 
-      objectReference: {fileID: 0}
+      objectReference: {fileID: 906465388}
     - target: {fileID: 14805425647850256, guid: be1e904868c18ad4aac89736c43f3e59, type: 3}
       propertyPath: interactPrompt
       value: 

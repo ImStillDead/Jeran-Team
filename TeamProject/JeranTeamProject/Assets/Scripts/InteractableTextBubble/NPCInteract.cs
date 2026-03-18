@@ -1,8 +1,6 @@
 using UnityEngine;
 using TMPro;
-using JetBrains.Annotations;
 using UnityEngine.UI;
-using System.Reflection;
 
 public class NPCInteract : MonoBehaviour, iInteract
 {
@@ -81,10 +79,11 @@ public class NPCInteract : MonoBehaviour, iInteract
             if (interactPrompt != null)
                 interactPrompt.SetActive(false);
 
-            ShowCurrentPage();
-            return;
+            Cursor.visible = true;
+            Cursor.lockState = CursorLockMode.None;
+
+            ShowCurrentPage(); 
         }
-        NextPage();
     }
 
     private void ShowCurrentPage()
@@ -134,5 +133,8 @@ public class NPCInteract : MonoBehaviour, iInteract
             skipConfirmPanel.SetActive(false);
         if (interactPrompt != null)
             interactPrompt.SetActive(true);
+        
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
     }
 }
