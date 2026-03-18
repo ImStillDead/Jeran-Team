@@ -17,18 +17,19 @@ MonoBehaviour:
   shootRate: 1.25
   magSizeMax: 40
   reloadTime: 3
-  bullet: {fileID: 11400000, guid: 31d48277d90124040b710faffdb6bc5b, type: 2}
+  bullet: {fileID: 11400000, guid: e5d4f0e2aed291546851512e04651949, type: 2}
   aud:
   - {fileID: 8300000, guid: 1328126a7a31589499120f3f3808d014, type: 3}
   scale: {x: 0.25, y: 0.25, z: 0.25}
   postion: {x: 0, y: 0.194, z: 0.294}
   rotation: {x: 0, y: 0, z: 0, w: 0}
   shootRotate: {x: 0, y: 0, z: 0, w: 0}
-  currentAmmo: 0
+  currentAmmo: 40
   spread: 15
   isShotgun: 1
   isBurst: 0
   burstTime: 0
+  burstDelay: 0
   rechamberTime: 1
   burstAmount: 0
   pelletAmount: 5
