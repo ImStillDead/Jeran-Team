@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu]
-[Serializable]
 public class CharacterSelect : ScriptableObject
 {
     public float HP;

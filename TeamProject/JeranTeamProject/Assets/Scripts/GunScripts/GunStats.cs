@@ -3,7 +3,6 @@ using UnityEngine;
 using UnityEngine.Rendering;
 
 [CreateAssetMenu]
-[Serializable]
 public class GunStats : ScriptableObject
 {
     public GameObject gunModel;

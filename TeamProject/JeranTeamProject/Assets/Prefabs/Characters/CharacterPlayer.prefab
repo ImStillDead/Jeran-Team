@@ -1909,7 +1909,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 6056277950681428499}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 63f541ab1cb4f014b881bd1b69d18ab5, type: 3}
+  m_Script: {fileID: 11500000, guid: f1ce31cf2c9553741aa3e78247492517, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraController
   player: {fileID: 0}
@@ -2608,7 +2608,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2552789030766678744}
-  - component: {fileID: 9032412059722442069}
+  - component: {fileID: 4571722508075737141}
   - component: {fileID: 7709777452405699691}
   - component: {fileID: 383483301613954093}
   - component: {fileID: 7967669273735130920}
@@ -2638,7 +2638,7 @@ Transform:
   - {fileID: 1039705809827871674}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &9032412059722442069
+--- !u!114 &4571722508075737141
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2655,8 +2655,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 0
   HP: 50
-  Armor: 0
-  maxArmor: 0
+  Armor: 10
+  maxArmor: 3
   speed: 8
   sprintMod: 2
   jumpSpeed: 10
