@@ -1909,7 +1909,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 6056277950681428499}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d0c997653bd6f8b49af2cd56a609434e, type: 3}
+  m_Script: {fileID: 11500000, guid: dfdac9d962f2b69428afb37ee0975821, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraController
   player: {fileID: 6057148889461089348}
@@ -2647,25 +2647,25 @@ MonoBehaviour:
   m_GameObject: {fileID: 8593092689105773739}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 702bea551e769674e8677faba3484417, type: 3}
+  m_Script: {fileID: 11500000, guid: f98eda37df222a1499b66261321f1cde, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
   playerController: {fileID: 7709777452405699691}
   ignoreLayer:
     serializedVersion: 2
     m_Bits: 0
-  HP: 50
-  Armor: 0
-  maxArmor: 0
-  speed: 8
+  HP: 10
+  Armor: 10
+  maxArmor: 10
+  speed: 10
   sprintMod: 2
-  jumpSpeed: 10
+  jumpSpeed: 12
   jumpChargeMax: 3
-  jumpChargeRate: 2
+  jumpChargeRate: 3
   jumpMax: 1
-  interactDis: 3
-  enemyViewDis: 15
-  gravity: 35
+  interactDis: 0
+  enemyViewDis: 0
+  gravity: 3
   dashForce: 30
   dashDur: 0.2
   dashCD: 1
@@ -2675,9 +2675,9 @@ MonoBehaviour:
   slideYScale: 0.5
   slideCD: 1
   weaponPos: {fileID: 6718390287254165713}
-  firstPersonCamera: {fileID: 2129172508047573539}
+  firstPersonCamera: {fileID: 6056277950681428499}
   thirdPersonCamera: {fileID: 0}
-  torch: {fileID: 0}
+  torch: {fileID: 2657794373020211425}
   itemList: []
   aud: {fileID: 7967669273735130920}
   moneyOnPlayer: 0
