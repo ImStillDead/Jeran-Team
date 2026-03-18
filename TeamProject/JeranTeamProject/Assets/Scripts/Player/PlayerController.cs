@@ -121,7 +121,6 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
     }
     void Update()
     {
-        //updatePlayerUI();
         Movement();
         WeaponRotate();
         Sprint();
@@ -173,6 +172,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
         Interact();
         useItem();
         ToggleTorch();
+
     }
 
     void SetupDashing()

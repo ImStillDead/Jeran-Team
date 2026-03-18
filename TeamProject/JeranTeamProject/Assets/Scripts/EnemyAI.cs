@@ -284,7 +284,7 @@ public class EnemyAI : MonoBehaviour, IDamage
 
             player.addPlayerMoney(killReward);
             manager.giveXP(experienceReward);
-
+            player.updatePlayerUI();
             Destroy(gameObject);
         }
         else
