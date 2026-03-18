@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Rendering.PostProcessing;
 using UnityEngine.SceneManagement;
 
 
@@ -52,7 +53,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
     [SerializeField] float armorRegenDelay;
     [SerializeField] float armorRegenRate;
 
-
+    [SerializeField] List<GameObject> MeshList = new List<GameObject>();
 
     Pickups activePick;
     float HPMax;
@@ -98,7 +99,6 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
     public PlayerData playerData;
     void Start()
     {
-        manager = GameManager.instance;
         spawnPlayer();
         playerArmor();
         updatePlayerUI();
@@ -763,7 +763,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
     // World Interactions
     public void spawnPlayer()
     {
-        if (GameManager.instance.playerSpawn != null)
+        if (manager.playerSpawn != null)
         {
             playerController.transform.position = manager.playerSpawn.transform.position;
             Physics.SyncTransforms();
@@ -841,6 +841,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
         gameData.jumpChargeRate = jumpChargeRate;
         gameData.jumpChargeMax = jumpChargeMax;
         gameData.itemList = itemList;
+        gameData.gunList.Clear();
         foreach(GunStats gun in data.gunList)
         {
             gameData.gunList.Add(gun);
@@ -851,5 +852,28 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
     public void SwapCharacter(CharacterSelect character)
     {
         UpdatePlayerStats(character);
+        swapAnimator(character.mesh);
+    }
+    void swapAnimator(GameObject mesh)
+    {
+        int index = 0;
+        bool change = false;
+        foreach (GameObject meshes in MeshList)
+        {
+            if (meshes.GetComponent<Animator>().avatar != mesh.GetComponent<Animator>().avatar)
+            {
+                MeshList[index].SetActive(false);
+            }
+            else if (meshes.GetComponent<Animator>().avatar == mesh.GetComponent<Animator>().avatar)
+            {
+                MeshList[index].SetActive(true);
+                change = true;
+            }
+            else if (change == false)
+            {
+                MeshList[0].SetActive(true);
+            }
+            index++;
+        }
     }
 }

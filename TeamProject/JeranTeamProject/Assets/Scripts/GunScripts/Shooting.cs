@@ -155,6 +155,7 @@ public class Shooting : MonoBehaviour
             gunModel.transform.localRotation = gunList[gunPos].rotation;
             shootPos.transform.localPosition = gunList[gunPos].shootPos.transform.localPosition;
             shootPos.transform.localRotation = gunList[gunPos].shootRotate;
+            recoil.UpdateRecoil(gunList[gunPos].recoil);
             changeBullet();
             callAmmo();
         }
