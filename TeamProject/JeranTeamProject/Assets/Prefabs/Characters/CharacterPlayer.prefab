@@ -855,11 +855,11 @@ Light:
   m_GameObject: {fileID: 2657794373020211425}
   m_Enabled: 1
   serializedVersion: 12
-  m_Type: 0
-  m_Color: {r: 0.5597484, g: 0.50694174, b: 0.31507847, a: 1}
-  m_Intensity: 25
+  m_Type: 2
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Intensity: 1
   m_Range: 10
-  m_SpotAngle: 73.16312
+  m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize2D: {x: 0.5, y: 0.5}
   m_Shadows:
@@ -1876,7 +1876,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1039705809827871674}
-  - component: {fileID: 6651675541008071449}
+  - component: {fileID: 2600062708103767072}
   m_Layer: 0
   m_Name: CameraRot
   m_TagString: Untagged
@@ -1900,7 +1900,7 @@ Transform:
   - {fileID: 2432325609343026195}
   m_Father: {fileID: 2552789030766678744}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6651675541008071449
+--- !u!114 &2600062708103767072
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1909,10 +1909,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 6056277950681428499}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dfdac9d962f2b69428afb37ee0975821, type: 3}
+  m_Script: {fileID: 11500000, guid: 63f541ab1cb4f014b881bd1b69d18ab5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraController
-  player: {fileID: 6057148889461089348}
+  player: {fileID: 0}
   sens: 300
   lockVertMin: -65
   lockVertMax: 65
@@ -2608,7 +2608,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2552789030766678744}
-  - component: {fileID: 6057148889461089348}
+  - component: {fileID: 9032412059722442069}
   - component: {fileID: 7709777452405699691}
   - component: {fileID: 383483301613954093}
   - component: {fileID: 7967669273735130920}
@@ -2638,7 +2638,7 @@ Transform:
   - {fileID: 1039705809827871674}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6057148889461089348
+--- !u!114 &9032412059722442069
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2647,7 +2647,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 8593092689105773739}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f98eda37df222a1499b66261321f1cde, type: 3}
+  m_Script: {fileID: 11500000, guid: 7e248fc8a6cc1984884e34f872542c0c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
   playerController: {fileID: 7709777452405699691}
