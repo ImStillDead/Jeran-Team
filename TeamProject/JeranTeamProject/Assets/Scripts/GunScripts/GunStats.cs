@@ -43,6 +43,7 @@ public class GunStats : ScriptableObject
     public int pelletAmount;
 
     public GunRarity gunRarity;
+    public Recoil gunRecoil;
 
     AudioClip[] shotSound;
     [Range(0, 1)] public float shotSoundVol;
