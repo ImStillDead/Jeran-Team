@@ -159,6 +159,8 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
         playerController.Move(moveDir * speed * Time.deltaTime);
         playerController.Move(playerVel * Time.deltaTime);
         playerVel.y -= gravity * Time.deltaTime;
+
+
         if (playerController.isGrounded)
         {
             jumpCount = 0;
@@ -573,7 +575,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
 
         if (manager.PlayerHP_bar != null)
         {
-            manager.PlayerHP_bar.fillAmount = Mathf.Lerp(manager.PlayerHP_bar.fillAmount, tartget, Time.deltaTime * 30);
+            manager.PlayerHP_bar.fillAmount = Mathf.Lerp(manager.PlayerHP_bar.fillAmount, tartget, Time.deltaTime * 50);
 
         }
         if (manager.XP_bar != null)
@@ -735,6 +737,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
 
     public void Heal(int amount)
     {
+        Armor = maxArmor;
         HP += amount;
 
         if (HP > HPMax)
