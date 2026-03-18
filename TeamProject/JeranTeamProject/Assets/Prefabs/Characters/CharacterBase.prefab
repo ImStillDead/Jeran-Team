@@ -149,7 +149,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4287734525203473242}
-  - component: {fileID: 6278032073924550365}
   - component: {fileID: 1568530778354278207}
   - component: {fileID: 3998205934063497706}
   - component: {fileID: 5523657499342163175}
@@ -175,24 +174,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 9115860967357371619}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6278032073924550365
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3433218060911350080}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d0c997653bd6f8b49af2cd56a609434e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Cameracontroller
-  player: {fileID: 2787569801988584938}
-  sens: 580
-  lockVertMin: -15
-  lockVertMax: 30
-  invertY: 0
-  camRotX: 0
 --- !u!20 &1568530778354278207
 Camera:
   m_ObjectHideFlags: 0
@@ -349,7 +330,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3523516411056709998}
-  - component: {fileID: 588794621362105920}
+  - component: {fileID: 5103837451650652731}
+  - component: {fileID: 126716560036190473}
   m_Layer: 0
   m_Name: CameraRot
   m_TagString: Untagged
@@ -373,7 +355,7 @@ Transform:
   - {fileID: 3873948610927575377}
   m_Father: {fileID: 9115860967357371619}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &588794621362105920
+--- !u!114 &5103837451650652731
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -382,11 +364,29 @@ MonoBehaviour:
   m_GameObject: {fileID: 4204800414640071393}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d0c997653bd6f8b49af2cd56a609434e, type: 3}
+  m_Script: {fileID: 11500000, guid: 79adcfcaa012aee4e9e5bf9bf8d553e0, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Cameracontroller
-  player: {fileID: 2787569801988584938}
-  sens: 600
+  m_EditorClassIdentifier: Assembly-CSharp::CameraController
+  player: {fileID: 0}
+  sens: 0
+  lockVertMin: 0
+  lockVertMax: 0
+  invertY: 0
+  camRotX: 0
+--- !u!114 &126716560036190473
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4204800414640071393}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 79adcfcaa012aee4e9e5bf9bf8d553e0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CameraController
+  player: {fileID: 2134302689295355696}
+  sens: 400
   lockVertMin: -80
   lockVertMax: 80
   invertY: 0
@@ -956,12 +956,13 @@ GameObject:
   m_Component:
   - component: {fileID: 9115860967357371619}
   - component: {fileID: 6891446722502554607}
-  - component: {fileID: 2787569801988584938}
+  - component: {fileID: 2134302689295355696}
   - component: {fileID: 6094603833308852184}
   - component: {fileID: 1015177555335240534}
   - component: {fileID: 6257784447869066656}
   - component: {fileID: 7136655406761469723}
   - component: {fileID: 8287638095323782048}
+  - component: {fileID: 8446731938631628172}
   m_Layer: 3
   m_Name: CharacterBase
   m_TagString: Player
@@ -1002,7 +1003,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DoNotDestroy
   persistentIndex: 1
---- !u!114 &2787569801988584938
+--- !u!114 &2134302689295355696
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1011,44 +1012,55 @@ MonoBehaviour:
   m_GameObject: {fileID: 8621472841112053527}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 702bea551e769674e8677faba3484417, type: 3}
+  m_Script: {fileID: 11500000, guid: aef7aa55284bc54468f18d3a871516d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
   playerController: {fileID: 7136655406761469723}
   ignoreLayer:
     serializedVersion: 2
-    m_Bits: 1015
+    m_Bits: 0
   HP: 50
-  Armor: 1
+  Armor: 0
   maxArmor: 3
-  speed: 8
+  speed: 10
   sprintMod: 2
-  jumpSpeed: 10
-  jumpChargeMax: 3
+  jumpSpeed: 2
+  jumpChargeMax: 1
   jumpChargeRate: 2
-  jumpMax: 1
-  interactDis: 3
-  enemyViewDis: 0
+  jumpMax: 2
+  interactDis: 4
+  enemyViewDis: 15
   gravity: 35
   dashForce: 30
   dashDur: 0.2
   dashCD: 1
   canSlide: 1
   slideSpeed: 12
-  slideDur: 0.5
+  slideDur: 1.5
   slideYScale: 0.5
   slideCD: 1
   weaponPos: {fileID: 2322056319581036704}
-  firstPersonCamera: {fileID: 8269506281394273731}
-  thirdPersonCamera: {fileID: 3433218060911350080}
-  torch: {fileID: 5439904606205444925}
+  firstPersonCamera: {fileID: 4204800414640071393}
+  thirdPersonCamera: {fileID: 0}
+  torch: {fileID: 0}
   itemList: []
   aud: {fileID: 8287638095323782048}
+  moneyOnPlayer: 40
   armorRegenDelay: 3
   armorRegenRate: 1
-  moneyOnPlayer: 50
   canPickup: 0
   canSwap: 0
+  manager: {fileID: 0}
+  playerData:
+    HP: 50
+    speed: 8
+    speedMod: 2
+    jumpMax: 1
+    jumpSpeed: 10
+    jumpChargeMax: 3
+    jumpChargeRate: 2
+    gunList: []
+    itemList: []
 --- !u!33 &6094603833308852184
 MeshFilter:
   m_ObjectHideFlags: 0
@@ -1251,6 +1263,64 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!114 &8446731938631628172
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8621472841112053527}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aef7aa55284bc54468f18d3a871516d3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerController
+  playerController: {fileID: 7136655406761469723}
+  ignoreLayer:
+    serializedVersion: 2
+    m_Bits: 0
+  HP: 0
+  Armor: 0
+  maxArmor: 0
+  speed: 0
+  sprintMod: 0
+  jumpSpeed: 0
+  jumpChargeMax: 0
+  jumpChargeRate: 0
+  jumpMax: 0
+  interactDis: 0
+  enemyViewDis: 0
+  gravity: 0
+  dashForce: 30
+  dashDur: 0.2
+  dashCD: 1
+  canSlide: 1
+  slideSpeed: 12
+  slideDur: 1.5
+  slideYScale: 0.5
+  slideCD: 1
+  weaponPos: {fileID: 0}
+  firstPersonCamera: {fileID: 0}
+  thirdPersonCamera: {fileID: 0}
+  torch: {fileID: 0}
+  itemList: []
+  aud: {fileID: 0}
+  moneyOnPlayer: 0
+  armorRegenDelay: 0
+  armorRegenRate: 0
+  canPickup: 0
+  canSwap: 0
+  manager: {fileID: 0}
+  playerData:
+    HP: 50
+    speed: 8
+    speedMod: 2
+    jumpMax: 1
+    jumpSpeed: 10
+    jumpChargeMax: 3
+    jumpChargeRate: 2
+    gunList: []
+    itemList: []
 --- !u!1001 &7466875289193135423
 PrefabInstance:
   m_ObjectHideFlags: 0

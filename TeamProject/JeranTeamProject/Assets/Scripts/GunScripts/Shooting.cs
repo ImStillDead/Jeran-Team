@@ -169,6 +169,7 @@ public class Shooting : MonoBehaviour
         if (!reloading)
         {
             shootTimer = 0;
+            if (aud[0] != null) 
             GameManager.instance.playerScript.playAudio(aud[0], volume);
 
 
