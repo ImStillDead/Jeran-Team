@@ -12,7 +12,7 @@ public class CharacterSelect : ScriptableObject
     public float jumpSpeed;
     public float jumpChargeMax;
     public float jumpChargeRate;
-    public List<GunStats> gunList;
-    public List<Pickups> itemList;
+    public List<GunStats> gunList = new List<GunStats>();
+    public List<Pickups> itemList = new List<Pickups>();
    
 }

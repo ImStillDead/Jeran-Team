@@ -4,9 +4,9 @@ public class PlayerSpawn : MonoBehaviour
 {
     void Start()
     {
-        if (GameManager.instance.playerSpawn != gameObject)
+        if (DataManager.manager.playerSpawn != gameObject)
         {
-            GameManager.instance.playerSpawn = gameObject;
+            DataManager.manager.playerSpawn = gameObject;
             //GameManager.instance.playerScript.spawnPlayer();
         }
     }

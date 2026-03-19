@@ -1,6 +1,4 @@
-using System;
 using UnityEngine;
-using UnityEngine.UI;
 
 [CreateAssetMenu]
 public class Pickups : ScriptableObject

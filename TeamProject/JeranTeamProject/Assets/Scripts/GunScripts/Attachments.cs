@@ -12,7 +12,6 @@ public enum AttachmentType
 }
 
 [CreateAssetMenu]
-[Serializable]
 public class Attachments : ScriptableObject
 {
     [Range(1, 100)] public int damageAmountMod;

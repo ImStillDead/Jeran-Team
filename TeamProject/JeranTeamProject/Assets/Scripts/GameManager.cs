@@ -512,6 +512,7 @@ public class GameManager : MonoBehaviour
         if (playerScript != null)
         {
             playerScript.manager = this;
+            playerSpawn = GameObject.FindWithTag("PlayerSpawn");
             playerScript.SwapCharacter(baseCharacter);
         }
 
