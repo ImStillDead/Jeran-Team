@@ -58,6 +58,7 @@ public class GameManager : MonoBehaviour
     public TMP_Text heathNum;
     public TMP_Text maxHealthNum;
     public TMP_Text killCount_text;
+    public Image reloadBar;
 
     public GameData currentGameData;
 

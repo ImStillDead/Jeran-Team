@@ -16,7 +16,7 @@ public class Shooting : MonoBehaviour
     [SerializeField] LayerMask ignoreLayer;
     [SerializeField] float shootRate;
     [SerializeField] int magSizeMax;
-    [SerializeField] float reloadTime;
+    [SerializeField] public float reloadTime;
     [SerializeField] GameObject bullet;
     [SerializeField] Transform shootPos;
 

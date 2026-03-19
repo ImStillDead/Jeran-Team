@@ -568,10 +568,11 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
     {
         if (manager == null) return;
 
-
+        float reloadmax = Shooting.instance.reloadTime;
 
         float tartget = (float)HP / HPMax;
         float XPtarget = (float)manager.experience / manager.levelUpCap;
+        float reloadTarget = (float)Shooting.instance.reloadTime / reloadmax;
 
         if (manager.PlayerHP_bar != null)
         {
@@ -592,6 +593,13 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
         {
             manager.heathNum.text = Mathf.RoundToInt(HP).ToString();
             manager.maxHealthNum.text = Mathf.RoundToInt(HPMax).ToString();
+
+        }
+
+        if(manager.reloadBar != null)
+        {
+            manager.reloadBar.fillAmount = Mathf.Lerp(manager.reloadBar.fillAmount, reloadTarget, Time.deltaTime);
+
 
         }
 
