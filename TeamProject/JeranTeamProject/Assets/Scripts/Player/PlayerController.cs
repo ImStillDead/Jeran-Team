@@ -99,6 +99,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
     public PlayerData playerData;
     void Start()
     {
+        manager = GameManager.instance;
         spawnPlayer();
         playerArmor();
         updatePlayerUI();
