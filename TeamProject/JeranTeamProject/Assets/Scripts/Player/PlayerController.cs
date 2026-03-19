@@ -821,6 +821,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
     public void SetStats(PlayerData data)
     {
         HPMax = data.HP;
+        HP = data.HP;
         speed = data.speed;
         sprintMod = data.speedMod;
         jumpSpeed = data.jumpSpeed;
