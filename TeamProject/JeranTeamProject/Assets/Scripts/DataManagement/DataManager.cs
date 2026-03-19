@@ -1,9 +1,5 @@
 using System.Collections.Generic;
-using System.IO;
-using System.Security.Cryptography;
-using Unity.Properties;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class DataManager : MonoBehaviour //ISave
 {
