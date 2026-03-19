@@ -51,11 +51,11 @@ MonoBehaviour:
   rb: {fileID: 5362188895160297448}
   ignoreLayer:
     serializedVersion: 2
-    m_Bits: 520
-  damageAmount: 0
-  damageRate: 0
-  speed: 0
-  destroyTime: 0
+    m_Bits: 8
+  damageAmount: 2
+  damageRate: 1
+  speed: 25
+  destroyTime: 5
   hitEffect: {fileID: 0}
 --- !u!135 &4912889407408669173
 SphereCollider:
@@ -70,7 +70,7 @@ SphereCollider:
     m_Bits: 64
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 512
+    m_Bits: 8
   m_LayerOverridePriority: 0
   m_IsTrigger: 1
   m_ProvidesContacts: 0

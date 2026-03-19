@@ -14,15 +14,13 @@ public class AudioSettingsController : MonoBehaviour
 
     public void SetVolume(float value)
     {
-        if (value < 0.0001f)
-            value = 0.0001f;
+        float volumeFix = Mathf.Log10(value / 100) * 20f;
+        if (value < 1) { volumeFix = -80; }
 
         RefreshSlider(value);
 
         PlayerPrefs.SetFloat("SavedMasterVolume", value);
-        PlayerPrefs.Save();
-
-        masterMixer.SetFloat("MasterVolume", Mathf.Log10(value) * 20f);
+        masterMixer.SetFloat("Master", volumeFix);
     }
 
     public void SetVolumeFromSlider()

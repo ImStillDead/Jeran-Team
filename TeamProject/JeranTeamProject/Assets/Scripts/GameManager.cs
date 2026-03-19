@@ -4,22 +4,24 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
-
-
+using UnityEngine.UIElements;
+using Image = UnityEngine.UI.Image;
 
 public class GameManager : MonoBehaviour
 {
+    [Header("Controllers")]
     public static GameManager instance;
-
     public MenuController menus;
-    [SerializeField] List<GameObject> itemsCase;
-    [SerializeField] CharacterSelect baseCharacter;
+    public GameObject player;
+    public PlayerController playerScript;
 
+    [Header("Static Objects")]
+    [SerializeField] CharacterSelect baseCharacter;
     [SerializeField] GameObject VolumeSlider;
     [SerializeField] public GameObject UI;
-
-    
     [SerializeField] int maxSpawn;
+    [SerializeField] List<GameObject> itemsCase;
+
     [Header("Weapon Handle")]
     [SerializeField] GameObject reticle;
     [SerializeField] TMP_Text magazine_text;
@@ -29,19 +31,18 @@ public class GameManager : MonoBehaviour
     [SerializeField] Color oldColor = Color.gray;
 
     [Header("Npc/Missons")]
-
     [SerializeField] int objectiveTimerDelay;
     [SerializeField] TMP_Text Objective_timer_text;
     [SerializeField] GameObject dialog_prefab;
     [SerializeField] Transform dialogParent;
     public List<TMP_Text> listofDialog = new List<TMP_Text> { }; //wip
-
     [SerializeField] GameObject Objective_prefab;
     [SerializeField] Transform missonParent;
     public List<GameObject> pickUpObjects = new List<GameObject>();
     public List<TMP_Text> missions = new List<TMP_Text> { }; //wip
     int maxTextprefabs = 5;
 
+    [Header("Armor Handle")]
     public GameObject armorParent;
     public Image armorPrefab;
     private Image tempArmor;
@@ -57,42 +58,32 @@ public class GameManager : MonoBehaviour
     public TMP_Text maxHealthNum;
     public TMP_Text killCount_text;
 
-    public GameData currentGameData;
-
-    public GameObject player;
-    public PlayerController playerScript;
+    [Header("Game Management")]
+    public GameData gameData;
+    public GameData hubData;
     public Light objectiveLight;
     public GameObject doorLights;
     public GameObject playerSpawn;
     public GameObject playerCheckpointPop;
-
-    public GameData gameData;
-    public GameData hubData;
-
+    public int itemIndex;
+    float increaseXpCap = 1.25f;
     public int DAYs;
     public int sceneIndex;
-    int itemIndex;
     public int enemyCount;
     public int killCount;
     public bool canSpawn;
     public bool startTimer;
     public bool objectiveCompleted;
     public float objectiveTimer;
-    int magSize;
-    int maxMagSize;
-
     public float experience;
     public float levelUpCap = 50f;
-    float increaseXpCap = 1.25f;
     public float level;
-
-    private supportGameProgression prog;
-
+    public supportGameProgression prog;
+    //Awake Start Update
     void Awake()
     {
         sceneIndex = SceneManager.GetActiveScene().buildIndex; //did alittle clean up for the awake method, had alot of sceneIndex within it. and mulitple player = gameobject---- 
-
-        if(Time.timeScale == 0)
+        if (Time.timeScale == 0)
         {
             Time.timeScale = 1f;
         }
@@ -102,27 +93,27 @@ public class GameManager : MonoBehaviour
         }
         if (instance.player == null)
         {
-            instance.player = GameObject.FindWithTag("Player");
+            player = GameObject.FindWithTag("Player");
         }
         if (instance.player != null)
         {
-            playerScript = instance.player.GetComponent<PlayerController>();
+            playerScript = player.GetComponent<PlayerController>();
             playerSpawn = GameObject.FindWithTag("PlayerSpawn");
         }
-
-
     }
-
     void Start()
     {
+        killCount = 0;
         menus = Object.FindAnyObjectByType<MenuController>();
         menus.stateUnpause();
         prog = GetComponent<supportGameProgression>();
         if (moneyCount != null && playerScript != null)
-            moneyCount.text = playerScript.getplayerMoney().ToString();
-        StartData();
+            moneyCount.text = playerScript.GetplayerMoney().ToString();
+        if(DataManager.instance != null)
+        {
+            StartData();
+        }
     }
-
     void Update()
     {
         if (Input.GetButtonDown("Cancel"))
@@ -130,22 +121,21 @@ public class GameManager : MonoBehaviour
             menus.pauseMenu();
         }
 
-        if (prog != null)
-        {
-            prog.getkills(killCount);
-        }
-
         if (player != null)
         {
             startMission();
         }
-
         levelUp();
-
         reticle.SetActive(!menus.isPaused);
     }
+    public int randomNumberPicker(int amount)
+    {
+        int item = Random.Range(0, amount);
 
-   
+
+        return item;
+    }
+    //Missions and Dialaog
     private void startMission()
     {
         if (startTimer || objectiveCompleted) Objective_timer_text.gameObject.SetActive(true);
@@ -153,25 +143,6 @@ public class GameManager : MonoBehaviour
         else Objective_timer_text.gameObject.SetActive(false);
 
         if (startTimer) objectiveStartTimer();
-    }
-
-    public void loadMain()
-    {
-        SceneManager.LoadScene(0);
-    }
-
-    public void levelSelect(int index)
-    {
-        SceneManager.LoadScene(index);
-    }
-    public void ammocount(int mag, int maxMag)
-    {
-        magSize = mag;
-        maxMagSize = maxMag;
-
-        magazine_text.text = magSize.ToString();
-        maxMagsize_text.text = maxMagSize.ToString();
-
     }
     public bool objectiveCheck()
     {
@@ -188,21 +159,7 @@ public class GameManager : MonoBehaviour
         objectiveCompleted = false;
         startTimer = false;
         startMission();
-
     }
-    public void enemyBoardCount(int count)
-    {
-        enemyCount += count;
-        if (enemyCount >= maxSpawn)
-        {
-            canSpawn = false;
-        }
-        else if (enemyCount < maxSpawn)
-        {
-            canSpawn = true;
-        }
-    }
-
     void objectiveStartTimer()
     {
         Color green = Color.green;
@@ -267,12 +224,10 @@ public class GameManager : MonoBehaviour
             addDialog("");
         }
     }
-
     public bool IsObjectiveComplete()
     {
         return objectiveCompleted;
     }
-
     public void addMission(string msg)
     {
 
@@ -300,7 +255,6 @@ public class GameManager : MonoBehaviour
         }
 
     }
-
     public void addDialog(string msg)
     {
         int amounOfUses = 0;
@@ -334,7 +288,6 @@ public class GameManager : MonoBehaviour
             }
         }
     }
-
     IEnumerator fadeText(TMP_Text Text, float duration)
     {
         if (Text == null) yield break;
@@ -355,12 +308,10 @@ public class GameManager : MonoBehaviour
         if (Text != null)
             Destroy(Text.gameObject);
     }
-
     public void FlashText(TMP_Text text, Color flashColor, float duration)
     {
         StartCoroutine(FlashTextCoroutine(text, flashColor, duration));
     }
-
     private IEnumerator FlashTextCoroutine(TMP_Text text, Color flashColor, float duration)
     {
         if (text == null) yield break;
@@ -379,62 +330,76 @@ public class GameManager : MonoBehaviour
 
         text.color = original;
     }
+    //UI Updates
+    public void Ammocount(int mag, int maxMag)
+    {
+        magazine_text.text = mag.ToString();
+        maxMagsize_text.text = maxMag.ToString();
+    }
+    public void enemyBoardCount(int count)
+    {
+        enemyCount += count;
+        if (enemyCount >= maxSpawn)
+        {
+            canSpawn = false;
+        }
+        else if (enemyCount < maxSpawn)
+        {
+            canSpawn = true;
+        }
+    }
     public void updateItem(int index)
     {
         itemsCase[itemIndex].SetActive(false);
         itemIndex = index;
         itemsCase[index].SetActive(true);
     }
-   
-    
-
-    public int randomNumberPicker(int amount)
-    {
-        int item = Random.Range(0, amount);
-
-
-        return item;
-    }
-
     public void guiAlwaysFacePlayer(GameObject obje)
     {
         if (obje == null) return;
 
 
         Vector3 playDir = player.transform.position - obje.transform.position;
-        
+
         playDir.y = 0;
 
         obje.transform.rotation = Quaternion.LookRotation(-playDir);
 
     }
-
+    public void UpdateUI(PlayerData update)
+    {
+        moneyCount.text = update.money.ToString();
+        levelText.text = update.level.ToString();
+        heathNum.text = update.HP.ToString();
+        maxHealthNum.text = update.HPMax.ToString();
+}
+    //Experience
     public void giveXP(int XP)
     {
         experience += XP;
 
     }
-
     public void levelUp()
     {
         if (playerScript == null) return;
-
-        float tempMaxHP = playerScript.getMaxHP();
+        gameData.playerData = playerScript.playerData;
+        float tempMaxHP = gameData.playerData.HPMax;
         if (experience >= levelUpCap)
         {
             Debug.Log("you have leveled up");
-            level++;
+            gameData.playerData.level++;
+            levelText.text = gameData.playerData.level.ToString();
             experience -= levelUpCap;
             levelUpCap *= increaseXpCap;
             FlashText(levelText, Color.yellow, 2);
-            playerScript.setMaxHp(playerStatUpgrade(tempMaxHP));
+            gameData.playerData.HPMax = playerStatUpgrade(tempMaxHP);
             playerScript.Heal((int)tempMaxHP / 4);
-
+            gameData.playerData.HP = playerScript.playerData.HP;
+            playerScript.UpdatePlayer(gameData.playerData);
         }
 
 
     }
-
     public float playerStatUpgrade(float stat)
     {
         float statMultiplier = 1.15f;
@@ -471,7 +436,7 @@ public class GameManager : MonoBehaviour
 
         return stat;
     }
-
+    //Armor
     public void addArmor(int input)
     {
         for (int index = 0; index < input; index++)
@@ -492,44 +457,33 @@ public class GameManager : MonoBehaviour
                 Destroy(lastArmor.gameObject);
         }
     }
-
-    public void SaveData(GameData data)
-    {
-        DataManager.instance.SaveData(data);
-    }
+    //DataManagement
     public void StartData()
     {
-        gameData = new GameData();
-        hubData = new GameData();
+        gameData ??= new GameData();
+        hubData ??= new GameData();
         if (DataManager.manager == null)
         {
             DataManager.manager = this;
         }
-        if (DataManager.instance != null)
-        {
-            DataManager.instance.UpdateHub(hubData);
-        }
         if (playerScript != null)
         {
-            playerScript.manager = this;
+            playerSpawn = GameObject.FindWithTag("PlayerSpawn");
             playerScript.SwapCharacter(baseCharacter);
         }
-
-    }
-    public void SaveRun(GameData data)
-    {
-        DataManager.instance.SaveRun(data);
     }
     public void UpdateRun()
     {
         gameData.sceneIndex = sceneIndex;
         gameData.currentpickUps = pickUpObjects;
-        gameData.playerPos = player.transform.position;
-        SaveRun(gameData);
+        gameData.player = player;
+        gameData.playerData = playerScript.GetPlayerData();
+        DataManager.instance.SaveRun(gameData);
     }
     public void LoadRun()
     {
         gameData = DataManager.instance.LoadRun();
-        player.transform.position = gameData.playerPos;
+        player = gameData.player;
     }
 }
+
