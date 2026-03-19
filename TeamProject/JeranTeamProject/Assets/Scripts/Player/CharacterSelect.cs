@@ -2,11 +2,13 @@ using NUnit.Framework;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 [CreateAssetMenu]
 public class CharacterSelect : ScriptableObject
 {
+    public GameObject mesh;
     public float HP;
     public float speed;
     public float speedMod;

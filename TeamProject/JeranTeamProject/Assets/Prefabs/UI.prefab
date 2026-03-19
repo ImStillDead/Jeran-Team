@@ -728,7 +728,7 @@ MonoBehaviour:
   - {fileID: 662753362679615104}
   - {fileID: 6044543788700534905}
   - {fileID: 6540267720293026578}
-  baseCharacter: {fileID: 0}
+  baseCharacter: {fileID: 11400000, guid: 7c716a9f235784447a45b1ccfd998aad, type: 2}
   VolumeSlider: {fileID: 4761292616876445622}
   UI: {fileID: 0}
   maxSpawn: 20
@@ -963,64 +963,6 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!1 &2431465805945855142
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 4289762150806742709}
-  - component: {fileID: 7117879445349705014}
-  m_Layer: 0
-  m_Name: DataManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &4289762150806742709
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2431465805945855142}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -959.99994, y: -521.5877, z: 0}
-  m_LocalScale: {x: 1.6389244, y: 1.6389244, z: 1.6389244}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 3960778526486469259}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7117879445349705014
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2431465805945855142}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a93aa9686343abd47b7c1600904e401f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DataManager
-  hubData:
-    sceneIndex: 0
-    playerPos: {x: 0, y: 0, z: 0}
-    currentpickUps: []
-    HP: 0
-    speed: 0
-    sprintMod: 0
-    jumpSpeed: 0
-    jumpChargeMax: 0
-    jumpChargeRate: 0
-    jumpMax: 0
-    gunList: []
-    itemList: []
-  fileName: saveData.json
 --- !u!1 &2765127732332320864
 GameObject:
   m_ObjectHideFlags: 0
@@ -1342,7 +1284,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -668.83, y: -515.37}
+  m_AnchoredPosition: {x: -668.83, y: -464}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7409181953206734828
@@ -1608,7 +1550,6 @@ RectTransform:
   - {fileID: 4866994411928202577}
   - {fileID: 753469375498878925}
   - {fileID: 1726374953393955191}
-  - {fileID: 4289762150806742709}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -2325,7 +2266,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -443.16003, y: -515.37}
+  m_AnchoredPosition: {x: -443.16003, y: -463}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5802934089208622680
@@ -3931,7 +3872,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 32.369965}
   m_SizeDelta: {x: 400, y: 30}
   m_Pivot: {x: 0, y: 0}
 --- !u!222 &2005755108838387839
