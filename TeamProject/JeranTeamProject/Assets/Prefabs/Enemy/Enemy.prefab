@@ -163,24 +163,26 @@ MonoBehaviour:
   HP: 10
   Speed: 6
   faceTargetSpeed: 45
-  killReward: 10
-  experienceReward: 10
+  maxLifeTimer: 25
+  enemyHPBar: {fileID: 2492639644381190621}
+  enemyHealth: {fileID: 3040305562755383513}
   FOV: 65
-  roamDist: 15
+  roamDist: 5
   roamPauseTime: 3
-  spit: {fileID: 7398234212651272795, guid: 229986870f567754283d079147199970, type: 3}
+  forgetPlayerTime: 5
+  isRoaming: 1
+  spit: {fileID: 3189653459911353158, guid: cdc233a2a752d7f4bab4c21b049ae23e, type: 3}
   spitRate: 3
   spitPos: {fileID: 5653870359010455776}
   neckPivot: {fileID: 0}
   neckRotationSpeed: 0
-  contactDamage: 1
-  damageRate: 1
+  canSpit: 1
+  contactDamage: 2
+  damageRate: 5
   meleeDist: 3
-  maxLifeTimer: 25
-  enemyHPBar: {fileID: 2492639644381190621}
-  enemyHealth: {fileID: 3040305562755383513}
-  forgetPlayerTime: 5
-  isRoaming: 0
+  killReward: 10
+  experienceReward: 10
+  showcaseMode: 0
 --- !u!195 &5672984400017759591
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -529,7 +531,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5653870359010455776}
   m_Layer: 11
-  m_Name: Weapon
+  m_Name: Spit Pos
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -544,7 +546,7 @@ Transform:
   m_GameObject: {fileID: 5475451939226703984}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.066, y: 0.251, z: 0.594}
+  m_LocalPosition: {x: 0.032, y: 0.251, z: 0.93}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

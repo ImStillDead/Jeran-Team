@@ -45,13 +45,13 @@ public class Shop : MonoBehaviour, iInteract
         if(itemForSale != null)
         {
 
-            if (Pm.removePlayerMoney(itemWorth) == true)
+            if (Pm.RemovePlayerMoney(itemWorth) == true)
             {
                 Vector3 location = spawnLocation.transform.position;
 
                 GameObject.Instantiate(itemForSale, location, Quaternion.identity.normalized);
 
-                Pm.updatePlayerUI();
+                Pm.UpdatePlayerUI();
             }
         }
         else

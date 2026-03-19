@@ -37,6 +37,8 @@ public class NPCInteract : MonoBehaviour, iInteract
             chatWindow.SetActive(false);
         if (skipConfirmPanel != null)
             skipConfirmPanel.SetActive(false);
+        if (interactPrompt != null)
+            interactPrompt.SetActive(false);
 
         if (bubbleText != null && messages != null && messages.Length > 0)
             bubbleText.text = messages[0];
@@ -136,5 +138,21 @@ public class NPCInteract : MonoBehaviour, iInteract
         
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
+    }
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            if (interactPrompt != null)
+                interactPrompt.SetActive(true);
+        }
+    }
+    private void OnTriggerExit(Collider other) {
+        if (other.CompareTag("Player"))
+        {
+            if (interactPrompt != null)
+                interactPrompt.SetActive(false);
+            StopInteraction();
+        }
     }
 }

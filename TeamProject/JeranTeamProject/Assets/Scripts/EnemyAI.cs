@@ -281,10 +281,10 @@ public class EnemyAI : MonoBehaviour, IDamage
         {
             GameManager.instance.enemyBoardCount(-1);
             GameManager.instance.killCount++;
-
-            player.addPlayerMoney(killReward);
+            GameManager.instance.prog.getkills(1);
+            player.AddPlayerMoney(killReward);
             manager.giveXP(experienceReward);
-            player.updatePlayerUI();
+            player.UpdatePlayerUI();
             Destroy(gameObject);
         }
         else
