@@ -1,14 +1,22 @@
 using System;
 using UnityEngine;
-using UnityEngine.Rendering;
+
+public enum GunRarity
+{
+    Common,
+    Uncommon,
+    Rare,
+    Perfected,
+    Exotic,
+    Special
+}
 
 [CreateAssetMenu]
-[Serializable]
 public class GunStats : ScriptableObject
 {
     public GameObject gunModel;
     public GameObject shootPos;
-
+    public RecoilScriptable recoil;
     [Range(0.05f, 10f)] public float shootRate;
     [Range(1, 500)] public int magSizeMax;
     [Range(0.5f, 10)] public float reloadTime;
@@ -33,6 +41,7 @@ public class GunStats : ScriptableObject
     public int burstAmount;
     public int pelletAmount;
 
+    public GunRarity gunRarity;
 
     AudioClip[] shotSound;
     [Range(0, 1)] public float shotSoundVol;

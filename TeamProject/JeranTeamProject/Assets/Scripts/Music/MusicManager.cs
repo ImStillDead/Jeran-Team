@@ -1,16 +1,34 @@
 using UnityEngine;
 
-public class NewMonoBehaviourScript : MonoBehaviour
+public class MusicManager : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
+    [SerializeField] private AudioSource musicSource;
+    [SerializeField] private AudioClip neutralTrack;
+
     void Start()
     {
-        
+        Debug.Log("MusicManager Start ran.");
+        PlayNeutralMusic();
     }
 
-    // Update is called once per frame
-    void Update()
+    void PlayNeutralMusic()
     {
-        
+        if (musicSource == null)
+        {
+            Debug.LogWarning("musicSource is missing.");
+            return;
+        }
+
+        if (neutralTrack == null)
+        {
+            Debug.LogWarning("neutralTrack is missing.");
+            return;
+        }
+
+        musicSource.clip = neutralTrack;
+        musicSource.loop = true;
+        musicSource.Play();
+
+        Debug.Log("Playing neutral music: " + neutralTrack.name);
     }
 }

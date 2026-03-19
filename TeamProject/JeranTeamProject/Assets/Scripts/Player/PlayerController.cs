@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Rendering.PostProcessing;
 using UnityEngine.SceneManagement;
 
 
@@ -52,7 +53,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
     [SerializeField] float armorRegenDelay;
     [SerializeField] float armorRegenRate;
 
-
+    [SerializeField] List<GameObject> MeshList = new List<GameObject>();
 
     Pickups activePick;
     float HPMax;
@@ -99,9 +100,9 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
     void Start()
     {
         manager = GameManager.instance;
-        manager.player.GetComponent<PlayerController>().spawnPlayer();
-
+        spawnPlayer();
         playerArmor();
+        updatePlayerUI();
     }
 
     void Awake()
@@ -111,15 +112,16 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
         SetupSliding();
 
         isFirstPerson = true;
-        if (HPMax == 0)
+        if(HPMax == 0)
+        {
             HPMax = 50;
+        }
         gunMax = 2;
         speedOrigin = speed;
         jumpSpeedOrigin = jumpSpeed;
     }
     void Update()
     {
-        updatePlayerUI();
         Movement();
         WeaponRotate();
         Sprint();
@@ -157,6 +159,8 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
         playerController.Move(moveDir * speed * Time.deltaTime);
         playerController.Move(playerVel * Time.deltaTime);
         playerVel.y -= gravity * Time.deltaTime;
+
+
         if (playerController.isGrounded)
         {
             jumpCount = 0;
@@ -169,6 +173,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
         Interact();
         useItem();
         ToggleTorch();
+
     }
 
     void SetupDashing()
@@ -571,7 +576,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
 
         if (manager.PlayerHP_bar != null)
         {
-            manager.PlayerHP_bar.fillAmount = Mathf.Lerp(manager.PlayerHP_bar.fillAmount, tartget, Time.deltaTime * 30);
+            manager.PlayerHP_bar.fillAmount = Mathf.Lerp(manager.PlayerHP_bar.fillAmount, tartget, Time.deltaTime * 50);
 
         }
         if (manager.XP_bar != null)
@@ -733,6 +738,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
 
     public void Heal(int amount)
     {
+        Armor = maxArmor;
         HP += amount;
 
         if (HP > HPMax)
@@ -761,11 +767,14 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
     // World Interactions
     public void spawnPlayer()
     {
-        playerController.transform.position = manager.playerSpawn.transform.position;
-        Physics.SyncTransforms();
-        HP = (int)HPMax;
-        //updatePlayerUI();
-        if (manager.menus != null) manager.menus.stateUnpause();
+        if (manager.playerSpawn != null)
+        {
+            playerController.transform.position = manager.playerSpawn.transform.position;
+            Physics.SyncTransforms();
+            HP = (int)HPMax;
+            updatePlayerUI();
+            if (manager.menus != null) manager.menus.stateUnpause();
+        }
     }
     public void playAudio(AudioClip clip, float volume)
     {
@@ -776,44 +785,43 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
 
     public void UpdatePlayerStats(GameData data)
     {
-        playerData = new PlayerData();
-        if (data == null) return;
-        else
-        {
+        if (playerData == null) playerData = new PlayerData();
+        if(data == null) return;
 
-            playerData.HP = data.HP;
-            playerData.speed = data.speed;
-            playerData.speedMod = data.sprintMod;
-            playerData.jumpSpeed = data.jumpSpeed;
-            playerData.jumpMax = data.jumpMax;
-            playerData.jumpChargeRate = data.jumpChargeRate;
-            playerData.jumpChargeMax = data.jumpChargeMax;
-            playerData.itemList = data.itemList;
-            playerData.gunList = data.gunList;
-            SetStats(playerData);
-        }
+        playerData.HP = data.HP;
+        playerData.speed = data.speed;
+        playerData.speedMod = data.sprintMod;
+        playerData.jumpSpeed = data.jumpSpeed;
+        playerData.jumpMax = data.jumpMax;
+        playerData.jumpChargeRate = data.jumpChargeRate;
+        playerData.jumpChargeMax = data.jumpChargeMax;
+        playerData.itemList = data.itemList;
+        playerData.gunList = data.gunList;
+        SetStats(playerData);
     }
     public void UpdatePlayerStats(CharacterSelect data)
     {
         if (data == null) return;
-        else
-        {
 
-            playerData.HP = data.HP;
-            playerData.speed = data.speed;
-            playerData.speedMod = data.speedMod;
-            playerData.jumpSpeed = data.jumpSpeed;
-            playerData.jumpMax = data.jumpMax;
-            playerData.jumpChargeRate = data.jumpChargeRate;
-            playerData.jumpChargeMax = data.jumpChargeMax;
-            playerData.itemList = data.itemList;
-            playerData.gunList = data.gunList;
-            SetStats(playerData);
+        playerData.HP = data.HP;
+        playerData.speed = data.speed;
+        playerData.speedMod = data.speedMod;
+        playerData.jumpSpeed = data.jumpSpeed;
+        playerData.jumpMax = data.jumpMax;
+        playerData.jumpChargeRate = data.jumpChargeRate;
+        playerData.jumpChargeMax = data.jumpChargeMax;
+        playerData.itemList = data.itemList;
+        playerData.gunList.Clear();
+        foreach (GunStats gun in data.gunList)
+        {
+            playerData.gunList.Add(gun);
         }
+        SetStats(playerData);
     }
     public void SetStats(PlayerData data)
     {
         HPMax = data.HP;
+        HP = data.HP;
         speed = data.speed;
         sprintMod = data.speedMod;
         jumpSpeed = data.jumpSpeed;
@@ -821,20 +829,56 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
         jumpChargeRate = data.jumpChargeRate;
         jumpChargeMax = data.jumpChargeMax;
         itemList = data.itemList;
-        Shooting.instance.GunListSwap(data.gunList);
-        //gameData.HP = data.HP;
-        //gameData.speed = data.speed;
-        //gameData.jumpSpeed = data.jumpSpeed;
-        //gameData.jumpMax = data.jumpMax;
-        //gameData.jumpChargeRate = data.jumpChargeRate;
-        //gameData.jumpChargeMax = data.jumpChargeMax;
-        //gameData.itemList = data.itemList;
-        //gameData.gunList = data.gunList;
-        //DataManager.instance.UpdateHub(gameData);
+        Shooting.instance.gunList.Clear();
+        foreach (GunStats gun in data.gunList)
+        {
+            Shooting.instance.gunList.Add(gun);
+        }
+        Shooting.instance.changeGun(0);
+        if(gameData == null)
+        {
+            gameData = new GameData();
+        }
+        gameData.HP = HPMax;
+        gameData.speed = speed;
+        gameData.jumpSpeed = jumpSpeed;
+        gameData.jumpMax = jumpMax;
+        gameData.jumpChargeRate = jumpChargeRate;
+        gameData.jumpChargeMax = jumpChargeMax;
+        gameData.itemList = itemList;
+        gameData.gunList.Clear();
+        foreach(GunStats gun in data.gunList)
+        {
+            gameData.gunList.Add(gun);
+        }
+        DataManager.instance.UpdateHub(gameData);
         updatePlayerUI();
     }
     public void SwapCharacter(CharacterSelect character)
     {
         UpdatePlayerStats(character);
+        swapAnimator(character.mesh);
+    }
+    void swapAnimator(GameObject mesh)
+    {
+        int index = 0;
+        bool change = false;
+        foreach (GameObject meshes in MeshList)
+        {
+            if (meshes.GetComponent<Animator>().avatar != mesh.GetComponent<Animator>().avatar)
+            {
+                MeshList[index].SetActive(false);
+            }
+            else if (meshes.GetComponent<Animator>().avatar == mesh.GetComponent<Animator>().avatar)
+            {
+                MeshList[index].SetActive(true);
+                change = true;
+            }
+            else if (change == false)
+            {
+                MeshList[0].SetActive(true);
+            }
+            index++;
+        }
     }
 }

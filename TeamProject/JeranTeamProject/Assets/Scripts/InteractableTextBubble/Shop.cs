@@ -51,6 +51,7 @@ public class Shop : MonoBehaviour, iInteract
 
                 GameObject.Instantiate(itemForSale, location, Quaternion.identity.normalized);
 
+                Pm.updatePlayerUI();
             }
         }
         else

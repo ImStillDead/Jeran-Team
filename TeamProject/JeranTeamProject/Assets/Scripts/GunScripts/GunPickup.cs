@@ -1,5 +1,4 @@
 using UnityEngine;
-using UnityEngine.UIElements;
 
 public class GunPickup : MonoBehaviour
 {
@@ -8,11 +7,11 @@ public class GunPickup : MonoBehaviour
     private bool canSwap;
     private void Start()
     {
-        this.GetComponent<MeshFilter>().sharedMesh = gun.gunModel.GetComponent<MeshFilter>().sharedMesh;
-        this.GetComponent<MeshRenderer>().sharedMaterial = gun.gunModel.GetComponent<MeshRenderer>().sharedMaterial;
-        this.transform.localScale = gun.scale * 3;
-        this.transform.localRotation = gun.rotation;
-        GameManager.instance.pickUpObjects.Add(this.gameObject);
+        GetComponent<MeshFilter>().sharedMesh = gun.gunModel.GetComponent<MeshFilter>().sharedMesh;
+        GetComponent<MeshRenderer>().sharedMaterial = gun.gunModel.GetComponent<MeshRenderer>().sharedMaterial;
+        transform.localScale = gun.scale * 3;
+        transform.localRotation = gun.rotation;
+        GameManager.instance.pickUpObjects.Add(gameObject);
     }
     private void OnTriggerEnter(Collider other)
     {

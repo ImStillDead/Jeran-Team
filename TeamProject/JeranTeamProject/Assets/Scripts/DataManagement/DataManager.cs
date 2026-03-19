@@ -1,9 +1,5 @@
 using System.Collections.Generic;
-using System.IO;
-using System.Security.Cryptography;
-using Unity.Properties;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class DataManager : MonoBehaviour //ISave
 {
@@ -59,16 +55,16 @@ public class DataManager : MonoBehaviour //ISave
     {
 
 
-        //hubData.HP = data.HP;
-        //hubData.speed = data.speed;
-        //hubData.sprintMod = data.sprintMod;
-        //hubData.jumpSpeed = data.jumpSpeed;
-        //hubData.jumpChargeMax = data.jumpChargeMax;
-        //hubData.jumpChargeRate = data.jumpChargeRate;
-        //hubData.jumpMax = data.jumpMax;
-        //List<GunStats> gunList = new List<GunStats>();
-        //List<Pickups> itemList = new List<Pickups>();
-        //SaveData(hubData);
+        hubData.HP = data.HP;
+        hubData.speed = data.speed;
+        hubData.sprintMod = data.sprintMod;
+        hubData.jumpSpeed = data.jumpSpeed;
+        hubData.jumpChargeMax = data.jumpChargeMax;
+        hubData.jumpChargeRate = data.jumpChargeRate;
+        hubData.jumpMax = data.jumpMax;
+        List<GunStats> gunList = new List<GunStats>();
+        List<Pickups> itemList = new List<Pickups>();
+        SaveData(hubData);
         Debug.Log("Hub Updated" +  hubData);
     }
     

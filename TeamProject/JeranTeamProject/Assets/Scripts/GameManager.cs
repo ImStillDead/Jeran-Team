@@ -2,9 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
-using UnityEngine.SubsystemsImplementation;
 using UnityEngine.UI;
 
 
@@ -108,8 +106,8 @@ public class GameManager : MonoBehaviour
         }
         if (instance.player != null)
         {
-            instance.playerScript = instance.player.GetComponent<PlayerController>();
-            instance.playerSpawn = GameObject.FindWithTag("PlayerSpawn");
+            playerScript = instance.player.GetComponent<PlayerController>();
+            playerSpawn = GameObject.FindWithTag("PlayerSpawn");
         }
 
 
@@ -507,20 +505,15 @@ public class GameManager : MonoBehaviour
         {
             DataManager.manager = this;
         }
-
         if (DataManager.instance != null)
         {
-            //DataManager.instance.UpdateHub(hubData);
+            DataManager.instance.UpdateHub(hubData);
         }
         if (playerScript != null)
         {
-            if (playerScript.manager == null)
-            {
-                playerScript.manager = DataManager.manager;
-            }
-
-            playerScript.playerData = new PlayerData();
-            //playerScript.UpdatePlayerStats(DataManager.instance.hubData);
+            playerScript.manager = this;
+            playerSpawn = GameObject.FindWithTag("PlayerSpawn");
+            playerScript.SwapCharacter(baseCharacter);
         }
 
     }
