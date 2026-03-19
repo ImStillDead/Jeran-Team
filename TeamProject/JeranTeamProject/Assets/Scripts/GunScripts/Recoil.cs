@@ -10,10 +10,6 @@ public class Recoil : MonoBehaviour
 
     public void UpdateRecoil(RecoilScriptable recoilCall)
     {
-        if (recoil == null)
-        {
-            RecoilScriptable recoil = new RecoilScriptable();
-        }
         recoil = recoilCall;
     }
     void Update()
