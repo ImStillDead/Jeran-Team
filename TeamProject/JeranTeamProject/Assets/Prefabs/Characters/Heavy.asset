@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ef6ab8b2df52b0642afcc023c9722eaa, type: 3}
+  m_Name: Heavy
+  m_EditorClassIdentifier: Assembly-CSharp::CharacterSelect
+  mesh: {fileID: 1328662189394884204, guid: ab21bfc11e8ed7047ac569460983a20a, type: 3}
+  HPMax: 75
+  HP: 75
+  speed: 6
+  speedMod: 2
+  jumpMax: 1
+  jumpSpeed: 8
+  jumpChargeMax: 4
+  jumpChargeRate: 2
+  gunList:
+  - {fileID: 11400000, guid: 3e6b543aa61b0554eb715dcb65734fa5, type: 2}
+  - {fileID: 11400000, guid: 00f4d885037419245a3074a2cfe488fd, type: 2}
+  itemList:
+  - {fileID: 11400000, guid: e59f3edd499056243804aa2e76460fd4, type: 2}
+  - {fileID: 11400000, guid: 9594aea3a5cd43f4e9723804c491aace, type: 2}

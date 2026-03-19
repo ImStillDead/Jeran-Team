@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
 
 [Serializable]
 public class PlayerData 
 {
+    public int level;
     public float HP;
     public float HPMax;
     public float speed;
@@ -13,10 +15,12 @@ public class PlayerData
     public float jumpChargeMax;
     public float jumpChargeRate;
     public int dmgAmmount;
+    public int money;
     public List<GunStats> gunList;
     public List<Pickups> itemList;
     public PlayerData()
     {
+        level = 1;
         HP = 50;
         HPMax = 50;
         speed = 8;
@@ -26,6 +30,7 @@ public class PlayerData
         jumpChargeMax = 3;
         jumpChargeRate = 2;
         dmgAmmount = 3;
+        money = 0;
         gunList = new List<GunStats>();
         itemList = new List<Pickups>();
 }

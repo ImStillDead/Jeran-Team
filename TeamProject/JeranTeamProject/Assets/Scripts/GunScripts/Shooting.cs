@@ -110,10 +110,9 @@ public class Shooting : MonoBehaviour
     }
     public void callAmmo()
     {
-        GameManager.instance.ammocount(currentAmmo, magSizeMax);
         if (gunList.Count > 0)
         {
-            gunList[activeGun].currentAmmo = currentAmmo;
+            GameManager.instance.Ammocount(currentAmmo, magSizeMax);
         }
     }
     // Called in Update if the Fire1 button (Left Click) is pressed
@@ -130,7 +129,7 @@ public class Shooting : MonoBehaviour
         if (gunList.Count > 0)
         {
             activeGun = gunPos;
-            currentAmmo = gunList[gunPos].currentAmmo;
+            currentAmmo = gunList[gunPos].magSizeMax;
             magSizeMax = gunList[gunPos].magSizeMax;
             bulletScript = gunList[gunPos].bullet;
             shootRate = gunList[gunPos].shootRate;

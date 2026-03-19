@@ -60,10 +60,7 @@ public class ButtonFunctions : MonoBehaviour
         {
             manager.playerScript.SpawnPlayer();
         }
-        if (manager.menus != null)
-        {
-            manager.menus.stateUnpause();
-        }
+        
     }
     public void Quit()
     {
@@ -87,8 +84,8 @@ public class ButtonFunctions : MonoBehaviour
     }
     public void NewGame()
     {
-        SceneManager.LoadScene(2);
         DataManager.instance.NewGame();
+        SceneManager.LoadScene(2);
     }
 
     public void StartGame()
@@ -97,15 +94,24 @@ public class ButtonFunctions : MonoBehaviour
     }
     public void NextLevel()
     {
-
         int index = SceneManager.GetActiveScene().buildIndex;
         index += 1;
-        SceneManager.LoadScene(index);
-        manager.sceneIndex = index;
-        manager.resetObjective();
-        manager.UpdateRun();
-        manager.playerScript.SpawnPlayer();
-        manager.menus.stateUnpause();
+        if (index >= SceneManager.sceneCountInBuildSettings)
+        {
+            DataManager.instance.SaveData(DataManager.instance.hubData);
+            manager.UpdateRun();
+            SceneManager.LoadScene(0);
+        }
+        else
+        {
+            SceneManager.LoadScene(index);
+            manager.sceneIndex = index;
+            manager.resetObjective();
+            manager.UpdateRun();
+            manager.playerScript.SpawnPlayer();
+            manager.playerScript.LoadRun();
+            manager.menus.stateUnpause();
+        }
     }
     
 

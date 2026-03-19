@@ -17,16 +17,25 @@ public class supportGameProgression : MonoBehaviour
     PlayerController player;
     GameManager Manager;
     Shooting guns;
+    int kills;
     private HashSet<progess> unlocked = new HashSet<progess>();
 
-    public void Awake()
+    //public void Awake()
+    //{
+    //    Manager = DataManager.manager;
+    //    if (Manager != null && Manager.playerScript != null)
+    //    {
+    //        player = Manager.playerScript;
+    //    }
+
+    //}
+    private void Start()
     {
         Manager = DataManager.manager;
         if (Manager != null && Manager.playerScript != null)
         {
             player = Manager.playerScript;
         }
-
     }
 
     public void Unlock(progess achievement)
@@ -38,8 +47,9 @@ public class supportGameProgression : MonoBehaviour
         }
     }
 
-    public void getkills(int kills)
+    public void getkills(int kill)
     {
+        kills += kill;
         if(kills >= 10 && !unlocked.Contains(progess.get10Kills))
         {
             Debug.LogWarning("*********achievement unlocked************");

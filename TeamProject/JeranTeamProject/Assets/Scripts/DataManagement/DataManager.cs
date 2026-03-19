@@ -50,20 +50,21 @@ public class DataManager : MonoBehaviour //ISave
     {
         hubData = new GameData();
         gameData = new GameData();
-
+        SetHub(hubData);
+        SaveRun(gameData);
     }
    public void SetHub(GameData data)
     {
         hubData.sceneIndex = data.sceneIndex; 
         hubData.playerData = data.playerData;
-        hubData.playerPos = data.playerPos;
+        hubData.player = data.player;
         SaveData(hubData);
     }
     public void SetRun(GameData data)
     {
         gameData.sceneIndex = data.sceneIndex;
         gameData.playerData = data.playerData;
-        gameData.playerPos = data.playerPos;
+        gameData.player = data.player;
         gameData.currentpickUps = data.currentpickUps;
         SaveRun(gameData);
     }

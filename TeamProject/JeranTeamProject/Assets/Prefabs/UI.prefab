@@ -122,8 +122,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 6839462407911610198}
-        m_TargetAssemblyTypeName: buttonFunctions, Assembly-CSharp
-        m_MethodName: nextLevel
+        m_TargetAssemblyTypeName: ButtonFunctions, Assembly-CSharp
+        m_MethodName: NextLevel
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -633,9 +633,9 @@ RectTransform:
   - {fileID: 1109768523754408969}
   m_Father: {fileID: 3960778526486469259}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 1}
-  m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: -560.48, y: -925.615}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 400, y: 115}
   m_SizeDelta: {x: 400, y: 10}
   m_Pivot: {x: 0.5, y: 1}
 --- !u!222 &2872933773835525567
@@ -1293,9 +1293,10 @@ MonoBehaviour:
   killCount_text: {fileID: 4675162484356823955}
   gameData:
     sceneIndex: 0
-    playerPos: {x: 0, y: 0, z: 0}
+    player: {fileID: 0}
     currentpickUps: []
     playerData:
+      level: 1
       HP: 50
       HPMax: 50
       speed: 8
@@ -1305,13 +1306,15 @@ MonoBehaviour:
       jumpChargeMax: 3
       jumpChargeRate: 2
       dmgAmmount: 3
+      money: 0
       gunList: []
       itemList: []
   hubData:
     sceneIndex: 0
-    playerPos: {x: 0, y: 0, z: 0}
+    player: {fileID: 0}
     currentpickUps: []
     playerData:
+      level: 1
       HP: 50
       HPMax: 50
       speed: 8
@@ -1321,12 +1324,14 @@ MonoBehaviour:
       jumpChargeMax: 3
       jumpChargeRate: 2
       dmgAmmount: 3
+      money: 0
       gunList: []
       itemList: []
   objectiveLight: {fileID: 0}
   doorLights: {fileID: 0}
   playerSpawn: {fileID: 0}
   playerCheckpointPop: {fileID: 8735779706122195384}
+  itemIndex: 0
   DAYs: 0
   sceneIndex: 0
   enemyCount: 0
@@ -1338,6 +1343,7 @@ MonoBehaviour:
   experience: 0
   levelUpCap: 100
   level: 0
+  prog: {fileID: 0}
 --- !u!114 &8713702032824760701
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1487,67 +1493,6 @@ MonoBehaviour:
   m_hasFontAssetChanged: 0
   m_baseMaterial: {fileID: 0}
   m_maskOffset: {x: 0, y: 0, z: 0, w: 0}
---- !u!1 &2431465805945855142
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 4289762150806742709}
-  - component: {fileID: 7117879445349705014}
-  m_Layer: 0
-  m_Name: DataManager
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &4289762150806742709
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2431465805945855142}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -959.99994, y: -521.5877, z: 0}
-  m_LocalScale: {x: 1.6389244, y: 1.6389244, z: 1.6389244}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 3960778526486469259}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7117879445349705014
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2431465805945855142}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a93aa9686343abd47b7c1600904e401f, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::DataManager
-  hubData:
-    sceneIndex: 0
-    playerPos: {x: 0, y: 0, z: 0}
-    currentpickUps: []
-    playerData:
-      HP: 50
-      HPMax: 50
-      speed: 8
-      speedMod: 2
-      jumpMax: 1
-      jumpSpeed: 10
-      jumpChargeMax: 3
-      jumpChargeRate: 2
-      dmgAmmount: 3
-      gunList: []
-      itemList: []
-  fileName: saveData.json
 --- !u!1 &2765127732332320864
 GameObject:
   m_ObjectHideFlags: 0
@@ -1867,9 +1812,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 3960778526486469259}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -668.83, y: -515.37}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 291.16998, y: 46.1}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7409181953206734828
@@ -2005,9 +1950,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 3960778526486469259}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -561.86, y: -444.61}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 400, y: 50}
   m_SizeDelta: {x: 400, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3073753101600230876
@@ -2134,7 +2079,6 @@ RectTransform:
   - {fileID: 4866994411928202577}
   - {fileID: 753469375498878925}
   - {fileID: 1726374953393955191}
-  - {fileID: 4289762150806742709}
   - {fileID: 4994372123305389071}
   - {fileID: 5842331422640686104}
   m_Father: {fileID: 0}
@@ -2854,9 +2798,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 3960778526486469259}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -443.16003, y: -515.37}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 515, y: 50}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &5802934089208622680
@@ -2922,7 +2866,7 @@ MonoBehaviour:
   m_fontSizeMax: 72
   m_fontStyle: 0
   m_HorizontalAlignment: 1
-  m_VerticalAlignment: 256
+  m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_characterHorizontalScale: 1
@@ -3188,9 +3132,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 3960778526486469259}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -51.210022, y: -392.41998}
+  m_AnchorMin: {x: 0.5, y: 0}
+  m_AnchorMax: {x: 0.5, y: 0}
+  m_AnchoredPosition: {x: -50, y: 105}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &6447489046927274963
@@ -3256,7 +3200,7 @@ MonoBehaviour:
   m_fontSizeMax: 72
   m_fontStyle: 0
   m_HorizontalAlignment: 1
-  m_VerticalAlignment: 256
+  m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_characterHorizontalScale: 1
@@ -3906,9 +3850,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 3960778526486469259}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -561.86, y: -444.61}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 400, y: 50}
   m_SizeDelta: {x: 400, y: 30}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &1027470806291265567
@@ -4159,9 +4103,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 3960778526486469259}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 43.25, y: 449.75}
+  m_AnchorMin: {x: 0.5, y: 1}
+  m_AnchorMax: {x: 0.5, y: 1}
+  m_AnchoredPosition: {x: 43.25, y: -31}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &162605553454618376
@@ -4464,8 +4408,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 6839462407911610198}
-        m_TargetAssemblyTypeName: buttonFunctions, Assembly-CSharp
-        m_MethodName: respawn
+        m_TargetAssemblyTypeName: ButtonFunctions, Assembly-CSharp
+        m_MethodName: Respawn
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -4507,9 +4451,9 @@ RectTransform:
   m_Children: []
   m_Father: {fileID: 3960778526486469259}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 840.635, y: 355.57996}
+  m_AnchorMin: {x: 1, y: 1}
+  m_AnchorMax: {x: 1, y: 1}
+  m_AnchoredPosition: {x: -119.36499, y: -71.420044}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &43858130634371865
@@ -5238,7 +5182,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 0, y: 20}
   m_SizeDelta: {x: 400, y: 30}
   m_Pivot: {x: 0, y: 0}
 --- !u!222 &2005755108838387839
@@ -7385,6 +7329,14 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 6839462407911610198}
+    - target: {fileID: 8790484072026842204, guid: c2ac53a838b7aba48a9a2a630fd45c75, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: Resume
+      objectReference: {fileID: 0}
+    - target: {fileID: 8790484072026842204, guid: c2ac53a838b7aba48a9a2a630fd45c75, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: ButtonFunctions, Assembly-CSharp
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -7772,19 +7724,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7789875314239446589, guid: 72985d153e73dc44585383c9be5ec197, type: 3}
       propertyPath: m_AnchorMax.x
-      value: 0.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7789875314239446589, guid: 72985d153e73dc44585383c9be5ec197, type: 3}
       propertyPath: m_AnchorMax.y
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7789875314239446589, guid: 72985d153e73dc44585383c9be5ec197, type: 3}
       propertyPath: m_AnchorMin.x
-      value: 0.5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7789875314239446589, guid: 72985d153e73dc44585383c9be5ec197, type: 3}
       propertyPath: m_AnchorMin.y
-      value: 0.5
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7789875314239446589, guid: 72985d153e73dc44585383c9be5ec197, type: 3}
       propertyPath: m_SizeDelta.x
@@ -7824,11 +7776,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7789875314239446589, guid: 72985d153e73dc44585383c9be5ec197, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: 520
+      value: -450
       objectReference: {fileID: 0}
     - target: {fileID: 7789875314239446589, guid: 72985d153e73dc44585383c9be5ec197, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -452
+      value: 55
       objectReference: {fileID: 0}
     - target: {fileID: 7789875314239446589, guid: 72985d153e73dc44585383c9be5ec197, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x

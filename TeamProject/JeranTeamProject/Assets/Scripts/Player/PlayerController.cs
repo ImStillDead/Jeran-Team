@@ -12,6 +12,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
     [SerializeField] LayerMask ignoreLayer;
 
     [Header("Player Stats")]
+    public int level;
     [SerializeField] float HP;
     [SerializeField] float HPMax;
     [SerializeField] int Armor;
@@ -56,7 +57,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
     GameManager manager;
     PlayerData staticBase;
     GameData runData;
-    PlayerData playerData;
+    public PlayerData playerData;
     public List<Pickups> itemList;
     Pickups activePick;
     float lastDamageTime;
@@ -95,7 +96,6 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
         characterController = GetComponent<CharacterController>();
         SetupDashing();
         SetupSliding();
-        SetPlayerData(staticBase);
     }
     void Start()
     {
@@ -419,7 +419,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
 
         if (HP > HPMax)
             HP = (int)HPMax;
-
+        playerData.HP = HP;
         UpdatePlayerUI();
     }
     IEnumerator DmgBoost()
@@ -599,8 +599,6 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
     {
         if (manager == null) return;
 
-
-
         float tartget = (float)HP / HPMax;
         float XPtarget = (float)manager.experience / manager.levelUpCap;
 
@@ -612,20 +610,25 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
         if (manager.XP_bar != null)
         {
             manager.XP_bar.fillAmount = Mathf.Lerp(manager.XP_bar.fillAmount, XPtarget, Time.deltaTime * 3);
-            manager.levelText.text = manager.level.ToString();
-
+            //manager.levelText.text = manager.level.ToString();
+            playerData.level = level;
         }
 
         if (manager.moneyCount != null)
-            manager.moneyCount.text = moneyOnPlayer.ToString();
+            playerData.money = moneyOnPlayer;
 
         if (manager.heathNum != null && manager.maxHealthNum != null)
         {
-            manager.heathNum.text = Mathf.RoundToInt(HP).ToString();
-            manager.maxHealthNum.text = Mathf.RoundToInt(HPMax).ToString();
-
+            //manager.heathNum.text = Mathf.RoundToInt(HP).ToString();
+            //manager.maxHealthNum.text = Mathf.RoundToInt(HPMax).ToString();
+            playerData.HP = Mathf.RoundToInt(HP);
+            playerData.HPMax = Mathf.RoundToInt(HPMax);
         }
-
+        if (itemList.Count > 0 && itemList[0] != null)
+        {
+            manager.updateItem(itemList[itemIndex].itemIndex);
+        }
+        manager.UpdateUI(playerData);
     }
     public void SpawnPlayer()
     {
@@ -656,7 +659,6 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
         Armor = maxArmor;
 
     }
-
     void ArmorRegen()
     {
         // wait after taking damage
@@ -679,7 +681,6 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
         }
 
     }
-
     //Money
     public void AddPlayerMoney(int increase)
     {
@@ -704,47 +705,10 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
     {
         return moneyOnPlayer;
     }
-
-    //RunData
-    public void SetPlayerData(PlayerData data)
-    {
-        HPMax = data.HPMax;
-        HP = data.HP;
-        speed = data.speed;
-        sprintMod = data.speedMod;
-        jumpSpeed = data.jumpSpeed;
-        jumpMax = data.jumpMax;
-        jumpChargeRate = data.jumpChargeRate;
-        jumpChargeMax = data.jumpChargeMax;
-        itemList = data.itemList;
-        Shooting.instance.gunList.Clear();
-        foreach (GunStats gun in data.gunList)
-        {
-            Shooting.instance.gunList.Add(gun);
-        }
-    }
-    //SaveData
-    public void SaveHub()
-    {
-        if(DataManager.instance != null)
-        {
-            GameData data = DataManager.instance.hubData;
-            data.playerData = staticBase;
-            data.sceneIndex = hubIndex;
-            DataManager.instance.SetHub(data);
-        }
-    }
-    public void SaveRun() 
-    {
-        runData.playerData = playerData;
-        runData.currentpickUps = manager.pickUpObjects;
-        runData.playerPos = this.transform.position;
-        runData.sceneIndex = SceneManager.GetActiveScene().buildIndex;
-        DataManager.instance.SaveRun(runData);
-    }
-    //LoadData
+    //SetData GetData
     public void UpdatePlayer(PlayerData data)
     {
+        level = data.level;
         HPMax = data.HPMax;
         HP = data.HP;
         speed = data.speed;
@@ -768,21 +732,58 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
     }
     public void SetHubStats(GameData hubData)
     {
-        UpdatePlayer(hubData.playerData);
-        //get achievements here
+        if (DataManager.instance != null)
+        {
+            UpdatePlayer(hubData.playerData);
+            //get achievements here
 
-        DataManager.instance.SaveData(hubData);
+            DataManager.instance.SaveData(hubData);
+        }
     }
+    public PlayerData GetPlayerData()
+    {
+        return playerData;
+    }
+    //SaveData
+    public void SaveHub()
+    {
+        if(DataManager.instance != null)
+        {
+            DataManager.instance.hubData.playerData = staticBase;
+            DataManager.instance.hubData.sceneIndex = hubIndex;
+        }
+    }
+    public void SaveRun() 
+    {
+        if (DataManager.instance != null)
+        {
+            runData.playerData = playerData;
+            runData.currentpickUps = manager.pickUpObjects;
+            runData.player = GameManager.instance.player;
+            runData.sceneIndex = SceneManager.GetActiveScene().buildIndex;
+            DataManager.instance.SaveRun(runData);
+        }
+    }
+    //LoadData
     public void LoadRun()
     {
-        runData = new GameData();
-        runData = DataManager.instance.LoadRun();
+        if (DataManager.instance != null)
+        {
+            if (runData == null)
+            {
+                runData = new GameData();
+            }
+            runData = DataManager.instance.LoadRun();
+            UpdatePlayer(runData.playerData);
+        }
     }
     public void LoadSave()
     {
-        SetHubStats(DataManager.instance.LoadData());
+        if (DataManager.instance != null)
+        {
+            SetHubStats(DataManager.instance.LoadData());
+        }
     }
-    //Character Change
     public void SwapCharacter(CharacterSelect character)
     {
         playerData.HPMax = character.HPMax;
@@ -791,8 +792,8 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
         playerData.speedMod = character.speedMod;
         playerData.jumpSpeed = character.jumpSpeed;
         playerData.jumpMax = character.jumpMax;
-        playerData.jumpChargeMax = character.jumpChargeMax;
         playerData.jumpChargeRate = character.jumpChargeRate;
+        playerData.jumpChargeMax = character.jumpChargeMax;
         playerData.itemList.Clear();
         foreach (Pickups item in character.itemList)
         {
@@ -803,10 +804,29 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
         {
             playerData.gunList.Add(gun);
         }
+        UpdateStatic(playerData);
         UpdatePlayer(playerData);
     }
-    public PlayerData GetPlayerData()
+    void UpdateStatic(PlayerData character)
     {
-        return playerData;
+        staticBase.HPMax = character.HPMax;
+        staticBase.HP = character.HP;
+        staticBase.speed = character.speed;
+        staticBase.speedMod = character.speedMod;
+        staticBase.jumpSpeed = character.jumpSpeed;
+        staticBase.jumpMax = character.jumpMax;
+        staticBase.jumpChargeRate = character.jumpChargeRate;
+        staticBase.jumpChargeMax = character.jumpChargeMax;
+        staticBase.itemList.Clear();
+        foreach (Pickups item in character.itemList)
+        {
+            staticBase.itemList.Add(item);
+        }
+        staticBase.gunList.Clear();
+        foreach (GunStats gun in character.gunList)
+        {
+            staticBase.gunList.Add(gun);
+        }
+        SaveHub();
     }
 }

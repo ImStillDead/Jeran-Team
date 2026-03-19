@@ -8,7 +8,7 @@ public class GameData
 {
     //GameStats
     public int sceneIndex;
-    public Vector3 playerPos;
+    public GameObject player;
     public List<GameObject> currentpickUps = new List<GameObject>();
     //playerStats
     public PlayerData playerData;

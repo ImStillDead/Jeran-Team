@@ -7,10 +7,21 @@ public class Recoil : MonoBehaviour
 
     //Hipfire
     RecoilScriptable recoil;
-
+    void Start()
+    {
+        recoil = ScriptableObject.CreateInstance<RecoilScriptable>();
+        recoil.X = 2;
+        recoil.Y = 2;
+        recoil.Z = 0;
+        recoil.returnSpeed = 6;
+        recoil.snappiness = 8;
+    }
     public void UpdateRecoil(RecoilScriptable recoilCall)
     {
-        recoil = recoilCall;
+        if (recoilCall != null)
+        {
+            recoil = recoilCall;
+        }
     }
     void Update()
     {

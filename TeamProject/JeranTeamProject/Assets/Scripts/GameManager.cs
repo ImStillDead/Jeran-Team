@@ -4,6 +4,8 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UnityEngine.UIElements;
+using Image = UnityEngine.UI.Image;
 
 public class GameManager : MonoBehaviour
 {
@@ -63,9 +65,7 @@ public class GameManager : MonoBehaviour
     public GameObject doorLights;
     public GameObject playerSpawn;
     public GameObject playerCheckpointPop;
-    int itemIndex;
-    int magSize;
-    int maxMagSize;
+    public int itemIndex;
     float increaseXpCap = 1.25f;
     public int DAYs;
     public int sceneIndex;
@@ -78,7 +78,7 @@ public class GameManager : MonoBehaviour
     public float experience;
     public float levelUpCap = 50f;
     public float level;
-    private supportGameProgression prog;
+    public supportGameProgression prog;
     //Awake Start Update
     void Awake()
     {
@@ -103,6 +103,7 @@ public class GameManager : MonoBehaviour
     }
     void Start()
     {
+        killCount = 0;
         menus = Object.FindAnyObjectByType<MenuController>();
         menus.stateUnpause();
         prog = GetComponent<supportGameProgression>();
@@ -118,11 +119,6 @@ public class GameManager : MonoBehaviour
         if (Input.GetButtonDown("Cancel"))
         {
             menus.pauseMenu();
-        }
-
-        if (prog != null)
-        {
-            prog.getkills(killCount);
         }
 
         if (player != null)
@@ -335,14 +331,10 @@ public class GameManager : MonoBehaviour
         text.color = original;
     }
     //UI Updates
-    public void ammocount(int mag, int maxMag)
+    public void Ammocount(int mag, int maxMag)
     {
-        magSize = mag;
-        maxMagSize = maxMag;
-
-        magazine_text.text = magSize.ToString();
-        maxMagsize_text.text = maxMagSize.ToString();
-
+        magazine_text.text = mag.ToString();
+        maxMagsize_text.text = maxMag.ToString();
     }
     public void enemyBoardCount(int count)
     {
@@ -374,6 +366,13 @@ public class GameManager : MonoBehaviour
         obje.transform.rotation = Quaternion.LookRotation(-playDir);
 
     }
+    public void UpdateUI(PlayerData update)
+    {
+        moneyCount.text = update.money.ToString();
+        levelText.text = update.level.ToString();
+        heathNum.text = update.HP.ToString();
+        maxHealthNum.text = update.HPMax.ToString();
+}
     //Experience
     public void giveXP(int XP)
     {
@@ -383,18 +382,20 @@ public class GameManager : MonoBehaviour
     public void levelUp()
     {
         if (playerScript == null) return;
-
-        float tempMaxHP = playerScript.GetMaxHP();
+        gameData.playerData = playerScript.playerData;
+        float tempMaxHP = gameData.playerData.HPMax;
         if (experience >= levelUpCap)
         {
             Debug.Log("you have leveled up");
-            level++;
+            gameData.playerData.level++;
+            levelText.text = gameData.playerData.level.ToString();
             experience -= levelUpCap;
             levelUpCap *= increaseXpCap;
             FlashText(levelText, Color.yellow, 2);
-            playerScript.SetMaxHp(playerStatUpgrade(tempMaxHP));
+            gameData.playerData.HPMax = playerStatUpgrade(tempMaxHP);
             playerScript.Heal((int)tempMaxHP / 4);
-
+            gameData.playerData.HP = playerScript.playerData.HP;
+            playerScript.UpdatePlayer(gameData.playerData);
         }
 
 
@@ -475,14 +476,14 @@ public class GameManager : MonoBehaviour
     {
         gameData.sceneIndex = sceneIndex;
         gameData.currentpickUps = pickUpObjects;
-        gameData.playerPos = player.transform.position;
+        gameData.player = player;
         gameData.playerData = playerScript.GetPlayerData();
         DataManager.instance.SaveRun(gameData);
     }
     public void LoadRun()
     {
         gameData = DataManager.instance.LoadRun();
-        player.transform.position = gameData.playerPos;
+        player = gameData.player;
     }
 }
 

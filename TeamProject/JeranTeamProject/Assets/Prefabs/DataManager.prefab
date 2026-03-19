@@ -27,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 485989164227918194}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -6.26298, y: 0.7976, z: 5.84645}
+  m_LocalPosition: {x: 3.36553, y: 0, z: 5.39447}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -47,17 +47,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::DataManager
   hubData:
     sceneIndex: 0
-    playerPos: {x: 0, y: 0, z: 0}
+    player: {fileID: 0}
     currentpickUps: []
-    HP: 0
-    speed: 0
-    sprintMod: 0
-    jumpSpeed: 0
-    jumpChargeMax: 0
-    jumpChargeRate: 0
-    jumpMax: 0
-    gunList: []
-    itemList: []
+    playerData:
+      level: 1
+      HP: 50
+      HPMax: 50
+      speed: 8
+      speedMod: 2
+      jumpMax: 1
+      jumpSpeed: 10
+      jumpChargeMax: 3
+      jumpChargeRate: 2
+      dmgAmmount: 3
+      money: 0
+      gunList: []
+      itemList: []
   fileName: saveData.json
 --- !u!114 &9168244373505273358
 MonoBehaviour:
@@ -71,4 +76,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a155524e32b4fb24bbd2e844795e02d0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DoNotDestroy
-  persistentIndex: 0
+  persistentIndex: 2

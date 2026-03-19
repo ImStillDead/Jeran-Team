@@ -21,7 +21,7 @@ public class GunPickup : MonoBehaviour
         {
             gun.currentAmmo = gun.magSizeMax;
             pick.GetGunStats(gun);
-            if (GameManager.instance.playerScript.canPickup)
+            if (Shooting.instance.gunList.Count < 2)
             {
                 Destroy(gameObject);
                 GameManager.instance.pickUpObjects.Remove(this.gameObject);
