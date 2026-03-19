@@ -139,6 +139,7 @@ public class Shooting : MonoBehaviour
             volume = gunList[gunPos].shotSoundVol;
 
             spread = gunList[gunPos].spread;
+            
 
             isShotgun = gunList[gunPos].isShotgun;
             isBurst = gunList[gunPos].isBurst;
@@ -148,8 +149,9 @@ public class Shooting : MonoBehaviour
             pelletAmount = gunList[gunPos].pelletAmount;
             burstDelay = gunList[gunPos].burstDelay;
 
-            gunModel.GetComponent<MeshFilter>().sharedMesh = instance.gunList[gunPos].gunModel.GetComponent<MeshFilter>().sharedMesh;
-            gunModel.GetComponent<MeshRenderer>().sharedMaterial = instance.gunList[gunPos].gunModel.GetComponent<MeshRenderer>().sharedMaterial;
+            recoil.UpdateRecoil(gunList[gunPos].recoil);
+            gunModel.GetComponent<MeshFilter>().sharedMesh = gunList[gunPos].gunModel.GetComponent<MeshFilter>().sharedMesh;
+            gunModel.GetComponent<MeshRenderer>().sharedMaterial = gunList[gunPos].gunModel.GetComponent<MeshRenderer>().sharedMaterial;
             gunModel.transform.localScale = gunList[gunPos].scale;
             gunModel.transform.localPosition = gunList[gunPos].postion;
             gunModel.transform.localRotation = gunList[gunPos].rotation;
