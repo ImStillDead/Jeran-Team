@@ -5,6 +5,7 @@ using UnityEngine;
 public class CharacterSelect : ScriptableObject
 {
     public GameObject mesh;
+    public float HPMax;
     public float HP;
     public float speed;
     public float speedMod;

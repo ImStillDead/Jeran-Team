@@ -6,11 +6,8 @@ public class Door : MonoBehaviour
     [SerializeField] GameObject button;
     bool playerInTrigger;
     bool enemyInTrigger;
-    void Start()
-    {
-        
-    }
-    void Update()
+
+    private void Update()
     {
         if (Input.GetButtonDown("Interact") && playerInTrigger)
         {

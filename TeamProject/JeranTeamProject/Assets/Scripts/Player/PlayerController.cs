@@ -1,21 +1,19 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
+using System.IO;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.Rendering.PostProcessing;
 using UnityEngine.SceneManagement;
+using UnityEngine.TextCore.Text;
 
 
 public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDash, ICharacters
 {
-
-
     [SerializeField] CharacterController playerController;
     [SerializeField] LayerMask ignoreLayer;
 
     [Header("Player Stats")]
     [SerializeField] float HP;
+    [SerializeField] float HPMax;
     [SerializeField] int Armor;
     [SerializeField] int maxArmor;
     [SerializeField] float speed;
@@ -24,9 +22,16 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
     [SerializeField] float jumpChargeMax;
     [SerializeField] float jumpChargeRate;
     [SerializeField] int jumpMax;
+    [SerializeField] float armorRegenDelay;
+    [SerializeField] float armorRegenRate;
+    [SerializeField] int gunMax;
+
+    [Header("Player Static Stats")]
     [SerializeField] int interactDis;
     [SerializeField] int enemyViewDis;
     [SerializeField] int gravity;
+    [SerializeField] int hubIndex;
+    
 
     [Header("Dash Settings")]
     [SerializeField] float dashForce = 30f;
@@ -41,37 +46,29 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
     [SerializeField] float slideCD = 1f;
 
     [Header("Other Settings")]
+    [SerializeField] int moneyOnPlayer;
     [SerializeField] Transform weaponPos;
     [SerializeField] GameObject firstPersonCamera;
-    [SerializeField] GameObject thirdPersonCamera;
     [SerializeField] GameObject torch;
-    [SerializeField] public List<Pickups> itemList = new List<Pickups>();
     [SerializeField] AudioSource aud;
-    [SerializeField] int moneyOnPlayer;
+    [SerializeField] List<GameObject> MeshList;
 
-
-    [SerializeField] float armorRegenDelay;
-    [SerializeField] float armorRegenRate;
-
-    [SerializeField] List<GameObject> MeshList = new List<GameObject>();
-
+    GameManager manager;
+    PlayerData staticBase;
+    GameData runData;
+    PlayerData playerData;
+    public List<Pickups> itemList;
     Pickups activePick;
-    float HPMax;
     float lastDamageTime;
     float armorRegenTimer;
     int jumpCount;
     int invPos;
     int gunPos;
-    int gunMax;
     int itemIndex;
     float boostTime;
     float jumpCharge;
-    int tempOrginDmg;
-    float speedOrigin;
-    float jumpSpeedOrigin;
     bool dmgBoosting;
     bool isJumping;
-    bool isFirstPerson;
     bool torchActive;
     public bool canPickup;
     public bool canSwap;
@@ -89,47 +86,32 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
     private Vector3 slideDirection;
     private CharacterController characterController;
     private bool slideButtonHeld;
-
-    // Start and Update Functions
-
-
-
-    public GameManager manager;
-    GameData gameData;
-    public PlayerData playerData;
+    void Awake()
+    {
+        runData = new GameData();
+        staticBase = new PlayerData();
+        playerData = new PlayerData();
+        
+        characterController = GetComponent<CharacterController>();
+        SetupDashing();
+        SetupSliding();
+        SetPlayerData(staticBase);
+    }
     void Start()
     {
         manager = GameManager.instance;
-        spawnPlayer();
-        playerArmor();
-        updatePlayerUI();
-    }
-
-    void Awake()
-    {
-        gameData = new GameData();
-        SetupDashing();
-        SetupSliding();
-
-        isFirstPerson = true;
-        if(HPMax == 0)
-        {
-            HPMax = 50;
-        }
-        gunMax = 2;
-        speedOrigin = speed;
-        jumpSpeedOrigin = jumpSpeed;
+        SpawnPlayer();
+        PlayerArmor();
+        UpdatePlayerUI();
     }
     void Update()
     {
         Movement();
-        WeaponRotate();
         Sprint();
-        armorRegen();
+        WeaponRotate();
+        ArmorRegen();
         Charge();
     }
-
-    // Movement and Button Interactions
     void Movement()
     {
         HandleSliding();
@@ -147,19 +129,11 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
             playerController.Move(playerVel * Time.deltaTime);
             return;
         }
-        float horizontal = Input.GetAxis("Horizontal");
-        float vertical = Input.GetAxis("Vertical");
-
-        //if (horizontal != 0 || vertical != 0)
-        //{
-        //    Debug.Log($"Input detected - H:{horizontal}, V:{vertical}");
-        //}
 
         moveDir = Input.GetAxis("Horizontal") * transform.right + (Input.GetAxis("Vertical") * transform.forward);
-        playerController.Move(moveDir * speed * Time.deltaTime);
+        playerController.Move(speed * Time.deltaTime * moveDir);
         playerController.Move(playerVel * Time.deltaTime);
         playerVel.y -= gravity * Time.deltaTime;
-
 
         if (playerController.isGrounded)
         {
@@ -169,13 +143,12 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
 
         Jump();
         ChangeActiveInventory();
-        CameraToggle();
         Interact();
-        useItem();
+        UseItem();
         ToggleTorch();
 
     }
-
+    //Dashing and Sliding
     void SetupDashing()
     {
         dashingComponent = GetComponent<Dashing>();
@@ -188,15 +161,12 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
         dashingComponent.dashDur = dashDur;
         dashingComponent.dashCD = dashCD;
     }
-
     void SetupSliding()
     {
-        characterController = GetComponent<CharacterController>();
         originalHeight = characterController.height;
         originalCenter = characterController.center;
         originalYScale = transform.localScale.y;
     }
-
     void HandleSliding()
     {
         if (slideCDTimer > 0)
@@ -226,7 +196,6 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
             SlidingMovement();
         }
     }
-
     void StartSlide()
     {
         isSliding = true;
@@ -243,10 +212,9 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
 
         Debug.Log("Slide started");
     }
-
     void SlidingMovement()
     {
-        playerController.Move(slideDirection * slideSpeed * Time.deltaTime);
+        playerController.Move(slideSpeed * Time.deltaTime * slideDirection);
 
         playerVel.y -= gravity * Time.deltaTime;
         playerController.Move(playerVel * Time.deltaTime);
@@ -258,7 +226,6 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
             StopSlide();
         }
     }
-
     void StopSlide()
     {
         isSliding = false;
@@ -274,47 +241,38 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
         {
             playerVel.y = -2f;
         }
-
         Debug.Log("Slide stopped");
     }
-
     public bool IsSliding()
     {
         return isSliding;
     }
-
     public float GetSpeed()
     {
         return speed;
     }
-
     public void SetSpeed(float newSpeed)
     {
         speed = newSpeed;
     }
-
     public float GetJumpSpeed()
     {
         return jumpSpeed;
     }
-
     public void SetJumpSpeed(float newJumpSpeed)
     {
         jumpSpeed = newJumpSpeed;
     }
-
     // IDash Implementation
     public void StartDash()
     {
         if (dashingComponent != null)
             dashingComponent.StartDash();
     }
-
     public bool IsDashing()
     {
         return dashingComponent != null && dashingComponent.IsDashing();
     }
-
     public float GetDashRemainingCooldown()
     {
         return dashingComponent != null ? dashingComponent.GetDashRemainingCooldown() : 0f;
@@ -323,27 +281,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
     {
         return playerVel;
     }
-
-    void CameraToggle()
-    {
-        if (Input.GetButtonDown("ToggleCamera"))
-        {
-            if (isFirstPerson)
-            {
-                weaponPos.transform.Rotate(-4, 4, 0);
-                thirdPersonCamera.SetActive(true);
-                firstPersonCamera.SetActive(false);
-                isFirstPerson = false;
-            }
-            else
-            {
-                weaponPos.transform.Rotate(4, -4, 0);
-                firstPersonCamera.SetActive(true);
-                thirdPersonCamera.SetActive(false);
-                isFirstPerson = true;
-            }
-        }
-    }
+    //Jump
     void Jump()
     {
         if (isSliding)
@@ -369,6 +307,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
             jumpCharge += Time.deltaTime;
         }
     }
+    //Sprint
     void Sprint()
     {
         if (IsDashing() || isSliding)
@@ -383,6 +322,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
             speed /= sprintMod;
         }
     }
+    //Torch
     void ToggleTorch()
     {
         if (Input.GetButtonDown("Torch"))
@@ -399,6 +339,106 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
             }
         }
     }
+    public void pickUpObject(Pickups item)
+    {
+
+        if (itemList.Contains(item))
+        {
+            itemIndex = itemList.IndexOf(item);
+            itemList[itemIndex].uesage++;
+
+        }
+        else
+        {
+            itemList.Add(item);
+            itemIndex = itemList.Count - 1;
+            itemList[itemIndex].uesage = 1;
+        }
+        if (activePick == null)
+        {
+            ChangeItem(itemIndex);
+        }
+    }
+    //Itemes and Interactions
+    void ChangeItem(int pos)
+    {
+        activePick = itemList[pos];
+        itemIndex = itemList[pos].itemIndex;
+        GameManager.instance.updateItem(itemIndex);
+    }
+    void UseItem()
+    {
+        if (activePick != null && Input.GetButtonDown("Use"))
+        {
+            //Healing if used object has health
+            if (activePick.healing > 0)
+            {
+                Heal(activePick.healing);
+                activePick.uesage--;
+            }
+            //temp Boost dmg
+            if (activePick.dmgBoost > 0)
+            {
+                if (dmgBoosting == false)
+                {
+                    activePick.uesage--;
+                    StartCoroutine(DmgBoost());
+                }
+            }
+            //temp speed Boost
+            if (activePick.speedBoost > 0)
+            {
+                if (speed != playerData.speed)
+                {
+                    activePick.uesage--;
+                    StartCoroutine(SpeedBoost());
+                }
+            }
+            //Check for usage and remove if no more uses
+            if (activePick.uesage <= 0)
+            {
+                itemList.Remove(activePick);
+                if (itemList.Count > 0)
+                {
+                    activePick = itemList[^1];
+                    itemIndex = itemList[^1].itemIndex;
+                    GameManager.instance.updateItem(itemIndex);
+                }
+                else
+                {
+                    activePick = null;
+                    GameManager.instance.updateItem(0);
+                }
+            }
+        }
+    }
+    public void Heal(int amount)
+    {
+        Armor = maxArmor;
+        HP += amount;
+
+        if (HP > HPMax)
+            HP = (int)HPMax;
+
+        UpdatePlayerUI();
+    }
+    IEnumerator DmgBoost()
+    {
+        dmgBoosting = true;
+        playerData.dmgAmmount = Shooting.instance.gunList[gunPos].bullet.damageAmount;
+        Shooting.instance.gunList[gunPos].bullet.damageAmount *= (int)activePick.dmgBoost;
+        boostTime = activePick.boostDur;
+        yield return new WaitForSeconds(boostTime);
+        Shooting.instance.gunList[gunPos].bullet.damageAmount = playerData.dmgAmmount;
+        dmgBoosting = false;
+    }
+    IEnumerator SpeedBoost()
+    {
+        boostTime = activePick.boostDur;
+        speed *= (int)activePick.speedBoost;
+        yield return new WaitForSeconds((float)boostTime);
+        speed = playerData.speed;
+    }
     void ChangeActiveInventory()
     {
 
@@ -412,7 +452,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
                 else
                     invPos++;
 
-                changeItem(invPos);
+                ChangeItem(invPos);
             }
         }
 
@@ -428,7 +468,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
             else
                 gunPos++;
 
-            updateGun();
+            UpdateGun();
         }
         else if (Input.GetAxis("Mouse ScrollWheel") < 0)
         {
@@ -437,7 +477,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
             else
                 gunPos--;
 
-            updateGun();
+            UpdateGun();
         }
 
         // Weapon Select 1-5
@@ -486,7 +526,6 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
             }
         }
     }
-
     // Gun interactions
     public void GetGunStats(GunStats gun)
     {
@@ -515,22 +554,13 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
         Shooting.instance.gunList[gunPos] = gun;
         Shooting.instance.changeGun(gunPos);
     }
-    public void updateGun()
+    public void UpdateGun()
     {
         Shooting.instance.changeGun(gunPos);
     }
     void WeaponRotate()
     {
-        if (isFirstPerson)
-        {
-            weaponPos.transform.rotation = firstPersonCamera.transform.rotation;
-            interactDis = 3;
-        }
-        else
-        {
-            weaponPos.transform.localRotation = thirdPersonCamera.transform.localRotation;
-            interactDis = 5;
-        }
+        weaponPos.transform.rotation = firstPersonCamera.transform.rotation;
     }
 
     // Health and UI interactions
@@ -549,8 +579,8 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
             HP -= amount;
         }
 
-        updatePlayerUI();
-        StartCoroutine(flahScreen());
+        UpdatePlayerUI();
+        StartCoroutine(FlahScreen());
 
         if (HP <= 0)
         {
@@ -559,13 +589,13 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
 
 
     }
-    IEnumerator flahScreen()
+    IEnumerator FlahScreen()
     {
         GameManager.instance.playerDamageFlash.SetActive(true);
         yield return new WaitForSeconds(0.1f);
         GameManager.instance.playerDamageFlash.SetActive(false);
     }
-    public void updatePlayerUI()
+    public void UpdatePlayerUI()
     {
         if (manager == null) return;
 
@@ -597,15 +627,37 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
         }
 
     }
-
-    void playerArmor()
+    public void SpawnPlayer()
+    {
+        if (manager.playerSpawn != null)
+        {
+            playerController.transform.position = manager.playerSpawn.transform.position;
+            Physics.SyncTransforms();
+            UpdatePlayer(staticBase);
+            if (manager.menus != null) manager.menus.stateUnpause();
+        }
+    }
+    public void PlayAudio(AudioClip clip, float volume)
+    {
+        aud.PlayOneShot(clip, volume);
+    }
+    public void SetMaxHp(float input)
+    {
+        HPMax = input;
+    }
+    public float GetMaxHP()
+    {
+        return HPMax;
+    }
+    //Armor
+    void PlayerArmor()
     {
         manager.addArmor(maxArmor);
         Armor = maxArmor;
 
     }
 
-    void armorRegen()
+    void ArmorRegen()
     {
         // wait after taking damage
         if (Time.time < lastDamageTime + armorRegenDelay)
@@ -628,14 +680,14 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
 
     }
 
-
-    public void addPlayerMoney(int increase)
+    //Money
+    public void AddPlayerMoney(int increase)
     {
         moneyOnPlayer += increase;
 
 
     }
-    public bool removePlayerMoney(int decrease)
+    public bool RemovePlayerMoney(int decrease)
     {
         if ((moneyOnPlayer - decrease) >= 0)
         {
@@ -648,179 +700,15 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
             return false;
         }
     }
-    public void setMaxHp(float input)
-    {
-        HPMax = input;
-    }
-    public float getMaxHP()
-    {
-        return HPMax;
-    }
-    public int getplayerMoney()
+    public int GetplayerMoney()
     {
         return moneyOnPlayer;
     }
 
-    // Item Interactions
-    public void pickUpObject(Pickups item)
+    //RunData
+    public void SetPlayerData(PlayerData data)
     {
-
-        if (itemList.Contains(item))
-        {
-            itemIndex = itemList.IndexOf(item);
-            itemList[itemIndex].uesage++;
-
-        }
-        else
-        {
-            itemList.Add(item);
-            itemIndex = itemList.Count - 1;
-            itemList[itemIndex].uesage = 1;
-        }
-        if (activePick == null)
-        {
-            changeItem(itemIndex);
-        }
-    }
-    void changeItem(int pos)
-    {
-        activePick = itemList[pos];
-        itemIndex = itemList[pos].itemIndex;
-        GameManager.instance.updateItem(itemIndex);
-    }
-    void useItem()
-    {
-        if (activePick != null && Input.GetButtonDown("Use"))
-        {
-            //Healing if used object has health
-            if (activePick.healing > 0)
-            {
-                Heal(activePick.healing);
-                activePick.uesage--;
-            }
-            //temp Boost dmg
-            if (activePick.dmgBoost > 0)
-            {
-                if (dmgBoosting == false)
-                {
-                    activePick.uesage--;
-                    StartCoroutine(dmgBoost());
-                }
-            }
-            //temp speed Boost
-            if (activePick.speedBoost > 0)
-            {
-                if (speed != speedOrigin)
-                {
-                    activePick.uesage--;
-                    StartCoroutine(speedBoost());
-                }
-            }
-            //Check for usage and remove if no more uses
-            if (activePick.uesage <= 0)
-            {
-                itemList.Remove(activePick);
-                if (itemList.Count > 0)
-                {
-                    activePick = itemList[itemList.Count - 1];
-                    itemIndex = itemList[itemList.Count - 1].itemIndex;
-                    GameManager.instance.updateItem(itemIndex);
-                }
-                else
-                {
-                    activePick = null;
-                    GameManager.instance.updateItem(0);
-                }
-            }
-        }
-    }
-
-
-    public void Heal(int amount)
-    {
-        Armor = maxArmor;
-        HP += amount;
-
-        if (HP > HPMax)
-            HP = (int)HPMax;
-
-        updatePlayerUI();
-    }
-    IEnumerator dmgBoost()
-    {
-        dmgBoosting = true;
-        tempOrginDmg = Shooting.instance.gunList[gunPos].bullet.damageAmount;
-        Shooting.instance.gunList[gunPos].bullet.damageAmount *= (int)activePick.dmgBoost;
-        boostTime = activePick.boostDur;
-        yield return new WaitForSeconds(boostTime);
-        Shooting.instance.gunList[gunPos].bullet.damageAmount = tempOrginDmg;
-        dmgBoosting = false;
-    }
-    IEnumerator speedBoost()
-    {
-        boostTime = activePick.boostDur;
-        speed *= (int)activePick.speedBoost;
-        yield return new WaitForSeconds((float)boostTime);
-        speed = speedOrigin;
-    }
-
-    // World Interactions
-    public void spawnPlayer()
-    {
-        if (manager.playerSpawn != null)
-        {
-            playerController.transform.position = manager.playerSpawn.transform.position;
-            Physics.SyncTransforms();
-            HP = (int)HPMax;
-            updatePlayerUI();
-            if (manager.menus != null) manager.menus.stateUnpause();
-        }
-    }
-    public void playAudio(AudioClip clip, float volume)
-    {
-        aud.PlayOneShot(clip, volume);
-    }
-
-    // Data Management
-
-    public void UpdatePlayerStats(GameData data)
-    {
-        if (playerData == null) playerData = new PlayerData();
-        if(data == null) return;
-
-        playerData.HP = data.HP;
-        playerData.speed = data.speed;
-        playerData.speedMod = data.sprintMod;
-        playerData.jumpSpeed = data.jumpSpeed;
-        playerData.jumpMax = data.jumpMax;
-        playerData.jumpChargeRate = data.jumpChargeRate;
-        playerData.jumpChargeMax = data.jumpChargeMax;
-        playerData.itemList = data.itemList;
-        playerData.gunList = data.gunList;
-        SetStats(playerData);
-    }
-    public void UpdatePlayerStats(CharacterSelect data)
-    {
-        if (data == null) return;
-
-        playerData.HP = data.HP;
-        playerData.speed = data.speed;
-        playerData.speedMod = data.speedMod;
-        playerData.jumpSpeed = data.jumpSpeed;
-        playerData.jumpMax = data.jumpMax;
-        playerData.jumpChargeRate = data.jumpChargeRate;
-        playerData.jumpChargeMax = data.jumpChargeMax;
-        playerData.itemList = data.itemList;
-        playerData.gunList.Clear();
-        foreach (GunStats gun in data.gunList)
-        {
-            playerData.gunList.Add(gun);
-        }
-        SetStats(playerData);
-    }
-    public void SetStats(PlayerData data)
-    {
-        HPMax = data.HP;
+        HPMax = data.HPMax;
         HP = data.HP;
         speed = data.speed;
         sprintMod = data.speedMod;
@@ -834,51 +722,91 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
         {
             Shooting.instance.gunList.Add(gun);
         }
-        Shooting.instance.changeGun(0);
-        if(gameData == null)
-        {
-            gameData = new GameData();
-        }
-        gameData.HP = HPMax;
-        gameData.speed = speed;
-        gameData.jumpSpeed = jumpSpeed;
-        gameData.jumpMax = jumpMax;
-        gameData.jumpChargeRate = jumpChargeRate;
-        gameData.jumpChargeMax = jumpChargeMax;
-        gameData.itemList = itemList;
-        gameData.gunList.Clear();
-        foreach(GunStats gun in data.gunList)
-        {
-            gameData.gunList.Add(gun);
-        }
-        DataManager.instance.UpdateHub(gameData);
-        updatePlayerUI();
     }
+    //SaveData
+    public void SaveHub()
+    {
+        if(DataManager.instance != null)
+        {
+            GameData data = DataManager.instance.hubData;
+            data.playerData = staticBase;
+            data.sceneIndex = hubIndex;
+            DataManager.instance.SetHub(data);
+        }
+    }
+    public void SaveRun() 
+    {
+        runData.playerData = playerData;
+        runData.currentpickUps = manager.pickUpObjects;
+        runData.playerPos = this.transform.position;
+        runData.sceneIndex = SceneManager.GetActiveScene().buildIndex;
+        DataManager.instance.SaveRun(runData);
+    }
+    //LoadData
+    public void UpdatePlayer(PlayerData data)
+    {
+        HPMax = data.HPMax;
+        HP = data.HP;
+        speed = data.speed;
+        sprintMod = data.speedMod;
+        jumpSpeed = data.jumpSpeed;
+        jumpMax = data.jumpMax;
+        jumpChargeRate = data.jumpChargeRate;
+        jumpChargeMax = data.jumpChargeMax;
+        itemList.Clear();
+        foreach (Pickups item in data.itemList)
+        {
+            itemList.Add(item);
+        }
+        Shooting.instance.gunList.Clear();
+        foreach (GunStats gun in data.gunList)
+        {
+            Shooting.instance.gunList.Add(gun);
+        }
+        Shooting.instance.changeGun(0);
+        UpdatePlayerUI();
+    }
+    public void SetHubStats(GameData hubData)
+    {
+        UpdatePlayer(hubData.playerData);
+        //get achievements here
+
+        DataManager.instance.SaveData(hubData);
+    }
+    public void LoadRun()
+    {
+        runData = new GameData();
+        runData = DataManager.instance.LoadRun();
+    }
+    public void LoadSave()
+    {
+        SetHubStats(DataManager.instance.LoadData());
+    }
+    //Character Change
     public void SwapCharacter(CharacterSelect character)
     {
-        UpdatePlayerStats(character);
-        swapAnimator(character.mesh);
-    }
-    void swapAnimator(GameObject mesh)
-    {
-        int index = 0;
-        bool change = false;
-        foreach (GameObject meshes in MeshList)
+        playerData.HPMax = character.HPMax;
+        playerData.HP = character.HP;
+        playerData.speed = character.speed;
+        playerData.speedMod = character.speedMod;
+        playerData.jumpSpeed = character.jumpSpeed;
+        playerData.jumpMax = character.jumpMax;
+        playerData.jumpChargeMax = character.jumpChargeMax;
+        playerData.jumpChargeRate = character.jumpChargeRate;
+        playerData.itemList.Clear();
+        foreach (Pickups item in character.itemList)
         {
-            if (meshes.GetComponent<Animator>().avatar != mesh.GetComponent<Animator>().avatar)
-            {
-                MeshList[index].SetActive(false);
-            }
-            else if (meshes.GetComponent<Animator>().avatar == mesh.GetComponent<Animator>().avatar)
-            {
-                MeshList[index].SetActive(true);
-                change = true;
-            }
-            else if (change == false)
-            {
-                MeshList[0].SetActive(true);
-            }
-            index++;
+            playerData.itemList.Add(item);
         }
+        playerData.gunList.Clear();
+        foreach (GunStats gun in character.gunList)
+        {
+            playerData.gunList.Add(gun);
+        }
+        UpdatePlayer(playerData);
+    }
+    public PlayerData GetPlayerData()
+    {
+        return playerData;
     }
 }

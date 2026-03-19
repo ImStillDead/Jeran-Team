@@ -48,24 +48,24 @@ public class DataManager : MonoBehaviour //ISave
     }
     public void NewGame()
     {
-        manager.StartData();
+        hubData = new GameData();
+        gameData = new GameData();
+
+    }
+   public void SetHub(GameData data)
+    {
+        hubData.sceneIndex = data.sceneIndex; 
+        hubData.playerData = data.playerData;
+        hubData.playerPos = data.playerPos;
         SaveData(hubData);
     }
-   public void UpdateHub(GameData data)
+    public void SetRun(GameData data)
     {
-
-
-        hubData.HP = data.HP;
-        hubData.speed = data.speed;
-        hubData.sprintMod = data.sprintMod;
-        hubData.jumpSpeed = data.jumpSpeed;
-        hubData.jumpChargeMax = data.jumpChargeMax;
-        hubData.jumpChargeRate = data.jumpChargeRate;
-        hubData.jumpMax = data.jumpMax;
-        List<GunStats> gunList = new List<GunStats>();
-        List<Pickups> itemList = new List<Pickups>();
-        SaveData(hubData);
-        Debug.Log("Hub Updated" +  hubData);
+        gameData.sceneIndex = data.sceneIndex;
+        gameData.playerData = data.playerData;
+        gameData.playerPos = data.playerPos;
+        gameData.currentpickUps = data.currentpickUps;
+        SaveRun(gameData);
     }
     
 }

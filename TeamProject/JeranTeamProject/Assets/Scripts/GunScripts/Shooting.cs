@@ -110,7 +110,7 @@ public class Shooting : MonoBehaviour
     }
     public void callAmmo()
     {
-        DataManager.manager.ammocount(currentAmmo, magSizeMax);
+        GameManager.instance.ammocount(currentAmmo, magSizeMax);
         if (gunList.Count > 0)
         {
             gunList[activeGun].currentAmmo = currentAmmo;
@@ -175,7 +175,7 @@ public class Shooting : MonoBehaviour
         {
             shootTimer = 0;
             if (aud[0] != null) 
-            GameManager.instance.playerScript.playAudio(aud[0], volume);
+            GameManager.instance.playerScript.PlayAudio(aud[0], volume);
 
 
             Quaternion spreadRotation = shootPos.transform.rotation *
@@ -202,7 +202,7 @@ public class Shooting : MonoBehaviour
         if (!reloading)
         {
             shootTimer = 0;
-            GameManager.instance.playerScript.playAudio(aud[0], volume);
+            GameManager.instance.playerScript.PlayAudio(aud[0], volume);
 
 
             Quaternion spreadRotation = shootPos.transform.rotation *

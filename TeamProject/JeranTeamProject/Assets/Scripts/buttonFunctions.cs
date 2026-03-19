@@ -1,40 +1,37 @@
 using System;
-using Unity.VisualScripting;
-using UnityEditor.UIElements;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-public class buttonFunctions : MonoBehaviour
+public class ButtonFunctions : MonoBehaviour
 {
     GameManager manager;
 
 
     public void Start()
     {
-        manager = GameManager.instance;
+        manager = GameManager.instance ?? FindAnyObjectByType<GameManager>();
     }
-    public void resume()
+    public void Resume()
     {
-        DataManager.manager.menus.stateUnpause();
+        manager.menus.stateUnpause();
     }
     public void LevelSelect()
     {
-        DataManager.manager.levelSelect(1);
     }
     public void Settings()
     {
         
     }
-    public void respawn()
+    public void Respawn()
     {
-        DataManager.manager.playerScript.spawnPlayer();
-        DataManager.manager.menus.stateUnpause();
+        manager.playerScript.SpawnPlayer();
+        manager.menus.stateUnpause();
     }
     public void MainMenu()
     {
         DataManager.instance.SaveData(DataManager.instance.hubData);
-        DataManager.manager.UpdateRun();
-        DataManager.manager.loadMain();
+        manager.UpdateRun();
+        SceneManager.LoadScene(0);
     }
     public void ContinueRun()
     {
@@ -42,8 +39,8 @@ public class buttonFunctions : MonoBehaviour
         {
             GameData load = DataManager.instance.currentRun.LoadRun();
             SceneManager.LoadScene(load.sceneIndex);
-            DataManager.manager.menus.stateUnpause();
-            DataManager.manager.LoadRun();
+            manager.menus.stateUnpause();
+            manager.LoadRun();
 
         }
     }
@@ -59,32 +56,34 @@ public class buttonFunctions : MonoBehaviour
             Debug.LogError("GameManager.instance is null! Cannot restart.");
             return;
         }
-        if (DataManager.manager.playerScript != null)
+        if (manager.playerScript != null)
         {
-            DataManager.manager.playerScript.spawnPlayer();
+            manager.playerScript.SpawnPlayer();
         }
-        if (DataManager.manager.menus != null)
+        if (manager.menus != null)
         {
-            DataManager.manager.menus.stateUnpause();
+            manager.menus.stateUnpause();
         }
     }
     public void Quit()
     {
-        if (DataManager.instance != null)
+        if (manager != null)
         {
-            // Add this method to DataManager if it doesn't exist yet
-            manager.UpdateRun();
-        }
-        else
-        {
-            Debug.LogWarning("DataManager.instance is null! Skipping UpdateRun.");
+            try
+            {
+                manager.UpdateRun();
+            }
+            catch (Exception e)
+            {
+                Debug.LogWarning("Failed to save on quit: " + e.Message);
+            }
         }
 
-#if UNITY_EDITOR
+        #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
-#else
-    Application.Quit();
-#endif
+        #else
+        Application.Quit();
+        #endif
     }
     public void NewGame()
     {
@@ -96,17 +95,17 @@ public class buttonFunctions : MonoBehaviour
     {
         SceneManager.LoadScene(2);
     }
-    public void nextLevel()
+    public void NextLevel()
     {
 
         int index = SceneManager.GetActiveScene().buildIndex;
         index += 1;
         SceneManager.LoadScene(index);
-        DataManager.manager.sceneIndex = index;
-        DataManager.manager.resetObjective();
-        DataManager.manager.UpdateRun();
-        DataManager.manager.playerScript.spawnPlayer();
-        DataManager.manager.menus.stateUnpause();
+        manager.sceneIndex = index;
+        manager.resetObjective();
+        manager.UpdateRun();
+        manager.playerScript.SpawnPlayer();
+        manager.menus.stateUnpause();
     }
     
 

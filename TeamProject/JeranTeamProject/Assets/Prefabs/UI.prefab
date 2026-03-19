@@ -1254,16 +1254,18 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameManager
   menus: {fileID: 0}
+  player: {fileID: 0}
+  playerScript: {fileID: 0}
+  baseCharacter: {fileID: 11400000, guid: 7c716a9f235784447a45b1ccfd998aad, type: 2}
+  VolumeSlider: {fileID: 4761292616876445622}
+  UI: {fileID: 3854756262889888773}
+  maxSpawn: 20
   itemsCase:
   - {fileID: 6345406311941397415}
   - {fileID: 2239006130509813823}
   - {fileID: 662753362679615104}
   - {fileID: 6044543788700534905}
   - {fileID: 6540267720293026578}
-  baseCharacter: {fileID: 0}
-  VolumeSlider: {fileID: 4761292616876445622}
-  UI: {fileID: 0}
-  maxSpawn: 20
   reticle: {fileID: 8843003007540835084}
   magazine_text: {fileID: 5765798503774629887}
   maxMagsize_text: {fileID: 3926703161668546565}
@@ -1289,51 +1291,42 @@ MonoBehaviour:
   heathNum: {fileID: 8490032000039084733}
   maxHealthNum: {fileID: 7295755091475559631}
   killCount_text: {fileID: 4675162484356823955}
-  currentGameData:
-    sceneIndex: 0
-    playerPos: {x: 0, y: 0, z: 0}
-    currentpickUps: []
-    HP: 0
-    speed: 0
-    sprintMod: 0
-    jumpSpeed: 0
-    jumpChargeMax: 0
-    jumpChargeRate: 0
-    jumpMax: 0
-    gunList: []
-    itemList: []
-  player: {fileID: 0}
-  playerScript: {fileID: 0}
-  objectiveLight: {fileID: 0}
-  doorLights: {fileID: 0}
-  playerSpawn: {fileID: 0}
-  playerCheckpointPop: {fileID: 8735779706122195384}
   gameData:
     sceneIndex: 0
     playerPos: {x: 0, y: 0, z: 0}
     currentpickUps: []
-    HP: 0
-    speed: 0
-    sprintMod: 0
-    jumpSpeed: 0
-    jumpChargeMax: 0
-    jumpChargeRate: 0
-    jumpMax: 0
-    gunList: []
-    itemList: []
+    playerData:
+      HP: 50
+      HPMax: 50
+      speed: 8
+      speedMod: 2
+      jumpMax: 1
+      jumpSpeed: 10
+      jumpChargeMax: 3
+      jumpChargeRate: 2
+      dmgAmmount: 3
+      gunList: []
+      itemList: []
   hubData:
     sceneIndex: 0
     playerPos: {x: 0, y: 0, z: 0}
     currentpickUps: []
-    HP: 0
-    speed: 0
-    sprintMod: 0
-    jumpSpeed: 0
-    jumpChargeMax: 0
-    jumpChargeRate: 0
-    jumpMax: 0
-    gunList: []
-    itemList: []
+    playerData:
+      HP: 50
+      HPMax: 50
+      speed: 8
+      speedMod: 2
+      jumpMax: 1
+      jumpSpeed: 10
+      jumpChargeMax: 3
+      jumpChargeRate: 2
+      dmgAmmount: 3
+      gunList: []
+      itemList: []
+  objectiveLight: {fileID: 0}
+  doorLights: {fileID: 0}
+  playerSpawn: {fileID: 0}
+  playerCheckpointPop: {fileID: 8735779706122195384}
   DAYs: 0
   sceneIndex: 0
   enemyCount: 0
@@ -1542,15 +1535,18 @@ MonoBehaviour:
     sceneIndex: 0
     playerPos: {x: 0, y: 0, z: 0}
     currentpickUps: []
-    HP: 0
-    speed: 0
-    sprintMod: 0
-    jumpSpeed: 0
-    jumpChargeMax: 0
-    jumpChargeRate: 0
-    jumpMax: 0
-    gunList: []
-    itemList: []
+    playerData:
+      HP: 50
+      HPMax: 50
+      speed: 8
+      speedMod: 2
+      jumpMax: 1
+      jumpSpeed: 10
+      jumpChargeMax: 3
+      jumpChargeRate: 2
+      dmgAmmount: 3
+      gunList: []
+      itemList: []
   fileName: saveData.json
 --- !u!1 &2765127732332320864
 GameObject:

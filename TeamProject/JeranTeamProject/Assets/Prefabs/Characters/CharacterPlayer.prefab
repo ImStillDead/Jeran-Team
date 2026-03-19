@@ -407,7 +407,7 @@ MonoBehaviour:
   gunModel: {fileID: 1608946974504509990}
   ignoreLayer:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 128
   shootRate: 0
   magSizeMax: 0
   reloadTime: 0
@@ -1909,13 +1909,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 6056277950681428499}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 79422fe0445b9b34daf45943c2723741, type: 3}
+  m_Script: {fileID: 11500000, guid: 2355b56fd1765ee48b1234063e47abeb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraController
-  player: {fileID: 4571722508075737141}
+  player: {fileID: 0}
   sens: 300
-  lockVertMin: -70
-  lockVertMax: 70
+  lockVertMin: -65
+  lockVertMax: 65
   invertY: 0
   camRotX: 0
 --- !u!1 &6227995068177771766
@@ -2561,11 +2561,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2915af473f80fae4aaa5394042cb0efb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Recoil
-  recoilX: -2
-  recoilY: 2
-  recoilZ: 0.35
-  snappiness: 6
-  returnSpeed: 2
 --- !u!1 &8586939550497483857
 GameObject:
   m_ObjectHideFlags: 0
@@ -2647,25 +2642,30 @@ MonoBehaviour:
   m_GameObject: {fileID: 8593092689105773739}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f6a609a2fc10cb54094734a46459e792, type: 3}
+  m_Script: {fileID: 11500000, guid: 7e248fc8a6cc1984884e34f872542c0c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
   playerController: {fileID: 7709777452405699691}
   ignoreLayer:
     serializedVersion: 2
-    m_Bits: 8
-  HP: 50
+    m_Bits: 128
+  HP: 0
+  HPMax: 0
   Armor: 0
-  maxArmor: 3
-  speed: 8
-  sprintMod: 2
-  jumpSpeed: 8
-  jumpChargeMax: 4
-  jumpChargeRate: 2
-  jumpMax: 1
-  interactDis: 4
-  enemyViewDis: 30
+  maxArmor: 0
+  speed: 0
+  sprintMod: 0
+  jumpSpeed: 0
+  jumpChargeMax: 0
+  jumpChargeRate: 0
+  jumpMax: 0
+  armorRegenDelay: 0
+  armorRegenRate: 0
+  gunMax: 0
+  interactDis: 3
+  enemyViewDis: 15
   gravity: 35
+  hubIndex: 2
   dashForce: 30
   dashDur: 0.2
   dashCD: 1
@@ -2674,28 +2674,16 @@ MonoBehaviour:
   slideDur: 1.5
   slideYScale: 0.5
   slideCD: 1
-  weaponPos: {fileID: 6718390287254165713}
-  firstPersonCamera: {fileID: 6056277950681428499}
-  thirdPersonCamera: {fileID: 0}
-  torch: {fileID: 0}
-  itemList: []
-  aud: {fileID: 0}
   moneyOnPlayer: 0
-  armorRegenDelay: 0
-  armorRegenRate: 0
+  weaponPos: {fileID: 6718390287254165713}
+  firstPersonCamera: {fileID: 2129172508047573539}
+  thirdPersonCamera: {fileID: 0}
+  torch: {fileID: 2657794373020211425}
+  aud: {fileID: 7967669273735130920}
+  MeshList: []
+  itemList: []
   canPickup: 0
   canSwap: 0
-  manager: {fileID: 0}
-  playerData:
-    HP: 50
-    speed: 8
-    speedMod: 2
-    jumpMax: 1
-    jumpSpeed: 10
-    jumpChargeMax: 3
-    jumpChargeRate: 2
-    gunList: []
-    itemList: []
 --- !u!143 &7709777452405699691
 CharacterController:
   m_ObjectHideFlags: 0
@@ -2753,7 +2741,7 @@ AudioSource:
   m_GameObject: {fileID: 8593092689105773739}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 24300002, guid: 0b23c06a2435a2d4493376ef5d3d0c47, type: 2}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 1
