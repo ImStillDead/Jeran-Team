@@ -8,28 +8,30 @@ public class AudioSettingsController : MonoBehaviour
 
     private void Start()
     {
-        SetVolume(PlayerPrefs.GetFloat("SavedMasterVolume", 100));
+        float savedVolume = PlayerPrefs.GetFloat("SavedMasterVolume", 1f);
+        SetVolume(savedVolume);
     }
 
     public void SetVolume(float value)
     {
-        if (value < 1)
-            value = 0.001f;
+        float volumeFix = Mathf.Log10(value / 100) * 20f;
+        if (value < 1) { volumeFix = -80; }
 
         RefreshSlider(value);
 
         PlayerPrefs.SetFloat("SavedMasterVolume", value);
-
-        masterMixer.SetFloat("MasterVolume", Mathf.Log10(value / 100) * 20f);
+        masterMixer.SetFloat("Master", volumeFix);
     }
 
     public void SetVolumeFromSlider()
     {
-        SetVolume(soundsSlider.value);
+        if (soundsSlider != null)
+            SetVolume(soundsSlider.value);
     }
 
     public void RefreshSlider(float value)
     {
-        soundsSlider.value = value;
+        if (soundsSlider != null)
+            soundsSlider.value = value;
     }
 }

@@ -5,6 +5,7 @@ using UnityEngine;
 public class CharacterSelect : ScriptableObject
 {
     public GameObject mesh;
+    public float HPMax;
     public float HP;
     public float speed;
     public float speedMod;
@@ -12,7 +13,7 @@ public class CharacterSelect : ScriptableObject
     public float jumpSpeed;
     public float jumpChargeMax;
     public float jumpChargeRate;
-    public List<GunStats> gunList;
-    public List<Pickups> itemList;
+    public List<GunStats> gunList = new List<GunStats>();
+    public List<Pickups> itemList = new List<Pickups>();
    
 }
