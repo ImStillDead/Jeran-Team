@@ -376,21 +376,21 @@ public class GameManager : MonoBehaviour
     //Experience
     public void giveXP(int XP)
     {
-        experience += XP;
-
+        gameData.playerData.experience += XP;
+        playerScript.UpdatePlayerUI();
     }
     public void levelUp()
     {
         if (playerScript == null) return;
         gameData.playerData = playerScript.playerData;
         float tempMaxHP = gameData.playerData.HPMax;
-        if (experience >= levelUpCap)
+        if (gameData.playerData.experience >= gameData.playerData.levelUpCap)
         {
             Debug.Log("you have leveled up");
-            gameData.playerData.level++;
+            gameData.playerData.level += 1;
             levelText.text = gameData.playerData.level.ToString();
-            experience -= levelUpCap;
-            levelUpCap *= increaseXpCap;
+            gameData.playerData.experience -= gameData.playerData.levelUpCap;
+            gameData.playerData.levelUpCap *= increaseXpCap;
             FlashText(levelText, Color.yellow, 2);
             gameData.playerData.HPMax = playerStatUpgrade(tempMaxHP);
             playerScript.Heal((int)tempMaxHP / 4);

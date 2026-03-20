@@ -13,6 +13,8 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
 
     [Header("Player Stats")]
     public int level;
+    public float experience;
+    public float levelUpCap;
     [SerializeField] float HP;
     [SerializeField] float HPMax;
     [SerializeField] int Armor;
@@ -576,13 +578,13 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
         }
         else
         {
-            HP -= amount;
+            playerData.HP -= amount;
         }
 
         UpdatePlayerUI();
         StartCoroutine(FlahScreen());
 
-        if (HP <= 0)
+        if (playerData.HP <= 0)
         {
             GameManager.instance.menus.youLose();
         }
@@ -599,8 +601,8 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
     {
         if (manager == null) return;
 
-        float tartget = (float)HP / HPMax;
-        float XPtarget = (float)manager.experience / manager.levelUpCap;
+        float tartget = (float)playerData.HP / playerData.HPMax;
+        float XPtarget = (float)playerData.experience / playerData.levelUpCap;
 
         if (manager.PlayerHP_bar != null)
         {
@@ -610,8 +612,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
         if (manager.XP_bar != null)
         {
             manager.XP_bar.fillAmount = Mathf.Lerp(manager.XP_bar.fillAmount, XPtarget, Time.deltaTime * 3);
-            //manager.levelText.text = manager.level.ToString();
-            playerData.level = level;
+            manager.levelText.text = playerData.level.ToString();
         }
 
         if (manager.moneyCount != null)
@@ -619,10 +620,8 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
 
         if (manager.heathNum != null && manager.maxHealthNum != null)
         {
-            //manager.heathNum.text = Mathf.RoundToInt(HP).ToString();
-            //manager.maxHealthNum.text = Mathf.RoundToInt(HPMax).ToString();
-            playerData.HP = Mathf.RoundToInt(HP);
-            playerData.HPMax = Mathf.RoundToInt(HPMax);
+            manager.heathNum.text = Mathf.RoundToInt(playerData.HP).ToString();
+            manager.maxHealthNum.text = Mathf.RoundToInt(playerData.HPMax).ToString();
         }
         if (itemList.Count > 0 && itemList[0] != null)
         {
@@ -708,7 +707,14 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
     //SetData GetData
     public void UpdatePlayer(PlayerData data)
     {
+        bool levelUp = false;
+        if (level != data.level)
+        {
+            levelUp = true;
+        }
         level = data.level;
+        experience = data.experience;
+        levelUpCap = data.levelUpCap;
         HPMax = data.HPMax;
         HP = data.HP;
         speed = data.speed;
@@ -727,7 +733,10 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
         {
             Shooting.instance.gunList.Add(gun);
         }
-        Shooting.instance.changeGun(0);
+        if (!levelUp)
+        {
+            Shooting.instance.changeGun(0);
+        }
         UpdatePlayerUI();
     }
     public void SetHubStats(GameData hubData)

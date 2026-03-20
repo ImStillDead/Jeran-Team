@@ -6,6 +6,8 @@ using System.Data.SqlTypes;
 public class PlayerData 
 {
     public int level;
+    public float experience;
+    public float levelUpCap;
     public float HP;
     public float HPMax;
     public float speed;
@@ -22,6 +24,8 @@ public class PlayerData
     {
         level = 1;
         HP = 50;
+        experience = 0;
+        levelUpCap = 50;
         HPMax = 50;
         speed = 8;
         speedMod = 2;
