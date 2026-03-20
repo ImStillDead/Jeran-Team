@@ -15,10 +15,7 @@ public class SpawnerDoor : MonoBehaviour
     int spawnCount;
     float spawnTimer;
     bool startSpawner;
-    void Start()
-    {
-
-    }
+   
     void Update()
     {
         if (enemyInTrigger)
