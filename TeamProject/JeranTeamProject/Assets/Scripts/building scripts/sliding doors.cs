@@ -53,7 +53,8 @@ public class slidingdoores : MonoBehaviour
 
         leftMoveDoor = leftParentDoor.transform.position;
         leftOrigonalPos = leftDoor.transform.position;
-
+            
+           
     }
 
 
@@ -66,6 +67,17 @@ public class slidingdoores : MonoBehaviour
 
     void Doors()
     {
+
+
+        if (rightActive == false && leftActive == false)
+        {
+            leftActive = true;
+            rightActive = true;
+            wholeLeft.SetActive(true);
+            wholeRight.SetActive(true);
+
+            Debug.LogWarning("You must have at least 1 door active");
+        }
 
 
         if(opening == true)
