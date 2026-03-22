@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac26794e551912b4db37d6875a3c37b8, type: 3}
+  m_Name: MP5 Common
+  m_EditorClassIdentifier: Assembly-CSharp::GunStats
+  gunModel: {fileID: 8238273374373201595, guid: a3e3fecaf0c58fb429e120e0c757395e, type: 3}
+  shootPos: {fileID: 1228954792775569764, guid: 8c01093d56399be4385b32cf44abb91f, type: 3}
+  recoil: {fileID: 11400000, guid: b23ba6a614bb5424eb28d2c9d239543b, type: 2}
+  shootRate: 0.05
+  magSizeMax: 20
+  reloadTime: 2
+  bullet: {fileID: 11400000, guid: 4697cae3a76785a44956d8886c285946, type: 2}
+  aud:
+  - {fileID: 8300000, guid: 843ca06fe8416504389a564a58521fc9, type: 3}
+  scale: {x: 1, y: 1, z: 1}
+  postion: {x: -0.029, y: 0.062, z: 0.092}
+  rotation: {x: 0, y: 1, z: 0, w: -0.00000004371139}
+  shootRotate: {x: 0, y: 1, z: 0, w: -0.00000004371139}
+  currentAmmo: 20
+  spread: 20
+  isShotgun: 0
+  isBurst: 0
+  burstTime: 0
+  burstDelay: 0
+  rechamberTime: 0
+  burstAmount: 0
+  pelletAmount: 0
+  gunRarity: 0
+  shotSoundVol: 0.059
