@@ -57,6 +57,7 @@ MonoBehaviour:
   reloadTime: 0
   bullet: {fileID: 3189653459911353158, guid: cdc233a2a752d7f4bab4c21b049ae23e, type: 3}
   shootPos: {fileID: 2533636574794691934}
+  invisiGun: {fileID: 1504375674951491945}
   aud: []
   bulletScript: {fileID: 0}
   gunList: []
@@ -778,6 +779,7 @@ MonoBehaviour:
   - {fileID: 2605105293266226617}
   - {fileID: 717864332876833511}
   - {fileID: 3444241507136503262}
+  playerAnimator: {fileID: 0}
   playerData:
     level: 1
     experience: 0
@@ -795,6 +797,7 @@ MonoBehaviour:
     gunList: []
     itemList: []
   itemList: []
+  isJumping: 0
   canPickup: 0
   canSwap: 0
 --- !u!143 &7709777452405699691
