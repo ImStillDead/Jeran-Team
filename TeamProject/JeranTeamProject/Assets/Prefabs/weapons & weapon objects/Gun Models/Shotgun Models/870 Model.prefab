@@ -121,10 +121,10 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 2355850908809623093}
   - {fileID: 511434104114395642}
   - {fileID: 8592914682693575780}
   - {fileID: 4176368380562471983}
-  - {fileID: 2355850908809623093}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &8787647121568011652
@@ -477,19 +477,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 307705904838089836, guid: 677bf10e52d7eb649b45d48e4270df2e, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 307705904838089836, guid: 677bf10e52d7eb649b45d48e4270df2e, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 307705904838089836, guid: 677bf10e52d7eb649b45d48e4270df2e, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 307705904838089836, guid: 677bf10e52d7eb649b45d48e4270df2e, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 307705904838089836, guid: 677bf10e52d7eb649b45d48e4270df2e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -497,7 +497,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 307705904838089836, guid: 677bf10e52d7eb649b45d48e4270df2e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
+      value: 180
       objectReference: {fileID: 0}
     - target: {fileID: 307705904838089836, guid: 677bf10e52d7eb649b45d48e4270df2e, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
@@ -505,7 +505,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7481496022841820134, guid: 677bf10e52d7eb649b45d48e4270df2e, type: 3}
       propertyPath: m_Name
-      value: 870 shotPos
+      value: ShootPos
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
