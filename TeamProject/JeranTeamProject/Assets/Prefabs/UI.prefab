@@ -1297,6 +1297,8 @@ MonoBehaviour:
     currentpickUps: []
     playerData:
       level: 1
+      experience: 0
+      levelUpCap: 50
       HP: 50
       HPMax: 50
       speed: 8
@@ -1315,6 +1317,8 @@ MonoBehaviour:
     currentpickUps: []
     playerData:
       level: 1
+      experience: 0
+      levelUpCap: 50
       HP: 50
       HPMax: 50
       speed: 8
@@ -5857,6 +5861,10 @@ PrefabInstance:
     - target: {fileID: 1634516729798199775, guid: ec88ca91a90761646bd11a378fba08ed, type: 3}
       propertyPath: m_Value
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1634516729798199775, guid: ec88ca91a90761646bd11a378fba08ed, type: 3}
+      propertyPath: m_MaxValue
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 1634516729798199775, guid: ec88ca91a90761646bd11a378fba08ed, type: 3}
       propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.size
