@@ -56,10 +56,22 @@ MonoBehaviour:
   reloadTime: 0
   bullet: {fileID: 3189653459911353158, guid: cdc233a2a752d7f4bab4c21b049ae23e, type: 3}
   shootPos: {fileID: 8741626505430425387}
+  invisiGun: {fileID: 8658822173771113738}
   aud: []
   bulletScript: {fileID: 0}
+  gunList: []
   currentAmmo: 0
-  maxAmmo: 0
+  startingMaxAmmo: 0
+  volume: 0
+  spread: 0
+  recoil: {fileID: 0}
+  isShotgun: 0
+  isBurst: 0
+  burstTime: 0
+  rechamberTime: 0
+  burstAmount: 0
+  pelletAmount: 0
+  burstDelay: 0
 --- !u!33 &8993774339185114105
 MeshFilter:
   m_ObjectHideFlags: 0
