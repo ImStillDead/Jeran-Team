@@ -4,6 +4,7 @@ using System.Net.Mail;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering;
+using UnityEngine.UIElements;
 
 
 public class Shooting : MonoBehaviour
@@ -19,6 +20,7 @@ public class Shooting : MonoBehaviour
     [SerializeField] public float reloadTime;
     [SerializeField] GameObject bullet;
     [SerializeField] Transform shootPos;
+    [SerializeField] Transform invisiGun;
 
     [SerializeField] AudioClip[] aud;
     [SerializeField] Bullet bulletScript;
@@ -149,13 +151,12 @@ public class Shooting : MonoBehaviour
             burstDelay = gunList[gunPos].burstDelay;
 
             recoil.UpdateRecoil(gunList[gunPos].recoil);
-            gunModel.GetComponent<MeshFilter>().sharedMesh = gunList[gunPos].gunModel.GetComponent<MeshFilter>().sharedMesh;
-            gunModel.GetComponent<MeshRenderer>().sharedMaterial = gunList[gunPos].gunModel.GetComponent<MeshRenderer>().sharedMaterial;
+            Destroy(gunModel);
+            gunModel = Instantiate(gunList[gunPos].gunModel, invisiGun);
             gunModel.transform.localScale = gunList[gunPos].scale;
             gunModel.transform.localPosition = gunList[gunPos].postion;
             gunModel.transform.localRotation = gunList[gunPos].rotation;
-            shootPos.transform.localPosition = gunList[gunPos].shootPos.transform.localPosition;
-            shootPos.transform.localRotation = gunList[gunPos].shootRotate;
+            shootPos = gunModel.transform.GetChild(0);
             changeBullet();
             callAmmo();
         }

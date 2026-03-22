@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using UnityEditor.Animations;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.TextCore.Text;
@@ -59,6 +60,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
     GameManager manager;
     PlayerData staticBase;
     GameData runData;
+    public AnimationControl playerAnimator;
     public PlayerData playerData;
     public List<Pickups> itemList;
     Pickups activePick;
@@ -71,7 +73,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
     float boostTime;
     float jumpCharge;
     bool dmgBoosting;
-    bool isJumping;
+    public bool isJumping;
     bool torchActive;
     public bool canPickup;
     public bool canSwap;
@@ -144,6 +146,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
         }
 
         Jump();
+        UpdateAnimations();
         ChangeActiveInventory();
         Interact();
         UseItem();
@@ -318,10 +321,12 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
         if (Input.GetButtonDown("Sprint"))
         {
             speed *= sprintMod;
+            playerAnimator.isRunning = true;
         }
         else if (Input.GetButtonUp("Sprint"))
         {
             speed /= sprintMod;
+            playerAnimator.isRunning = false;
         }
     }
     //Torch
@@ -837,5 +842,9 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
             staticBase.gunList.Add(gun);
         }
         SaveHub();
+    }
+    public void UpdateAnimations()
+    {
+        
     }
 }
