@@ -424,6 +424,26 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d1035a7fbead28b4d94b636a16625b61, type: 3}
+--- !u!1 &336592781 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 6142024871376478143, guid: 595c4e1184925d343b059dd846339cc3, type: 3}
+  m_PrefabInstance: {fileID: 2046757741}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &336592784
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 336592781}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 698a032b8055a724494620f40e6c8cce, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AudioSettingsController
+  masterSlider: {fileID: 1219859342}
+  sfxSlider: {fileID: 2067850508}
+  masterMixer: {fileID: 24100000, guid: 0b23c06a2435a2d4493376ef5d3d0c47, type: 2}
 --- !u!1001 &548440167
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3180,6 +3200,17 @@ Mesh:
       - serializedVersion: 1
         m_IndexStart: 0
         m_IndexCount: 0
+--- !u!114 &1219859342 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4169822919243694585, guid: 1871e5117a43b6a428afeb2ec882ee0e, type: 3}
+  m_PrefabInstance: {fileID: 2083281408}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Slider
 --- !u!1001 &1223409665
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4076,20 +4107,6 @@ Mesh:
       - serializedVersion: 1
         m_IndexStart: 0
         m_IndexCount: 0
---- !u!114 &1527939448
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 698a032b8055a724494620f40e6c8cce, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::AudioSettingsController
-  soundsSlider: {fileID: 0}
-  masterMixer: {fileID: 0}
 --- !u!1001 &1657757206
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4098,6 +4115,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 3602138791982440787, guid: 9a8e8f7362c1537428ff6bfea6518f7b, type: 3}
+      propertyPath: OutputAudioMixerGroup
+      value: 
+      objectReference: {fileID: 24300002, guid: 0b23c06a2435a2d4493376ef5d3d0c47, type: 2}
     - target: {fileID: 4090090882728611993, guid: 9a8e8f7362c1537428ff6bfea6518f7b, type: 3}
       propertyPath: m_LocalPosition.x
       value: 534.8128
@@ -4994,11 +5015,26 @@ PrefabInstance:
       propertyPath: m_Name
       value: AudioSettingsController
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5735398794666801979, guid: 595c4e1184925d343b059dd846339cc3, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 6142024871376478143, guid: 595c4e1184925d343b059dd846339cc3, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 336592784}
   m_SourcePrefab: {fileID: 100100000, guid: 595c4e1184925d343b059dd846339cc3, type: 3}
+--- !u!114 &2067850508 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7079532336686774584, guid: 1871e5117a43b6a428afeb2ec882ee0e, type: 3}
+  m_PrefabInstance: {fileID: 2083281408}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Slider
 --- !u!1001 &2083281408
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5007,6 +5043,26 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 976028920185777955, guid: 1871e5117a43b6a428afeb2ec882ee0e, type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 976028920185777955, guid: 1871e5117a43b6a428afeb2ec882ee0e, type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 976028920185777955, guid: 1871e5117a43b6a428afeb2ec882ee0e, type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 11500000, guid: 698a032b8055a724494620f40e6c8cce, type: 3}
+    - target: {fileID: 976028920185777955, guid: 1871e5117a43b6a428afeb2ec882ee0e, type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 976028920185777955, guid: 1871e5117a43b6a428afeb2ec882ee0e, type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: UnityEditor.MonoScript, UnityEditor.CoreModule
+      objectReference: {fileID: 0}
     - target: {fileID: 3854756262889888773, guid: 1871e5117a43b6a428afeb2ec882ee0e, type: 3}
       propertyPath: m_Name
       value: UI
@@ -5094,7 +5150,35 @@ PrefabInstance:
     - target: {fileID: 4169822919243694585, guid: 1871e5117a43b6a428afeb2ec882ee0e, type: 3}
       propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 1527939448}
+      objectReference: {fileID: 336592784}
+    - target: {fileID: 7079532336686774584, guid: 1871e5117a43b6a428afeb2ec882ee0e, type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7079532336686774584, guid: 1871e5117a43b6a428afeb2ec882ee0e, type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7079532336686774584, guid: 1871e5117a43b6a428afeb2ec882ee0e, type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 11500000, guid: 698a032b8055a724494620f40e6c8cce, type: 3}
+    - target: {fileID: 7079532336686774584, guid: 1871e5117a43b6a428afeb2ec882ee0e, type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7079532336686774584, guid: 1871e5117a43b6a428afeb2ec882ee0e, type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
+      value: set_name
+      objectReference: {fileID: 0}
+    - target: {fileID: 7079532336686774584, guid: 1871e5117a43b6a428afeb2ec882ee0e, type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
+      value: UnityEditor.MonoScript, UnityEditor.CoreModule
+      objectReference: {fileID: 0}
+    - target: {fileID: 7079532336686774584, guid: 1871e5117a43b6a428afeb2ec882ee0e, type: 3}
+      propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
