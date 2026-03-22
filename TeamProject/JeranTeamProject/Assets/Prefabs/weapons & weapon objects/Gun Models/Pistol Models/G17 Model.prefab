@@ -299,13 +299,13 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 1.516, z: -3.532}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 2.5379896, y: 1, z: 1.8913724}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 2475267626338601187}
   - {fileID: 5679621971586123391}
   - {fileID: 9016906088272012763}
   - {fileID: 3562386829797671012}
-  - {fileID: 2475267626338601187}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &6384029346439814892
@@ -465,7 +465,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2475267626338601187}
   m_Layer: 0
-  m_Name: Basic Pistol ShotPos
+  m_Name: ShootPos
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -479,10 +479,10 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7830318462924030281}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 1, z: 0, w: 0}
   m_LocalPosition: {x: 0.002, y: 0.0239, z: -0.119}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 6943469625255028136}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 180, z: 0}
