@@ -57,6 +57,7 @@ MonoBehaviour:
   reloadTime: 0
   bullet: {fileID: 3189653459911353158, guid: cdc233a2a752d7f4bab4c21b049ae23e, type: 3}
   shootPos: {fileID: 2533636574794691934}
+  invisiGun: {fileID: 1504375674951491945}
   aud: []
   bulletScript: {fileID: 0}
   gunList: []
@@ -581,7 +582,7 @@ Transform:
   m_GameObject: {fileID: 6056277950681428499}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.007, y: 1.601, z: 0.126}
+  m_LocalPosition: {x: 0, y: 1.518, z: 0.111}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -600,7 +601,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2355b56fd1765ee48b1234063e47abeb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraController
-  player: {fileID: 0}
+  player: {fileID: 4571722508075737141}
   sens: 300
   lockVertMin: -65
   lockVertMax: 65
@@ -711,7 +712,7 @@ Transform:
   m_GameObject: {fileID: 8593092689105773739}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -6.28881, y: 0.27, z: 5.49741}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -741,6 +742,8 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   level: 0
+  experience: 0
+  levelUpCap: 0
   HP: 0
   HPMax: 0
   Armor: 3
@@ -776,8 +779,11 @@ MonoBehaviour:
   - {fileID: 2605105293266226617}
   - {fileID: 717864332876833511}
   - {fileID: 3444241507136503262}
+  playerAnimator: {fileID: 0}
   playerData:
     level: 1
+    experience: 0
+    levelUpCap: 50
     HP: 50
     HPMax: 50
     speed: 8
@@ -791,6 +797,7 @@ MonoBehaviour:
     gunList: []
     itemList: []
   itemList: []
+  isJumping: 0
   canPickup: 0
   canSwap: 0
 --- !u!143 &7709777452405699691

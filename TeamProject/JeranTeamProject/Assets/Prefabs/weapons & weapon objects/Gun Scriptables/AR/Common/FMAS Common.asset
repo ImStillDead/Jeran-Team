@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac26794e551912b4db37d6875a3c37b8, type: 3}
+  m_Name: FMAS Common
+  m_EditorClassIdentifier: Assembly-CSharp::GunStats
+  gunModel: {fileID: 1301848162438660096, guid: 1bf5370e542682747b3e0ddefc928719, type: 3}
+  shootPos: {fileID: 3457571327997270671, guid: 155a9c0bb2ce5c943a7b5bc027ed73bd, type: 3}
+  recoil: {fileID: 11400000, guid: b23ba6a614bb5424eb28d2c9d239543b, type: 2}
+  shootRate: 0.5
+  magSizeMax: 46
+  reloadTime: 2.5
+  bullet: {fileID: 11400000, guid: ae53e35fe9750bf409e95aa92ea8980d, type: 2}
+  aud:
+  - {fileID: 8300000, guid: 8c98fcabdfc994c48bd8bff63493ea2f, type: 3}
+  scale: {x: 1, y: 1, z: 1}
+  postion: {x: 0, y: -0.111, z: 0}
+  rotation: {x: 0, y: 1, z: 0, w: -0.00000004371139}
+  shootRotate: {x: 0, y: 1, z: 0, w: -0.00000004371139}
+  currentAmmo: 46
+  spread: 15
+  isShotgun: 0
+  isBurst: 1
+  burstTime: 0.05
+  burstDelay: 0.5
+  rechamberTime: 0
+  burstAmount: 3
+  pelletAmount: 0
+  gunRarity: 0
+  shotSoundVol: 0.059

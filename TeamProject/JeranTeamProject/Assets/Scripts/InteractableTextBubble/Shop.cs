@@ -44,6 +44,8 @@ public class Shop : MonoBehaviour, iInteract
     {
         if(itemForSale != null)
         {
+            
+
 
             if (Pm.RemovePlayerMoney(itemWorth) == true)
             {
