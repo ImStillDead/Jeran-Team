@@ -267,4 +267,12 @@ public class Shooting : MonoBehaviour
         }
         changeGun(0);
     }
+    public GunType GetGunType()
+    {
+        return gunList[activeGun].gunType;
+    }
+    public Transform GetGunPosition()
+    {
+        return invisiGun;
+    }
 }

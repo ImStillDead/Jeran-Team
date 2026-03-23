@@ -12,6 +12,16 @@ public enum GunRarity
     Exotic,
     Special
 }
+public enum GunType
+{
+    Pistol,
+    AR,
+    LMG,
+    Shotgun,
+    SMG,
+    Sniper,
+    RocketLauncher
+}
 
 [CreateAssetMenu]
 public class GunStats : ScriptableObject
@@ -45,7 +55,7 @@ public class GunStats : ScriptableObject
     public int pelletAmount;
 
     public GunRarity gunRarity;
-
+    public GunType gunType;
     AudioClip[] shotSound;
     [Range(0, 1)] public float shotSoundVol;
 
