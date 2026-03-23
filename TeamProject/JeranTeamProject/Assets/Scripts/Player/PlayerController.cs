@@ -91,6 +91,11 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
     private Vector3 slideDirection;
     private CharacterController characterController;
     private bool slideButtonHeld;
+    private Vector3 platformVelocity;
+
+    private Transform currentPlatform;
+    private Vector3 lastPlatformPos;
+
     void Awake()
     {
         runData = new GameData();
@@ -110,6 +115,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
     }
     void Update()
     {
+                UpdatePlayerUI();
         Movement();
         Sprint();
         WeaponRotate();
@@ -134,15 +140,29 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
             return;
         }
 
+
+        if (currentPlatform != null)
+        {
+    
+
+            lastPlatformPos.y = manager.player.transform.position.y;
+            platformVelocity = currentPlatform.position - lastPlatformPos;
+
+            playerController.Move(platformVelocity);
+        }
+
         moveDir = Input.GetAxis("Horizontal") * transform.right + (Input.GetAxis("Vertical") * transform.forward);
         playerController.Move(speed * Time.deltaTime * moveDir);
         playerController.Move(playerVel * Time.deltaTime);
+
         playerVel.y -= gravity * Time.deltaTime;
 
-        if (playerController.isGrounded)
+
+
+        if (playerController.isGrounded && playerVel.y < 0)
         {
+            playerVel.y = -2f;
             jumpCount = 0;
-            playerVel = Vector3.zero;
         }
 
         Jump();
@@ -294,6 +314,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
 
         if (Input.GetButtonDown("Jump") && jumpCount < jumpMax)
         {
+            Debug.Log("***** jumped *****");
             isJumping = true;
         }
         if (Input.GetButtonUp("Jump") && jumpCount < jumpMax)
@@ -843,6 +864,25 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
         }
         SaveHub();
     }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Elevator"))
+        {
+            currentPlatform = other.transform;
+            lastPlatformPos = currentPlatform.position;
+        }
+    }
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.transform == currentPlatform)
+        {
+            currentPlatform = null;
+            
+        }
+    }
+
+
     public void UpdateAnimations()
     {
         
