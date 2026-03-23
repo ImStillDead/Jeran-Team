@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using System.Collections.Generic;
 
 public enum GunRarity
 {
@@ -14,25 +15,44 @@ public enum GunRarity
 [CreateAssetMenu]
 public class GunStats : ScriptableObject
 {
+    [Header("Objects")]
     public GameObject gunModel;
     public GameObject shootPos;
     public RecoilScriptable recoil;
+    public Bullet bullet;
+    public List<Attachments> attachments;
+
+    [Header("Shooting")]
     [Range(0.05f, 10f)] public float shootRate;
     [Range(1, 500)] public int magSizeMax;
     [Range(0.5f, 10)] public float reloadTime;
-
-
-
-    public Bullet bullet;
-    public AudioClip[] aud;
-    public Vector3 scale;
-    public Vector3 postion;
-    public Quaternion rotation;
-    public Quaternion shootRotate;
     public int currentAmmo;
 
-    public float spread;
-   
+    [Header("Other")]
+    public GunRarity gunRarity;
+    public int maxAttachments;
+
+    [Header("Positioning")]
+    public Vector3 scale;
+    public Vector3 position;
+    public Quaternion rotation;
+    public Quaternion shootRotate;
+
+
+    [Header("Aiming")]
+    public float hipSpread;
+    public float adsSpread;
+
+    public float hipX;
+    public float hipY;
+    public float hipZ;
+    public float adsX;
+    public float adsY;
+    public float adsZ;
+
+    public float adsZoom;
+
+    [Header("Shotgun/Burst Variables")]
     public bool isShotgun;
     public bool isBurst;
     public float burstTime;
@@ -41,9 +61,10 @@ public class GunStats : ScriptableObject
     public int burstAmount;
     public int pelletAmount;
 
-    public GunRarity gunRarity;
-
+    [Header("Audio")]
+    public AudioClip[] aud;
     AudioClip[] shotSound;
     [Range(0, 1)] public float shotSoundVol;
+
 
 }

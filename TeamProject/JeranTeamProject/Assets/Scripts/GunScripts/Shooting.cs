@@ -27,13 +27,24 @@ public class Shooting : MonoBehaviour
 
     //Public variables
     public List<GunStats> gunList = new List<GunStats>();
-    public List<Attachment> attachmentList = new List<Attachment>();
+    public List<Attachments> attachmentList = new List<Attachments>();
     public int currentAmmo;
     public int startingMaxAmmo;
     public static float shootTimer;
     public float volume;
 
-    public float spread;
+    public float currentSpread;
+    public float hipSpread;
+    public float adsSpread;
+
+    public float hipX;
+    public float hipY;
+    public float hipZ;
+    public float adsX;
+    public float adsY;
+    public float adsZ;
+
+    public float adsZoom;
 
     public Recoil recoil;
 
@@ -45,6 +56,9 @@ public class Shooting : MonoBehaviour
     public int pelletAmount;
     public float burstDelay;
 
+    public int maxAttachments;
+
+
     // Other Variables
     bool reloading;
     int activeGun;
@@ -52,6 +66,8 @@ public class Shooting : MonoBehaviour
 
     bool burstFiring = true;
     bool shotgunFiring;
+
+    bool isADS;
 
     void Awake()
     {
@@ -104,6 +120,16 @@ public class Shooting : MonoBehaviour
             StartCoroutine(Reload());
         }
 
+        if(Input.GetButton("Fire2"))
+        {
+            ADS();
+        }
+        else
+        {
+            HipFire();
+        }
+
+
         if (Input.GetButton("Reload") && !reloading)
         {
             StartCoroutine(Reload());
@@ -139,8 +165,20 @@ public class Shooting : MonoBehaviour
             aud = gunList[gunPos].aud;
             volume = gunList[gunPos].shotSoundVol;
 
-            spread = gunList[gunPos].spread;
-            
+            attachmentList = gunList[gunPos].attachments;
+            maxAttachments = gunList[gunPos].maxAttachments;
+
+            hipSpread = gunList[gunPos].hipSpread;
+            adsSpread = gunList[gunPos].adsSpread;
+
+            hipX = gunList[gunPos].hipX;
+            hipY = gunList[gunPos].hipY;
+            hipZ = gunList[gunPos].hipZ;
+            adsX = gunList[gunPos].adsX;
+            adsY = gunList[gunPos].adsY;
+            adsZ = gunList[gunPos].adsZ;
+
+            adsZoom = gunList[gunPos].adsZoom;
 
             isShotgun = gunList[gunPos].isShotgun;
             isBurst = gunList[gunPos].isBurst;
@@ -154,14 +192,14 @@ public class Shooting : MonoBehaviour
             Destroy(gunModel);
             gunModel = Instantiate(gunList[gunPos].gunModel, invisiGun);
             gunModel.transform.localScale = gunList[gunPos].scale;
-            gunModel.transform.localPosition = gunList[gunPos].postion;
+            gunModel.transform.localPosition = gunList[gunPos].position;
             gunModel.transform.localRotation = gunList[gunPos].rotation;
             shootPos = gunModel.transform.GetChild(0);
             changeBullet();
             callAmmo();
         }
     }
-    public void addAttachment(Attachment attach)
+    public void addAttachment(Attachments attach)
     {
 
 
@@ -179,7 +217,7 @@ public class Shooting : MonoBehaviour
 
 
             Quaternion spreadRotation = shootPos.transform.rotation *
-                Quaternion.Euler(Random.Range(-spread, spread), Random.Range(-spread, spread), 0);
+                Quaternion.Euler(Random.Range(-currentSpread, currentSpread), Random.Range(-currentSpread, currentSpread), 0);
 
 
             Instantiate(bullet, shootPos.position, spreadRotation);
@@ -206,7 +244,7 @@ public class Shooting : MonoBehaviour
 
 
             Quaternion spreadRotation = shootPos.transform.rotation *
-                Quaternion.Euler(Random.Range(-spread, spread), Random.Range(-spread, spread), 0);
+                Quaternion.Euler(Random.Range(-currentSpread, currentSpread), Random.Range(-currentSpread, currentSpread), 0);
 
 
             Instantiate(bullet, shootPos.position, spreadRotation);
@@ -266,5 +304,29 @@ public class Shooting : MonoBehaviour
             gunList.Add(gun);
         }
         changeGun(0);
+    }
+
+    public void HipFire()
+    {
+        isADS = false;
+        currentSpread = hipSpread;
+
+        recoil.recoil.X = hipX;
+        recoil.recoil.Y = hipY;
+        recoil.recoil.Z = hipZ;
+
+
+        Camera.main.fieldOfView = 75;
+    }
+    public void ADS()
+    {
+        isADS = true;
+        currentSpread = adsSpread;
+
+        recoil.recoil.X = adsX;
+        recoil.recoil.Y = adsY;
+        recoil.recoil.Z = adsZ;
+
+        Camera.main.fieldOfView = 75 - adsZoom;
     }
 }
