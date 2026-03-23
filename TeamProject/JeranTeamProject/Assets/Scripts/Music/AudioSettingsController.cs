@@ -13,6 +13,12 @@ public class AudioSettingsController : MonoBehaviour
         float savedMasterVolume = PlayerPrefs.GetFloat("SavedMasterVolume", 1f);
         float savedSfxVolume = PlayerPrefs.GetFloat("SavedSfxVolume", 1f);
 
+        if (masterSlider != null)
+            masterSlider.value = savedMasterVolume;
+
+        if (sfxSlider != null)
+            sfxSlider.value = savedSfxVolume;
+
         SetMasterVolume(savedMasterVolume);
         SetSfxVolume(savedSfxVolume);
     }
