@@ -15,6 +15,10 @@ public class ButtonFunctions : MonoBehaviour
     {
         manager.menus.stateUnpause();
     }
+    public void Save()
+    {
+
+    }
     public void LevelSelect()
     {
     }
