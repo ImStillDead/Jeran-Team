@@ -3063,10 +3063,6 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5735398794666801979, guid: 595c4e1184925d343b059dd846339cc3, type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 5735398794666801979, guid: 595c4e1184925d343b059dd846339cc3, type: 3}
       propertyPath: sfxSlider
       value: 
       objectReference: {fileID: 2067850508}
@@ -4168,36 +4164,6 @@ Mesh:
       - serializedVersion: 1
         m_IndexStart: 0
         m_IndexCount: 0
---- !u!1 &1497572466 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6590981399955500639, guid: 9a8e8f7362c1537428ff6bfea6518f7b, type: 3}
-  m_PrefabInstance: {fileID: 1657757206}
-  m_PrefabAsset: {fileID: 0}
---- !u!82 &1497572467 stripped
-AudioSource:
-  m_CorrespondingSourceObject: {fileID: 3602138791982440787, guid: 9a8e8f7362c1537428ff6bfea6518f7b, type: 3}
-  m_PrefabInstance: {fileID: 1657757206}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1497572469
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1497572466}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2e393aef4c9c11f4f8fb9c86b59a1105, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MusicManager
-  musicSource: {fileID: 1497572467}
-  neutralTracks:
-  - {fileID: 8300000, guid: 972f2d7f4f6a50349b41c5fb38948239, type: 3}
-  combatTracks:
-  - {fileID: 8300000, guid: f4e20ba45a49c6a44bef0c4b64b0c172, type: 3}
-  bossTracks:
-  - {fileID: 8300000, guid: 90f66df41bce0d247b1b0f51c8a0c0e1, type: 3}
-  fadeDuration: 1
 --- !u!1001 &1657757206
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -4206,10 +4172,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 3602138791982440787, guid: 9a8e8f7362c1537428ff6bfea6518f7b, type: 3}
-      propertyPath: OutputAudioMixerGroup
-      value: 
-      objectReference: {fileID: 24300002, guid: 0b23c06a2435a2d4493376ef5d3d0c47, type: 2}
     - target: {fileID: 4090090882728611993, guid: 9a8e8f7362c1537428ff6bfea6518f7b, type: 3}
       propertyPath: m_LocalPosition.x
       value: 534.8128
@@ -4257,10 +4219,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 6590981399955500639, guid: 9a8e8f7362c1537428ff6bfea6518f7b, type: 3}
-      insertIndex: 1
-      addedObject: {fileID: 1497572469}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9a8e8f7362c1537428ff6bfea6518f7b, type: 3}
 --- !u!1 &1695746394
 GameObject:
