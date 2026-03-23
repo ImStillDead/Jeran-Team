@@ -51,4 +51,13 @@ public class AnimationControl : MonoBehaviour
         }
        
     }
+    private void OnAnimatorIK(int layerIndex)
+    {
+        gunPos = Shooting.instance.GetGunPosition();
+        animator.SetIKPositionWeight(AvatarIKGoal.RightHand, 1);
+        animator.SetIKRotationWeight(AvatarIKGoal.RightHand, 1);
+        animator.SetIKPosition(AvatarIKGoal.RightHand, gunPos.position);
+        animator.SetIKRotation(AvatarIKGoal.RightHand, gunPos.rotation);
+    }
 }
+
