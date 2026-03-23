@@ -3,35 +3,61 @@ using UnityEngine.Audio;
 using UnityEngine.UI;
 public class AudioSettingsController : MonoBehaviour
 {
-    [SerializeField] Slider soundsSlider;
-    [SerializeField] AudioMixer masterMixer;
+    [SerializeField] private Slider masterSlider;
+    [SerializeField] private Slider  sfxSlider;
+
+    [SerializeField] private AudioMixer masterMixer;
 
     private void Start()
     {
-        float savedVolume = PlayerPrefs.GetFloat("SavedMasterVolume", 1f);
-        SetVolume(savedVolume);
+        float savedMasterVolume = PlayerPrefs.GetFloat("SavedMasterVolume", 1f);
+        float savedSFXVolume = PlayerPrefs.GetFloat("SavedSFXVolume", 1f);
+
+        if (savedMasterVolume <= 0.0001f)
+            savedMasterVolume = 1f;
+
+           if (savedSFXVolume <= 0.0001f)
+               savedSFXVolume = 1f;
+
+        if (masterSlider != null)
+            masterSlider.value = savedMasterVolume;
+
+        if (sfxSlider != null)
+            sfxSlider.value = savedSFXVolume;
+
+        SetMasterVolume(savedMasterVolume);
+        SetSfxVolume(savedSFXVolume);
     }
 
-    public void SetVolume(float value)
+    public void SetMasterVolume(float value)
     {
-        float volumeFix = Mathf.Log10(value / 100) * 20f;
-        if (value < 1) { volumeFix = -80; }
-
-        RefreshSlider(value);
+        if (value < 0.0001f)
+            value = 0.0001f;
 
         PlayerPrefs.SetFloat("SavedMasterVolume", value);
-        masterMixer.SetFloat("Master", volumeFix);
+        PlayerPrefs.Save();
+
+        masterMixer.SetFloat("MasterVolume", Mathf.Log10(value) * 20f);
+    }
+    public void SetSfxVolume(float value)
+    {
+        if (value < 0.0001f)
+            value = 0.0001f;
+
+        PlayerPrefs.SetFloat("SavedSFXVolume", value);
+        PlayerPrefs.Save();
+
+        masterMixer.SetFloat("SFXVolume", Mathf.Log10(value) * 20f);
     }
 
-    public void SetVolumeFromSlider()
+    public void SetMasterVolumeFromSlider()
     {
-        if (soundsSlider != null)
-            SetVolume(soundsSlider.value);
+        if (masterSlider != null)
+            SetMasterVolume(masterSlider.value);
     }
-
-    public void RefreshSlider(float value)
+    public void SetSfxVolumeFromSlider()
     {
-        if (soundsSlider != null)
-            soundsSlider.value = value;
+        if (sfxSlider != null)
+            SetSfxVolume(sfxSlider.value);
     }
 }
