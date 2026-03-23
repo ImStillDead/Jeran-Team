@@ -11,16 +11,22 @@ public class AudioSettingsController : MonoBehaviour
     private void Start()
     {
         float savedMasterVolume = PlayerPrefs.GetFloat("SavedMasterVolume", 1f);
-        float savedSfxVolume = PlayerPrefs.GetFloat("SavedSfxVolume", 1f);
+        float savedSFXVolume = PlayerPrefs.GetFloat("SavedSFXVolume", 1f);
+
+        if (savedMasterVolume <= 0.0001f)
+            savedMasterVolume = 1f;
+
+           if (savedSFXVolume <= 0.0001f)
+               savedSFXVolume = 1f;
 
         if (masterSlider != null)
             masterSlider.value = savedMasterVolume;
 
         if (sfxSlider != null)
-            sfxSlider.value = savedSfxVolume;
+            sfxSlider.value = savedSFXVolume;
 
         SetMasterVolume(savedMasterVolume);
-        SetSfxVolume(savedSfxVolume);
+        SetSfxVolume(savedSFXVolume);
     }
 
     public void SetMasterVolume(float value)
@@ -37,9 +43,11 @@ public class AudioSettingsController : MonoBehaviour
     {
         if (value < 0.0001f)
             value = 0.0001f;
-        PlayerPrefs.SetFloat("SavedSfxVolume", value);
+
+        PlayerPrefs.SetFloat("SavedSFXVolume", value);
         PlayerPrefs.Save();
-        masterMixer.SetFloat("SfxVolume", Mathf.Log10(value) * 20f);
+
+        masterMixer.SetFloat("SFXVolume", Mathf.Log10(value) * 20f);
     }
 
     public void SetMasterVolumeFromSlider()
