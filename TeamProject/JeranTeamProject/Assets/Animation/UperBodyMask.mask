@@ -6,8 +6,8 @@ AvatarMask:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: RioMask
-  m_Mask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+  m_Name: UperBodyMask
+  m_Mask: 00000000010000000100000000000000000000000100000001000000010000000100000000000000000000000100000001000000
   m_Elements:
   - m_Path: 
     m_Weight: 1
@@ -112,7 +112,7 @@ AvatarMask:
   - m_Path: root/root.x/spine_01.x/spine_02.x/spine_03.x/shoulder.r/arm_stretch.r/forearm_stretch.r/hand.r/c_thumb1.r/c_thumb2.r/c_thumb3.r
     m_Weight: 1
   - m_Path: root/root.x/thigh_stretch.l
-    m_Weight: 1
+    m_Weight: 0
   - m_Path: root/root.x/thigh_stretch.l/leg_stretch.l
     m_Weight: 1
   - m_Path: root/root.x/thigh_stretch.l/leg_stretch.l/foot.l
@@ -124,7 +124,7 @@ AvatarMask:
   - m_Path: root/root.x/thigh_stretch.l/thigh_twist.l
     m_Weight: 1
   - m_Path: root/root.x/thigh_stretch.r
-    m_Weight: 1
+    m_Weight: 0
   - m_Path: root/root.x/thigh_stretch.r/leg_stretch.r
     m_Weight: 1
   - m_Path: root/root.x/thigh_stretch.r/leg_stretch.r/foot.r
