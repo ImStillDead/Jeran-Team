@@ -26,7 +26,6 @@ public class Attachments : ScriptableObject
     public float rechamberTimeMod;
     public int burstAmountMod;
     public int pelletAmountMod;
-
     public Vector3 position;
     public AttachmentType attachmentType;
 }

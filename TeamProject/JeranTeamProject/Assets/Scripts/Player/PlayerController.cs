@@ -58,6 +58,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
     [SerializeField] List<GameObject> MeshList;
 
     GameManager manager;
+    GameObject characterMesh;
     PlayerData staticBase;
     GameData runData;
     public AnimationControl playerAnimator;
@@ -818,6 +819,11 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
         {
             playerData.gunList.Add(gun);
         }
+        //MeshChange
+        Destroy(characterMesh);
+        characterMesh = Instantiate(character.mesh, this.transform);
+        characterMesh.transform.localPosition = Vector3.zero;
+        UpdateAnimator();
         UpdateStatic(playerData);
         UpdatePlayer(playerData);
     }
@@ -846,5 +852,9 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
     public void UpdateAnimations()
     {
         
+    }
+    void UpdateAnimator()
+    {
+        playerAnimator.animator = characterMesh.GetComponent<Animator>();
     }
 }
