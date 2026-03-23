@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class liftscript : MonoBehaviour
@@ -17,6 +18,11 @@ public class liftscript : MonoBehaviour
     [Header("settings")]
     [SerializeField] float elevatorSpeed;
     [SerializeField] float elevatorDoorSpeed;
+    [SerializeField] TMP_Text floorNumber;
+    [SerializeField] AudioSource elevatorspeaker;
+    [SerializeField] AudioClip bell;
+    [SerializeField] AudioClip elevator;
+
 
 
     Vector3 MoveDoor;
@@ -47,6 +53,7 @@ public class liftscript : MonoBehaviour
 
         MoveDoor = OrigonalPos + new Vector3(-.05f, 0f, 1.5f); 
         MoveParentDoor = OrigonalParentPos + new Vector3(0f, 0f, 1f);
+
 
 
     }
@@ -83,6 +90,8 @@ public class liftscript : MonoBehaviour
             if (Mathf.Approximately(elevatorBox.transform.position.y, target.y))
             {
                 isMoving = false;
+
+
             }
         }
     }
@@ -94,13 +103,16 @@ public class liftscript : MonoBehaviour
             door.transform.localPosition = Vector3.Lerp(door.transform.localPosition, MoveDoor, Time.deltaTime * elevatorDoorSpeedMult);
             doorParent.transform.localPosition = Vector3.Lerp(doorParent.transform.localPosition, MoveParentDoor, Time.deltaTime * elevatorDoorSpeedMult);
             
-            
+            floorNumber.text = floor.ToString();
+
         }
         if (isMoving == true)
         {
             door.transform.localPosition = Vector3.Lerp(door.transform.localPosition, OrigonalPos, Time.deltaTime * elevatorDoorSpeedMult);
             doorParent.transform.localPosition = Vector3.Lerp(doorParent.transform.localPosition, OrigonalParentPos, Time.deltaTime * elevatorDoorSpeedMult);
-            
+
+            floorNumber.text = floor.ToString();
+
         }
     }
 

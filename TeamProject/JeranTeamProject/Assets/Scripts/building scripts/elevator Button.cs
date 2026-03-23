@@ -24,7 +24,7 @@ public class elevatorButton : MonoBehaviour, iInteract
         if (lift == null)
         {
             lift = GetComponentInParent<liftscript>();
-            Debug.LogError("No liftscript found in the scene!");
+            
         }
 
     }
@@ -54,6 +54,8 @@ public class elevatorButton : MonoBehaviour, iInteract
         {
             lift.setFloor(floor);
             isPressed = true;
+
+
         }
         else
         {
