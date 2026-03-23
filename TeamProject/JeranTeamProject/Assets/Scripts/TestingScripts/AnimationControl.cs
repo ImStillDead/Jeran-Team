@@ -2,12 +2,13 @@ using UnityEngine;
 
 public class AnimationControl : MonoBehaviour
 {
-    Animator animator;
+    public Animator animator;
+    
+    //Animation Settings
     public bool isRunning;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        animator = GameManager.instance.player.GetComponentInChildren<Animator>();
         GameManager.instance.playerScript.playerAnimator = this;
     }
 

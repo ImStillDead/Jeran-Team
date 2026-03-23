@@ -3,14 +3,17 @@ using UnityEngine;
 public class GunPickup : MonoBehaviour
 {
     [SerializeField] GunStats gun;
+    GameObject gunModel;
     private IGunPickup pick = null;
     private bool canSwap;
     private void Start()
     {
-        GetComponent<MeshFilter>().sharedMesh = gun.gunModel.GetComponent<MeshFilter>().sharedMesh;
-        GetComponent<MeshRenderer>().sharedMaterial = gun.gunModel.GetComponent<MeshRenderer>().sharedMaterial;
-        transform.localScale = gun.scale * 3;
-        transform.localRotation = gun.rotation;
+        if(gunModel == null)
+        {
+            gunModel = Instantiate(gun.gunModel, this.transform);
+            gunModel.transform.localScale *= 3;
+            gunModel.transform.localPosition = Vector3.zero;
+        }
         GameManager.instance.pickUpObjects.Add(gameObject);
     }
     private void OnTriggerEnter(Collider other)
@@ -51,12 +54,12 @@ public class GunPickup : MonoBehaviour
     public void SwapGun()
     {
         GunStats tempGun = Shooting.instance.Swap();
-        this.GetComponent<MeshFilter>().sharedMesh = Shooting.instance.Swap().gunModel.GetComponent<MeshFilter>().sharedMesh;
-        this.GetComponent<MeshRenderer>().sharedMaterial = Shooting.instance.Swap().gunModel.GetComponent<MeshRenderer>().sharedMaterial;
-        this.transform.localScale = Shooting.instance.Swap().scale * 3;
-        this.transform.localRotation = Shooting.instance.Swap().rotation;
         GameManager.instance.playerScript.SwapGunPickup(gun);
         gun = tempGun;
+        Destroy(gunModel);
+        gunModel = Instantiate(gun.gunModel, this.transform);
+        gunModel.transform.localPosition = Vector3.zero;
+        gunModel.transform.localScale = gun.scale * 3;
         canSwap = false;
     }
 }

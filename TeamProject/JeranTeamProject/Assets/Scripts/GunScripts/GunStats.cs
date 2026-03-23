@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Net.Mail;
 using UnityEngine;
 
 public enum GunRarity
@@ -17,6 +19,7 @@ public class GunStats : ScriptableObject
     public GameObject gunModel;
     public GameObject shootPos;
     public RecoilScriptable recoil;
+    public List<Attachment> attachmentList;
     [Range(0.05f, 10f)] public float shootRate;
     [Range(1, 500)] public int magSizeMax;
     [Range(0.5f, 10)] public float reloadTime;
