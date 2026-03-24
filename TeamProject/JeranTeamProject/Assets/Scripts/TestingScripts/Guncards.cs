@@ -131,11 +131,15 @@ public class Guncards : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         dmgNumber.text = dmgMult.ToString();
         dmgFill.fillAmount = Mathf.Clamp01(dmgMult / 100);
 
-        int accMult = (int)gun.spread;
-        accuracyNumber.text = accMult.ToString();
-        accuracyFill.fillAmount = Mathf.Clamp01(accMult / 100);
+        int accHipMult = (int)gun.hipSpread;
+        accuracyNumber.text = accHipMult.ToString();
+        accuracyFill.fillAmount = Mathf.Clamp01(accHipMult / 100);
 
-        int frrMult = (int)gun.spread; 
+        int accADSMult = (int)gun.adsSpread;
+        accuracyNumber.text = accADSMult.ToString();
+        accuracyFill.fillAmount = Mathf.Clamp01(accADSMult / 100);
+
+        int frrMult = (int)gun.shootRate; 
         firerateNumber.text = frrMult.ToString();
         firerateFill.fillAmount = Mathf.Clamp01(frrMult / 100);
 
