@@ -337,4 +337,10 @@ public class Shooting : MonoBehaviour
     {
         return invisiGun;
     }
+
+    public float getShootTimer()
+    {
+        return shootTimer;
+    }
+
 }
