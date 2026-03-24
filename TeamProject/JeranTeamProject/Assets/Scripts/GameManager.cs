@@ -7,6 +7,16 @@ using UnityEngine.UI;
 using UnityEngine.UIElements;
 using Image = UnityEngine.UI.Image;
 
+public enum EnemyType
+{
+    RegularZombie,
+    HeavyZombie,
+    Spitter,
+    DogZombie,
+    Boss1,
+    Boss2,
+    Boss3
+}
 public class GameManager : MonoBehaviour
 {
     [Header("Controllers")]
@@ -29,6 +39,19 @@ public class GameManager : MonoBehaviour
     [SerializeField] TMP_Text maxAmmo_text;
     [SerializeField] Color activeColor = Color.white;
     [SerializeField] Color oldColor = Color.gray;
+    
+    [Header("HighScore manager")]
+    public float gameTime;
+    public int currentScore;
+    public bool isGameActive = true;
+    public HighscoreTable highscoreTable;
+    public int regularZombiePoints = 100;
+    public int heavyZombiePoints = 250;
+    public int spitterPoints = 150;
+    public int dogZombiePoints = 200;
+    public int boss1Points = 1000;
+    public int boss2Points = 1500;
+    public int boss3Points = 2000;
 
     [Header("Npc/Missons")]
     [SerializeField] int objectiveTimerDelay;
@@ -128,6 +151,10 @@ public class GameManager : MonoBehaviour
         }
         levelUp();
         reticle.SetActive(!menus.isPaused);
+        if (isGameActive && !menus.isPaused && player != null)
+        {
+            gameTime += Time.deltaTime;
+        }
     }
     public int randomNumberPicker(int amount)
     {
@@ -373,7 +400,57 @@ public class GameManager : MonoBehaviour
         levelText.text = update.level.ToString();
         heathNum.text = update.HP.ToString();
         maxHealthNum.text = update.HPMax.ToString();
-}
+    }
+
+    //Highscore
+    public void AddScore(int points)
+    {
+        currentScore += points;
+        Debug.Log($"Added {points} points! Total Score: {currentScore}");
+    }
+    public void AddScore(EnemyType enemyType)
+    {
+        int points = GetEnemyPoints(enemyType);
+        AddScore(points);
+    }
+    public int GetEnemyPoints(EnemyType enemyType)
+    {
+        switch (enemyType)
+        {
+            case EnemyType.RegularZombie:
+                return regularZombiePoints;
+            case EnemyType.HeavyZombie:
+                return heavyZombiePoints;
+            case EnemyType.Spitter:
+                return spitterPoints;
+            case EnemyType.DogZombie:
+                return dogZombiePoints;
+            case EnemyType.Boss1:
+                return boss1Points;
+            case EnemyType.Boss2:
+                return boss2Points;
+            case EnemyType.Boss3:
+                return boss3Points;
+            default:
+                return 100; // Default fallback
+        }
+    }
+
+    public void EndGame()
+    {
+        isGameActive = false;
+
+        if (highscoreTable != null && highscoreTable.IsHighScore(currentScore))
+        {
+            highscoreTable.ShowHighScoreInput(currentScore, gameTime);
+        }
+    }
+    public void EnemyKilled()
+    {
+        killCount++;
+        AddScore(100); 
+    }
+
     //Experience
     public void giveXP(int XP)
     {
