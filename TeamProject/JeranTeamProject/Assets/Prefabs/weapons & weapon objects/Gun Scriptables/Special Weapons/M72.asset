@@ -10,32 +10,32 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ac26794e551912b4db37d6875a3c37b8, type: 3}
-  m_Name: 870 Common
+  m_Name: M72
   m_EditorClassIdentifier: Assembly-CSharp::GunStats
-  gunModel: {fileID: 3095223546600538404, guid: 55b3451da7d67834b855eedb53a2a04a, type: 3}
-  shootPos: {fileID: 7481496022841820134, guid: 677bf10e52d7eb649b45d48e4270df2e, type: 3}
-  recoil: {fileID: 11400000, guid: 535b8dd86258ec54c89258828bd9138a, type: 2}
-  bullet: {fileID: 11400000, guid: 271129c16c1d15a4e8c5564c1bd77559, type: 2}
+  gunModel: {fileID: 4669841312380762000, guid: 32396e083f4280f4582484b628cc7b83, type: 3}
+  shootPos: {fileID: 0}
+  recoil: {fileID: 11400000, guid: 56de06dbf8f45634890baaf0591c8b01, type: 2}
+  bullet: {fileID: 11400000, guid: 9ec337e9d56f2f84eac6f2c83ff2b134, type: 2}
   sightPos: {x: 0, y: 0, z: 0}
   foregripPos: {x: 0, y: 0, z: 0}
   laserPos: {x: 0, y: 0, z: 0}
-  shootRate: 1.25
-  magSizeMax: 40
-  reloadTime: 3
+  shootRate: 1
+  magSizeMax: 1
+  reloadTime: 4
   spread: 20
-  currentAmmo: 40
-  gunRarity: 0
-  gunType: 3
+  currentAmmo: 1
+  gunRarity: 2
+  gunType: 0
   isBurst: 0
   scale: {x: 1, y: 1, z: 1}
   position: {x: 0, y: 0, z: 0}
   rotation: {x: 0, y: 1, z: 0, w: -0.00000004371139}
-  shootRotate: {x: 0, y: 0, z: 0, w: 1}
+  shootRotate: {x: 0, y: 0, z: 0, w: 0}
   burstTime: 0
   burstDelay: 0
-  rechamberTime: 1
+  rechamberTime: 0
   burstAmount: 0
   pelletAmount: 5
   shotSound:
   - {fileID: 8300000, guid: 1328126a7a31589499120f3f3808d014, type: 3}
-  shotSoundVol: 0.03
+  shotSoundVol: 0.09
