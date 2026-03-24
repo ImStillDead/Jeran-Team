@@ -17,7 +17,6 @@ public class Guncards : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     [Header("GeneralUI")]
     [SerializeField] TMP_Text gunName;
-    [SerializeField] TMP_Text gunDesc;
     [SerializeField] TMP_Text gunRarity;
 
 
@@ -25,9 +24,13 @@ public class Guncards : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     [SerializeField] Image dmgFill;
     [SerializeField] TMP_Text dmgNumber;
 
-    [Header("accuracy UI")]
-    [SerializeField] Image accuracyFill;
-    [SerializeField] TMP_Text accuracyNumber;
+    [Header("hipFire accuracy UI")]
+    [SerializeField] Image HipaccuracyFill;
+    [SerializeField] TMP_Text HipaccuracyNumber;
+
+    [Header("ADS accuracy UI")]
+    [SerializeField] Image ADSaccuracyFill;
+    [SerializeField] TMP_Text ADSaccuracyNumber;
 
     [Header("firerate ui")]
     [SerializeField] Image firerateFill;
@@ -118,10 +121,14 @@ public class Guncards : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
         // Spawn new gun model
         gunObject = Instantiate(gun.gunModel, gunlocation);
-        gunObject.tag = "GunPreview";
+        foreach (Transform child in gunObject.GetComponentsInChildren<Transform>())
+        {
+            child.tag = "GunPreview";
+        }
         gunObject.transform.localRotation = Quaternion.identity;
         gunObject.transform.localPosition = Vector3.zero;
         gunObject.transform.localScale = Vector3.one;
+        
 
         // UI
         gunName.text = gun.name;
@@ -129,26 +136,26 @@ public class Guncards : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
         int dmgMult = Mathf.RoundToInt(gun.bullet.damageAmount) * 10;
         dmgNumber.text = dmgMult.ToString();
-        dmgFill.fillAmount = Mathf.Clamp01(dmgMult / 100);
+        dmgFill.fillAmount = Mathf.Clamp01(dmgMult / 100f);
 
-        int accHipMult = (int)gun.hipSpread;
-        accuracyNumber.text = accHipMult.ToString();
-        accuracyFill.fillAmount = Mathf.Clamp01(accHipMult / 100);
+        float accHipPercent = gun.hipSpread * 10f;
+        HipaccuracyNumber.text = Mathf.RoundToInt(accHipPercent).ToString();
+        HipaccuracyFill.fillAmount = Mathf.Clamp01(accHipPercent / 100f);
 
-        int accADSMult = (int)gun.adsSpread;
-        accuracyNumber.text = accADSMult.ToString();
-        accuracyFill.fillAmount = Mathf.Clamp01(accADSMult / 100);
+        float accADSPercent = gun.adsSpread * 10f;
+        ADSaccuracyNumber.text = Mathf.RoundToInt(accADSPercent).ToString();
+        ADSaccuracyFill.fillAmount = Mathf.Clamp01(accADSPercent / 100f);
 
-        int frrMult = (int)gun.shootRate; 
+        int frrMult = Mathf.RoundToInt(gun.shootRate * 10f);
         firerateNumber.text = frrMult.ToString();
-        firerateFill.fillAmount = Mathf.Clamp01(frrMult / 100);
+        firerateFill.fillAmount = Mathf.Clamp01(frrMult / 100f);
 
-        int reMult = (int)gun.reloadTime * 10;
+        int reMult = Mathf.RoundToInt(gun.reloadTime * 10f);
         reloadspeedNumber.text = reMult.ToString();
-        reloadspeedFill.fillAmount = Mathf.Clamp01(reMult / 100);
+        reloadspeedFill.fillAmount = Mathf.Clamp01(reMult / 100f);
 
         magsizeNumber.text = gun.magSizeMax.ToString();
-        magsizeFill.fillAmount = Mathf.Clamp01(gun.magSizeMax / 500);
+        magsizeFill.fillAmount = Mathf.Clamp01(gun.magSizeMax / 500f);
     }
 
 
