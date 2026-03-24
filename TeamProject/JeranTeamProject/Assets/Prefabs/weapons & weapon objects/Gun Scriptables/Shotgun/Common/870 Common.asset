@@ -16,33 +16,26 @@ MonoBehaviour:
   shootPos: {fileID: 7481496022841820134, guid: 677bf10e52d7eb649b45d48e4270df2e, type: 3}
   recoil: {fileID: 11400000, guid: 535b8dd86258ec54c89258828bd9138a, type: 2}
   bullet: {fileID: 11400000, guid: 271129c16c1d15a4e8c5564c1bd77559, type: 2}
-  attachments: []
+  sightPos: {x: 0, y: 0, z: 0}
+  foregripPos: {x: 0, y: 0, z: 0}
+  laserPos: {x: 0, y: 0, z: 0}
   shootRate: 1.25
   magSizeMax: 40
   reloadTime: 3
+  spread: 20
   currentAmmo: 40
   gunRarity: 0
-  maxAttachments: 0
+  gunType: 3
+  isBurst: 0
   scale: {x: 1, y: 1, z: 1}
   position: {x: 0, y: 0, z: 0}
   rotation: {x: 0, y: 1, z: 0, w: -0.00000004371139}
   shootRotate: {x: 0, y: 0, z: 0, w: 1}
-  hipSpread: 20
-  adsSpread: 15
-  hipX: -10
-  hipY: 10
-  hipZ: 0.38
-  adsX: -5
-  adsY: 5
-  adsZ: 0.38
-  adsZoom: 5
-  isShotgun: 1
-  isBurst: 0
   burstTime: 0
   burstDelay: 0
   rechamberTime: 1
   burstAmount: 0
   pelletAmount: 5
-  aud:
+  shotSound:
   - {fileID: 8300000, guid: 1328126a7a31589499120f3f3808d014, type: 3}
   shotSoundVol: 0.03

@@ -15,32 +15,27 @@ MonoBehaviour:
   gunModel: {fileID: 4669841312380762000, guid: 32396e083f4280f4582484b628cc7b83, type: 3}
   shootPos: {fileID: 0}
   recoil: {fileID: 11400000, guid: 56de06dbf8f45634890baaf0591c8b01, type: 2}
+  bullet: {fileID: 11400000, guid: 9ec337e9d56f2f84eac6f2c83ff2b134, type: 2}
+  sightPos: {x: 0, y: 0, z: 0}
+  foregripPos: {x: 0, y: 0, z: 0}
+  laserPos: {x: 0, y: 0, z: 0}
   shootRate: 1
   magSizeMax: 1
   reloadTime: 4
-  bullet: {fileID: 11400000, guid: 9ec337e9d56f2f84eac6f2c83ff2b134, type: 2}
-  aud:
-  - {fileID: 8300000, guid: 1328126a7a31589499120f3f3808d014, type: 3}
+  spread: 20
+  currentAmmo: 1
+  gunRarity: 2
+  gunType: 0
+  isBurst: 0
   scale: {x: 1, y: 1, z: 1}
-  postion: {x: 0, y: 0, z: 0}
+  position: {x: 0, y: 0, z: 0}
   rotation: {x: 0, y: 1, z: 0, w: -0.00000004371139}
   shootRotate: {x: 0, y: 0, z: 0, w: 0}
-  currentAmmo: 1
-  hipSpread: 0
-  adsSpread: 0
-  hipX: 0
-  hipY: 0
-  hipZ: 0
-  adsX: 0
-  adsY: 0
-  adsZ: 0
-  adsZoom: 0
-  isShotgun: 0
-  isBurst: 0
   burstTime: 0
   burstDelay: 0
   rechamberTime: 0
   burstAmount: 0
-  pelletAmount: 0
-  gunRarity: 2
+  pelletAmount: 5
+  shotSound:
+  - {fileID: 8300000, guid: 1328126a7a31589499120f3f3808d014, type: 3}
   shotSoundVol: 0.09
