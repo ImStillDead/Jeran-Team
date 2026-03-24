@@ -33,22 +33,37 @@ public class Shooting : MonoBehaviour
     public static float shootTimer;
     public float volume;
 
-    public float spread;
+    public float currentSpread;
+    public float hipSpread;
+    public float adsSpread;
+
+    public float hipX;
+    public float hipY;
+    public float hipZ;
+    public float adsX;
+    public float adsY;
+    public float adsZ;
+
+    public float adsZoom;
 
     public Recoil recoil;
 
-    public bool isShotgun;
     public bool isBurst;
+
     public float burstTime;
     public float rechamberTime;
     public int burstAmount;
     public int pelletAmount;
     public float burstDelay;
 
+
     // Other Variables
     bool reloading;
     int activeGun;
     int pelletCount;
+    bool isShotgun;
+
+    bool isADS;
 
     bool burstFiring = true;
     bool shotgunFiring;
@@ -72,21 +87,28 @@ public class Shooting : MonoBehaviour
 
         /*  Gets the input of the fire button and checks if the shoot timer is greater than
             equal to the shoot rate. If it is it calls the Shoot() method(function) */
+        if (Input.GetButton("Fire2"))
+        {
+            ADS();
+        }
+        else
+        {
+            HipFire();
+        }
 
         if (Input.GetButton("Fire1") && shootTimer >= shootRate && currentAmmo > 0 && isShotgun)
         {
             shotgunFiring = true;
 
-            while (shotgunFiring)
+            while(shotgunFiring)
             {
-                while (pelletCount != pelletAmount)
+                while(pelletCount != pelletAmount)
                 {
                     ShotgunShot();
                 }
-                StartCoroutine(BurstPellet());
+                StartCoroutine(BurstPellet());              
                 shotgunFiring = false;
             }
-
         }
         else if (Input.GetButton("Fire1") && shootTimer >= shootRate && currentAmmo > 0 && isBurst && burstFiring)
         {
@@ -136,14 +158,23 @@ public class Shooting : MonoBehaviour
             bulletScript = gunList[gunPos].bullet;
             shootRate = gunList[gunPos].shootRate;
             reloadTime = gunList[gunPos].reloadTime;
-            aud = gunList[gunPos].aud;
+            aud = gunList[gunPos].shotSound;
             volume = gunList[gunPos].shotSoundVol;
 
-            spread = gunList[gunPos].spread;
+            hipSpread = gunList[gunPos].hipSpread;
+            adsSpread = gunList[gunPos].adsSpread;
 
+            hipX = gunList[gunPos].hipX;
+            hipY = gunList[gunPos].hipY;
+            hipZ = gunList[gunPos].hipZ;
+            adsX = gunList[gunPos].adsX;
+            adsY = gunList[gunPos].adsY;
+            adsZ = gunList[gunPos].adsZ;
 
-            isShotgun = gunList[gunPos].isShotgun;
+            adsZoom = gunList[gunPos].adsZoom;
+
             isBurst = gunList[gunPos].isBurst;
+
             burstTime = gunList[gunPos].burstTime;
             rechamberTime = gunList[gunPos].rechamberTime;
             burstAmount = gunList[gunPos].burstAmount;
@@ -159,11 +190,19 @@ public class Shooting : MonoBehaviour
             shootPos = gunModel.transform.GetChild(0);
             changeBullet();
             callAmmo();
+
+            if (GetGunType() == GunType.Shotgun)
+            {
+                isShotgun = true;
+            }
+            else
+            {
+                isShotgun = false;
+            }
         }
     }
-    public void addAttachment(Attachment attach)
+    public void addAttachment(Attachments attachment)
     {
-
 
     }
     public void Shoot()
@@ -174,12 +213,12 @@ public class Shooting : MonoBehaviour
         if (!reloading)
         {
             shootTimer = 0;
-            if (aud[0] != null)
-                GameManager.instance.playerScript.PlayAudio(aud[0], volume);
+            if (aud[0] != null) 
+            GameManager.instance.playerScript.PlayAudio(aud[0], volume);
 
 
             Quaternion spreadRotation = shootPos.transform.rotation *
-                Quaternion.Euler(Random.Range(-spread, spread), Random.Range(-spread, spread), 0);
+                Quaternion.Euler(Random.Range(-currentSpread, currentSpread), Random.Range(-currentSpread, currentSpread), 0);
 
 
             Instantiate(bullet, shootPos.position, spreadRotation);
@@ -206,7 +245,7 @@ public class Shooting : MonoBehaviour
 
 
             Quaternion spreadRotation = shootPos.transform.rotation *
-                Quaternion.Euler(Random.Range(-spread, spread), Random.Range(-spread, spread), 0);
+                Quaternion.Euler(Random.Range(-currentSpread, currentSpread), Random.Range(-currentSpread, currentSpread), 0);
 
 
             Instantiate(bullet, shootPos.position, spreadRotation);
@@ -221,7 +260,30 @@ public class Shooting : MonoBehaviour
 
 
     }
+    public void HipFire()
+    {
+        isADS = false;
+        currentSpread = hipSpread;
 
+        recoil.recoil.X = hipX;
+        recoil.recoil.Y = hipY;
+        recoil.recoil.Z = hipZ;
+
+
+        Camera.main.fieldOfView = 75;
+    }
+
+    public void ADS()
+    {
+        isADS = true;
+        currentSpread = adsSpread;
+
+        recoil.recoil.X = adsX;
+        recoil.recoil.Y = adsY;
+        recoil.recoil.Z = adsZ;
+
+        Camera.main.fieldOfView = 75 - adsZoom;
+    }
 
     // Called in Update if the currentAmmo is less than or equal to 0 and the player is not reloading
     IEnumerator Reload()
@@ -235,16 +297,16 @@ public class Shooting : MonoBehaviour
 
     IEnumerator Burst()
     {
-        burstFiring = false;
+       burstFiring = false;
 
         for (int i = 0; i < burstAmount; i++)
         {
-            Shoot();
-            yield return new WaitForSeconds(burstTime);
+           Shoot();
+           yield return new WaitForSeconds(burstTime);
         }
 
-        yield return new WaitForSeconds(burstDelay);
-        burstFiring = true;
+       yield return new WaitForSeconds(burstDelay);
+       burstFiring = true;
     }
 
     IEnumerator BurstPellet()
@@ -261,7 +323,7 @@ public class Shooting : MonoBehaviour
     public void GunListSwap(List<GunStats> listSwap)
     {
         gunList.Clear();
-        foreach (GunStats gun in listSwap)
+        foreach(GunStats gun in listSwap)
         {
             gunList.Add(gun);
         }
@@ -275,9 +337,4 @@ public class Shooting : MonoBehaviour
     {
         return invisiGun;
     }
-
- 
-
-
-
 }

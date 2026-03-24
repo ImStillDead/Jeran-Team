@@ -349,12 +349,12 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
         if (Input.GetButtonDown("Sprint"))
         {
             speed *= sprintMod;
-            playerAnimator.isRunning = true;
+            //playerAnimator.isRunning = true;
         }
         else if (Input.GetButtonUp("Sprint"))
         {
             speed /= sprintMod;
-            playerAnimator.isRunning = false;
+           // playerAnimator.isRunning = false;
         }
     }
     //Torch

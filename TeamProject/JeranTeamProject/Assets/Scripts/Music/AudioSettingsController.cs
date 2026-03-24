@@ -4,6 +4,7 @@ using UnityEngine.UI;
 public class AudioSettingsController : MonoBehaviour
 {
     [SerializeField] private Slider masterSlider;
+    [SerializeField] private Slider musicSlider;
     [SerializeField] private Slider  sfxSlider;
 
     [SerializeField] private AudioMixer masterMixer;
@@ -11,21 +12,29 @@ public class AudioSettingsController : MonoBehaviour
     private void Start()
     {
         float savedMasterVolume = PlayerPrefs.GetFloat("SavedMasterVolume", 1f);
+        float savedMusicVolume = PlayerPrefs.GetFloat("SavedMusicVolume", 1f);
         float savedSFXVolume = PlayerPrefs.GetFloat("SavedSFXVolume", 1f);
 
         if (savedMasterVolume <= 0.0001f)
             savedMasterVolume = 1f;
 
-           if (savedSFXVolume <= 0.0001f)
+        if (savedMusicVolume <= 0.0001f)
+            savedMusicVolume = 1f;
+
+        if (savedSFXVolume <= 0.0001f)
                savedSFXVolume = 1f;
 
         if (masterSlider != null)
             masterSlider.value = savedMasterVolume;
 
+        if (musicSlider != null)
+            musicSlider.value = savedMusicVolume;
+
         if (sfxSlider != null)
             sfxSlider.value = savedSFXVolume;
 
         SetMasterVolume(savedMasterVolume);
+        SetMusicVolume(savedMusicVolume);
         SetSfxVolume(savedSFXVolume);
     }
 
@@ -38,6 +47,16 @@ public class AudioSettingsController : MonoBehaviour
         PlayerPrefs.Save();
 
         masterMixer.SetFloat("MasterVolume", Mathf.Log10(value) * 20f);
+    }
+    public void SetMusicVolume(float value)
+    {
+        if (value < 0.0001f)
+            value = 0.0001f;
+
+        PlayerPrefs.SetFloat("SavedMusicVolume", value);
+        PlayerPrefs.Save();
+
+        masterMixer.SetFloat("MusicVolume", Mathf.Log10(value) * 20f);
     }
     public void SetSfxVolume(float value)
     {
@@ -54,6 +73,11 @@ public class AudioSettingsController : MonoBehaviour
     {
         if (masterSlider != null)
             SetMasterVolume(masterSlider.value);
+    }
+    public void SetMusicVolumeFromSlider()
+    {
+        if (musicSlider != null)
+            SetMusicVolume(musicSlider.value);
     }
     public void SetSfxVolumeFromSlider()
     {
