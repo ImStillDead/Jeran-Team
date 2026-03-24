@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using UnityEngine.Animations;
 using UnityEngine.SceneManagement;
 using UnityEngine.TextCore.Text;
 
@@ -50,7 +51,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
 
     [Header("Other Settings")]
     [SerializeField] int moneyOnPlayer;
-    [SerializeField] Transform weaponPos;
+    [SerializeField] public Transform weaponPos;
     [SerializeField] GameObject firstPersonCamera;
     [SerializeField] GameObject torch;
     [SerializeField] AudioSource aud;
@@ -60,6 +61,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
     GameObject characterMesh;
     PlayerData staticBase;
     GameData runData;
+    public IKController playerIK;
     public AnimationControl playerAnimator;
     public PlayerData playerData;
     public List<Pickups> itemList;
@@ -91,6 +93,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
     private Vector3 slideDirection;
     private CharacterController characterController;
     private bool slideButtonHeld;
+    public Transform rightHand;
     void Awake()
     {
         runData = new GameData();
@@ -146,7 +149,6 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
         }
 
         Jump();
-        UpdateAnimations();
         ChangeActiveInventory();
         Interact();
         UseItem();
@@ -474,6 +476,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
                 gunPos++;
 
             UpdateGun();
+            UpdateAnimations();
         }
         else if (Input.GetAxis("Mouse ScrollWheel") < 0)
         {
@@ -483,6 +486,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
                 gunPos--;
 
             UpdateGun();
+            UpdateAnimations();
         }
 
         // Weapon Select 1-5
@@ -565,7 +569,8 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
     }
     void WeaponRotate()
     {
-        weaponPos.transform.rotation = firstPersonCamera.transform.rotation;
+        //weaponPos.transform.rotation = firstPersonCamera.transform.rotation;
+        weaponPos.LookAt(playerIK.scope.position);
     }
 
     // Health and UI interactions
@@ -816,11 +821,12 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
         {
             playerData.gunList.Add(gun);
         }
+        weaponPos.SetParent(GameManager.instance.player.transform);
         //MeshChange
         Destroy(characterMesh);
         characterMesh = Instantiate(character.mesh, this.transform);
         characterMesh.transform.localPosition = Vector3.zero;
-        UpdateAnimator();
+        UpdateAnimations();
         UpdateStatic(playerData);
         UpdatePlayer(playerData);
     }
@@ -848,10 +854,18 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
     }
     public void UpdateAnimations()
     {
-        
-    }
-    void UpdateAnimator()
-    {
         playerAnimator.animator = characterMesh.GetComponent<Animator>();
+        playerIK = characterMesh.GetComponent<IKController>();
+        if (playerIK != null)
+        {
+            playerIK.scope = GameObject.FindGameObjectWithTag("LookAtScope").transform;
+            playerIK.animator = playerAnimator.animator;
+            rightHand = playerIK.animator.GetBoneTransform(HumanBodyBones.RightHand);
+            if (rightHand != null)
+            {
+                weaponPos.SetParent(playerAnimator.animator.GetBoneTransform(HumanBodyBones.RightLowerArm), false);
+                weaponPos.transform.localPosition = playerAnimator.animator.GetBoneTransform(HumanBodyBones.RightHand).localPosition;
+            }
+        }
     }
 }

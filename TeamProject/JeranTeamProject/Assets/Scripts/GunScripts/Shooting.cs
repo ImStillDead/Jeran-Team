@@ -21,7 +21,7 @@ public class Shooting : MonoBehaviour
     [SerializeField] GameObject bullet;
     [SerializeField] Transform shootPos;
     [SerializeField] Transform invisiGun;
-
+    IKController playerIK;
     [SerializeField] AudioClip[] aud;
     [SerializeField] Bullet bulletScript;
 
@@ -151,19 +151,26 @@ public class Shooting : MonoBehaviour
             burstDelay = gunList[gunPos].burstDelay;
 
             recoil.UpdateRecoil(gunList[gunPos].recoil);
+            GameManager.instance.playerScript.weaponPos.SetParent(GameManager.instance.player.transform, false);
             Destroy(gunModel);
             gunModel = Instantiate(gunList[gunPos].gunModel, invisiGun);
             gunModel.transform.localScale = gunList[gunPos].scale;
             gunModel.transform.localPosition = gunList[gunPos].postion;
             gunModel.transform.localRotation = gunList[gunPos].rotation;
+            gunList[gunPos].leftHand = gunModel.transform.Find("LeftHandPos");
+            gunList[gunPos].rightHand = gunModel.transform.Find("RightHandPos");
             shootPos = gunModel.transform.GetChild(0);
             changeBullet();
             callAmmo();
+            playerIK = GameManager.instance.playerScript.playerIK;
+            if(playerIK != null)
+            {
+                SetHandPosition();
+            }
         }
     }
     public void addAttachment(Attachment attach)
     {
-
 
     }
     public void Shoot()
@@ -181,9 +188,7 @@ public class Shooting : MonoBehaviour
             Quaternion spreadRotation = shootPos.transform.rotation *
                 Quaternion.Euler(Random.Range(-spread, spread), Random.Range(-spread, spread), 0);
 
-
             Instantiate(bullet, shootPos.position, spreadRotation);
-
 
             currentAmmo = currentAmmo - 1;
             callAmmo();
@@ -271,8 +276,10 @@ public class Shooting : MonoBehaviour
     {
         return gunList[activeGun].gunType;
     }
-    public Transform GetGunPosition()
+    public void SetHandPosition()
     {
-        return invisiGun;
+        playerIK.gunLeftHand = gunList[activeGun].leftHand;
+        playerIK.gunRightHand = gunList[activeGun].rightHand;
+        GameManager.instance.playerScript.UpdateAnimations();
     }
 }

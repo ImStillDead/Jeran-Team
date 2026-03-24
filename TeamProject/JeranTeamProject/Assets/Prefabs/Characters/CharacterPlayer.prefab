@@ -28,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 1608946974504509990}
   serializedVersion: 2
   m_LocalRotation: {x: -0.008723475, y: -0.02617593, z: -0.00022843199, w: 0.9996193}
-  m_LocalPosition: {x: 0.167, y: 0.382, z: 0.546}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -548,13 +548,44 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3862030819210633259}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.231, y: 1.29, z: 0.23}
+  m_LocalRotation: {x: 0.07967316, y: -0, z: -0, w: 0.99682105}
+  m_LocalPosition: {x: 0.264, y: 1.385, z: 0.319}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1504375674951491945}
   m_Father: {fileID: 2552789030766678744}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &3963279705817257119
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8608726394270536169}
+  m_Layer: 3
+  m_Name: GunLookAt
+  m_TagString: LookAtScope
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8608726394270536169
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3963279705817257119}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.62, y: -0.59, z: 5}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1039705809827871674}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &6056277950681428499
 GameObject:
@@ -587,6 +618,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2432325609343026195}
+  - {fileID: 8608726394270536169}
   m_Father: {fileID: 2552789030766678744}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &7506061371083004502
@@ -776,6 +808,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  playerIK: {fileID: 0}
   playerAnimator: {fileID: 0}
   playerData:
     level: 1
@@ -797,6 +830,7 @@ MonoBehaviour:
   isJumping: 0
   canPickup: 0
   canSwap: 0
+  rightHand: {fileID: 0}
 --- !u!143 &7709777452405699691
 CharacterController:
   m_ObjectHideFlags: 0
@@ -854,7 +888,7 @@ AudioSource:
   m_GameObject: {fileID: 8593092689105773739}
   m_Enabled: 1
   serializedVersion: 4
-  OutputAudioMixerGroup: {fileID: 0}
+  OutputAudioMixerGroup: {fileID: 4413375237970932402, guid: 0b23c06a2435a2d4493376ef5d3d0c47, type: 2}
   m_audioClip: {fileID: 0}
   m_Resource: {fileID: 0}
   m_PlayOnAwake: 1
@@ -955,7 +989,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AnimationControl
   animator: {fileID: 0}
-  isRunning: 0
+  leftHand: {fileID: 0}
 --- !u!1 &9037636975032786081
 GameObject:
   m_ObjectHideFlags: 0

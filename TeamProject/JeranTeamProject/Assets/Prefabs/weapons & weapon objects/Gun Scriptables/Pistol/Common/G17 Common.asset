@@ -14,6 +14,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GunStats
   gunModel: {fileID: 6836891054529834359, guid: d4facdf54bb13834c907163c4eb9148d, type: 3}
   shootPos: {fileID: 7335949394086192017, guid: 19a0540f5f90a5e418f0c0eaa7581cb6, type: 3}
+  rightHand: {fileID: 0}
+  leftHand: {fileID: 0}
   recoil: {fileID: 11400000, guid: b23ba6a614bb5424eb28d2c9d239543b, type: 2}
   shootRate: 0.5
   magSizeMax: 9
@@ -21,8 +23,8 @@ MonoBehaviour:
   bullet: {fileID: 11400000, guid: 7998a77a9bdb1da4b87632ba2f1c8b5b, type: 2}
   aud:
   - {fileID: 8300000, guid: 843ca06fe8416504389a564a58521fc9, type: 3}
-  scale: {x: 1, y: 1, z: 1}
-  postion: {x: 0, y: -0.111, z: 0}
+  scale: {x: 0.5993, y: 0.5993, z: 0.5993}
+  postion: {x: -0.013, y: 0.035, z: 0.088}
   rotation: {x: 0, y: 1, z: 0, w: -0.00000004371139}
   shootRotate: {x: 0, y: 1, z: 0, w: -0.00000004371139}
   currentAmmo: 9
@@ -35,4 +37,5 @@ MonoBehaviour:
   burstAmount: 0
   pelletAmount: 0
   gunRarity: 0
+  gunType: 0
   shotSoundVol: 0.03

@@ -1003,6 +1003,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4641876443065420079}
   - component: {fileID: 3707894127449670125}
+  - component: {fileID: 8818425241654377073}
   m_Layer: 0
   m_Name: Rio Mesh
   m_TagString: Untagged
@@ -1049,6 +1050,21 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &8818425241654377073
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5404093363780004330}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d38a02257f8e2eb4194cd112ae09f8b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::IKController
+  animator: {fileID: 0}
+  gunPosition: {fileID: 0}
+  rightHand: {fileID: 0}
 --- !u!1 &5563254312659765108
 GameObject:
   m_ObjectHideFlags: 0
@@ -2068,6 +2084,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 8122159464505197289}
+  - component: {fileID: 6143171200277110476}
   m_Layer: 0
   m_Name: hand.r
   m_TagString: Untagged
@@ -2095,6 +2112,19 @@ Transform:
   - {fileID: 3920584248783364857}
   m_Father: {fileID: 857711928810474674}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6143171200277110476
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8403951969357793068}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ceee7233a50a5942bde5a2e4d896a7a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::HandPos
+  iKController: {fileID: 0}
 --- !u!1 &8799342956761855614
 GameObject:
   m_ObjectHideFlags: 0

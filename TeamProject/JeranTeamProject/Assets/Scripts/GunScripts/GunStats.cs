@@ -28,6 +28,10 @@ public class GunStats : ScriptableObject
 {
     public GameObject gunModel;
     public GameObject shootPos;
+
+    public Transform rightHand;
+    public Transform leftHand;
+
     public RecoilScriptable recoil;
     public List<Attachment> attachmentList;
     [Range(0.05f, 10f)] public float shootRate;
