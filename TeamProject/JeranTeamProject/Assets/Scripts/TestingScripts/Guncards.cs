@@ -4,6 +4,7 @@ using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using static UnityEngine.GraphicsBuffer;
 
 public class Guncards : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
@@ -28,20 +29,24 @@ public class Guncards : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     [SerializeField] Image accuracyFill;
     [SerializeField] TMP_Text accuracyNumber;
 
-    [Header("recoil ui")]
-    [SerializeField] Image recoilFill;
-    [SerializeField] TMP_Text recoilNumber;
-
     [Header("firerate ui")]
     [SerializeField] Image firerateFill;
     [SerializeField] TMP_Text firerateNumber;
 
+    [Header("reload ui")]
+    [SerializeField] Image reloadspeedFill;
+    [SerializeField] TMP_Text reloadspeedNumber;
+
+    [Header("magSize ui")]
+    [SerializeField] Image magsizeFill;
+    [SerializeField] TMP_Text magsizeNumber;
 
 
-    Shooting Gun;
+
     GameManager manager;
     PlayerController player;
-
+    Shooting Gun;
+    
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -55,12 +60,7 @@ public class Guncards : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         Gun = player.Gun;
         if (Gun == null) { Debug.LogError("player.Gun is null!"); return; }
 
-        
-        SetAlpha(0);
-        gunpreview.color = new Color32(0, 0, 0, 0);
-
     }
-
 
     public void OnPointerEnter(PointerEventData eventData)
     {
@@ -95,22 +95,56 @@ public class Guncards : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         }
     }
 
-    public void setGunstats(GunStats gun)
+
+
+
+    public void setGunstats(int gunPos)
     {
+        if (Gun == null || Gun.gunList == null) return;
+
+        var guns = player.Gun.gunList;
+
+        if (gunPos < 0 || gunPos >= guns.Count) return;
+
+        GunStats gun = guns[gunPos];
+
         if (gun == null) return;
 
+        // Destroy old preview
+        if (gunObject != null)
+        {
+            Destroy(gunObject);
+        }
 
-        dmgNumber.text = Mathf.RoundToInt(gun.bullet.damageAmount).ToString();
-        dmgFill.fillAmount = gun.bullet.damageAmount / 100;
+        // Spawn new gun model
+        gunObject = Instantiate(gun.gunModel, gunlocation);
+        gunObject.tag = "GunPreview";
+        gunObject.transform.localRotation = Quaternion.identity;
+        gunObject.transform.localPosition = Vector3.zero;
+        gunObject.transform.localScale = Vector3.one;
 
-        accuracyNumber.text = gun.spread.ToString();
-        accuracyFill.fillAmount = gun.spread / 100;
+        // UI
+        gunName.text = gun.name;
+        gunRarity.text = gun.gunRarity.ToString();
 
-        recoilNumber.text = gun.recoil.ToString();
-        
-        firerateNumber.text = gun.shootRate.ToString(); 
-        firerateFill.fillAmount = gun.shootRate / 100;
+        int dmgMult = Mathf.RoundToInt(gun.bullet.damageAmount) * 10;
+        dmgNumber.text = dmgMult.ToString();
+        dmgFill.fillAmount = Mathf.Clamp01(dmgMult / 100);
 
+        int accMult = (int)gun.spread;
+        accuracyNumber.text = accMult.ToString();
+        accuracyFill.fillAmount = Mathf.Clamp01(accMult / 100);
+
+        int frrMult = (int)gun.spread; 
+        firerateNumber.text = frrMult.ToString();
+        firerateFill.fillAmount = Mathf.Clamp01(frrMult / 100);
+
+        int reMult = (int)gun.reloadTime * 10;
+        reloadspeedNumber.text = reMult.ToString();
+        reloadspeedFill.fillAmount = Mathf.Clamp01(reMult / 100);
+
+        magsizeNumber.text = gun.magSizeMax.ToString();
+        magsizeFill.fillAmount = Mathf.Clamp01(gun.magSizeMax / 500);
     }
 
 

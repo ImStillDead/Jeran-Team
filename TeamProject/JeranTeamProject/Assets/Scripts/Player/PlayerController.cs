@@ -29,6 +29,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
     [SerializeField] float armorRegenRate;
     [SerializeField] int gunMax;
 
+
     [Header("Player Static Stats")]
     [SerializeField] int interactDis;
     [SerializeField] int enemyViewDis;
@@ -56,6 +57,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
     [SerializeField] AudioSource aud;
     [SerializeField] List<GameObject> MeshList;
 
+    private cardHolder cardUI;
     GameManager manager;
     GameObject characterMesh;
     PlayerData staticBase;
@@ -109,6 +111,9 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
     }
     void Start()
     {
+        cardUI = FindAnyObjectByType<cardHolder>();
+        cardUI?.Init(this);
+
         Gun = Shooting.instance;
         manager = GameManager.instance;
         SpawnPlayer();
@@ -510,32 +515,20 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
             UpdateGun();
         }
 
-        // Weapon Select 1-5
+        // Weapon Select 1-2
         if (Input.GetButtonDown("Weapon1") && Gun.gunList.Count > 0)
         {
             gunPos = 0;
-            Gun.changeGun(gunPos);
+            UpdateGun();
+ 
         }
         else if (Input.GetButtonDown("Weapon2") && Gun.gunList.Count > 1)
         {
             gunPos = 1;
-            Gun.changeGun(gunPos);
+            UpdateGun();
+
         }
-        else if (Input.GetButtonDown("Weapon3") && Gun.gunList.Count > 2)
-        {
-            gunPos = 2;
-            Gun.changeGun(gunPos);
-        }
-        else if (Input.GetButtonDown("Weapon4") && Gun.gunList.Count > 3)
-        {
-            gunPos = 3;
-            Gun.changeGun(gunPos);
-        }
-        else if (Input.GetButtonDown("Weapon5") && Gun.gunList.Count > 4)
-        {
-            gunPos = 4;
-            Gun.changeGun(gunPos);
-        }
+
     }
     void Interact()
     {
@@ -578,15 +571,22 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
             }
         }
 
+        cardUI?.updateCards();
+
     }
     public void SwapGunPickup(GunStats gun)
     {
         Gun.gunList[gunPos] = gun;
         Gun.changeGun(gunPos);
+
+        cardUI?.updateCards();
+
     }
     public void UpdateGun()
     {
         Gun.changeGun(gunPos);
+
+        cardUI?.updateCards();
     }
     void WeaponRotate()
     {
@@ -888,7 +888,6 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
             
         }
     }
-
 
     public void UpdateAnimations()
     {

@@ -77,13 +77,13 @@ public class Shooting : MonoBehaviour
         {
             shotgunFiring = true;
 
-            while(shotgunFiring)
+            while (shotgunFiring)
             {
-                while(pelletCount != pelletAmount)
+                while (pelletCount != pelletAmount)
                 {
                     ShotgunShot();
                 }
-                StartCoroutine(BurstPellet());              
+                StartCoroutine(BurstPellet());
                 shotgunFiring = false;
             }
 
@@ -140,7 +140,7 @@ public class Shooting : MonoBehaviour
             volume = gunList[gunPos].shotSoundVol;
 
             spread = gunList[gunPos].spread;
-            
+
 
             isShotgun = gunList[gunPos].isShotgun;
             isBurst = gunList[gunPos].isBurst;
@@ -174,8 +174,8 @@ public class Shooting : MonoBehaviour
         if (!reloading)
         {
             shootTimer = 0;
-            if (aud[0] != null) 
-            GameManager.instance.playerScript.PlayAudio(aud[0], volume);
+            if (aud[0] != null)
+                GameManager.instance.playerScript.PlayAudio(aud[0], volume);
 
 
             Quaternion spreadRotation = shootPos.transform.rotation *
@@ -221,8 +221,8 @@ public class Shooting : MonoBehaviour
 
 
     }
-    
-    
+
+
     // Called in Update if the currentAmmo is less than or equal to 0 and the player is not reloading
     IEnumerator Reload()
     {
@@ -235,16 +235,16 @@ public class Shooting : MonoBehaviour
 
     IEnumerator Burst()
     {
-       burstFiring = false;
+        burstFiring = false;
 
         for (int i = 0; i < burstAmount; i++)
         {
-           Shoot();
-           yield return new WaitForSeconds(burstTime);
+            Shoot();
+            yield return new WaitForSeconds(burstTime);
         }
 
-       yield return new WaitForSeconds(burstDelay);
-       burstFiring = true;
+        yield return new WaitForSeconds(burstDelay);
+        burstFiring = true;
     }
 
     IEnumerator BurstPellet()
@@ -261,7 +261,7 @@ public class Shooting : MonoBehaviour
     public void GunListSwap(List<GunStats> listSwap)
     {
         gunList.Clear();
-        foreach(GunStats gun in listSwap)
+        foreach (GunStats gun in listSwap)
         {
             gunList.Add(gun);
         }
@@ -275,4 +275,9 @@ public class Shooting : MonoBehaviour
     {
         return invisiGun;
     }
+
+ 
+
+
+
 }
