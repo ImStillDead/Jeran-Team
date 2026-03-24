@@ -14,26 +14,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GunStats
   gunModel: {fileID: 1301848162438660096, guid: 1bf5370e542682747b3e0ddefc928719, type: 3}
   shootPos: {fileID: 3457571327997270671, guid: 155a9c0bb2ce5c943a7b5bc027ed73bd, type: 3}
-  recoil: {fileID: 11400000, guid: b23ba6a614bb5424eb28d2c9d239543b, type: 2}
+  recoil: {fileID: 11400000, guid: 88427f95641d6c440837fa1ce19dae3e, type: 2}
+  bullet: {fileID: 11400000, guid: ae53e35fe9750bf409e95aa92ea8980d, type: 2}
   shootRate: 0.5
   magSizeMax: 46
   reloadTime: 2.5
-  bullet: {fileID: 11400000, guid: ae53e35fe9750bf409e95aa92ea8980d, type: 2}
-  aud:
-  - {fileID: 8300000, guid: 8c98fcabdfc994c48bd8bff63493ea2f, type: 3}
+  spread: 0
+  currentAmmo: 46
+  gunRarity: 0
+  gunType: 1
+  isBurst: 1
   scale: {x: 1, y: 1, z: 1}
-  postion: {x: 0, y: -0.111, z: 0}
+  position: {x: 0, y: 0, z: 0}
   rotation: {x: 0, y: 1, z: 0, w: -0.00000004371139}
   shootRotate: {x: 0, y: 0, z: 0, w: 1}
-  currentAmmo: 46
-  spread: 15
-  isShotgun: 0
-  isBurst: 1
   burstTime: 0.05
   burstDelay: 0.5
   rechamberTime: 0
   burstAmount: 3
   pelletAmount: 0
-  gunRarity: 0
-  gunType: 1
+  shotSound:
+  - {fileID: 8300000, guid: 843ca06fe8416504389a564a58521fc9, type: 3}
   shotSoundVol: 0.059

@@ -116,6 +116,8 @@ public class slidingdoores : MonoBehaviour
         if (other.CompareTag("Player"))
         {
             opening = true;
+            
+
         }
     }
 
