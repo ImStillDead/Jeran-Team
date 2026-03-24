@@ -373,7 +373,14 @@ public class GameManager : MonoBehaviour
         levelText.text = update.level.ToString();
         heathNum.text = update.HP.ToString();
         maxHealthNum.text = update.HPMax.ToString();
-}
+    }
+
+    public Color changeImageColor(Image input, byte red, byte green, byte blue, byte alpha)
+    {
+        return input.color = new Color(red / 255, green / 255, blue / 255, alpha / 255);
+    }
+
+
     //Experience
     public void giveXP(int XP)
     {

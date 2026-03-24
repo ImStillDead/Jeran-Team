@@ -3,6 +3,7 @@ using UnityEngine;
 public class AnimationControl : MonoBehaviour
 {
     public Animator animator;
+    internal bool isRunning;
     private GameObject player;
     private PlayerController playerController;
     //Animation Settings
