@@ -28,7 +28,7 @@ Transform:
   m_GameObject: {fileID: 1608946974504509990}
   serializedVersion: 2
   m_LocalRotation: {x: -0.008723475, y: -0.02617593, z: -0.00022843199, w: 0.9996193}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -0.226, y: -0, z: -0.011}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -64,9 +64,17 @@ MonoBehaviour:
   currentAmmo: 0
   startingMaxAmmo: 0
   volume: 0
-  spread: 0
+  currentSpread: 0
+  hipSpread: 0
+  adsSpread: 0
+  hipX: 0
+  hipY: 0
+  hipZ: 0
+  adsX: 0
+  adsY: 0
+  adsZ: 0
+  adsZoom: 0
   recoil: {fileID: 0}
-  isShotgun: 0
   isBurst: 0
   burstTime: 0
   rechamberTime: 0
@@ -533,6 +541,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6718390287254165713}
+  - component: {fileID: 6997174778563862585}
   m_Layer: 3
   m_Name: WeaponInHand
   m_TagString: Untagged
@@ -556,6 +565,33 @@ Transform:
   - {fileID: 1504375674951491945}
   m_Father: {fileID: 2552789030766678744}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1773428102 &6997174778563862585
+ParentConstraint:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3862030819210633259}
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Weight: 1
+  m_TranslationAtRest: {x: 0.264, y: 1.385, z: 0.319}
+  m_RotationAtRest: {x: 9.14, y: 0, z: 0}
+  m_TranslationOffsets:
+  - {x: -0.2373, y: 0.123, z: 0.4016}
+  m_RotationOffsets:
+  - {x: 0, y: 0, z: 0}
+  m_AffectTranslationX: 1
+  m_AffectTranslationY: 1
+  m_AffectTranslationZ: 1
+  m_AffectRotationX: 1
+  m_AffectRotationY: 1
+  m_AffectRotationZ: 1
+  m_Active: 0
+  m_IsLocked: 0
+  m_Sources:
+  - sourceTransform: {fileID: 0}
+    weight: 1
 --- !u!1 &3963279705817257119
 GameObject:
   m_ObjectHideFlags: 0
@@ -715,6 +751,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2915af473f80fae4aaa5394042cb0efb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Recoil
+  recoil: {fileID: 0}
 --- !u!1 &8593092689105773739
 GameObject:
   m_ObjectHideFlags: 0
@@ -808,6 +845,7 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
+  Gun: {fileID: 0}
   playerIK: {fileID: 0}
   playerAnimator: {fileID: 0}
   playerData:
@@ -831,6 +869,7 @@ MonoBehaviour:
   canPickup: 0
   canSwap: 0
   rightHand: {fileID: 0}
+  leftHand: {fileID: 0}
 --- !u!143 &7709777452405699691
 CharacterController:
   m_ObjectHideFlags: 0
@@ -989,6 +1028,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::AnimationControl
   animator: {fileID: 0}
+  isJumping: 0
+  isAiming: 0
+  isReloading: 0
   leftHand: {fileID: 0}
 --- !u!1 &9037636975032786081
 GameObject:

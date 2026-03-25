@@ -3,14 +3,17 @@ using UnityEngine;
 public class AnimationControl : MonoBehaviour
 {
     public Animator animator;
-    internal bool isRunning;
     private GameObject player;
     private PlayerController playerController;
     //Animation Settings
+    public bool isJumping;
+    public bool isAiming;
+    public bool isReloading;
     float magnitudeX;
     float magnitudeZ;
     float reach;
     public Transform leftHand;
+    float movingMag;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -44,18 +47,34 @@ public class AnimationControl : MonoBehaviour
                 if (Shooting.instance.GetGunType() == GunType.Pistol)
                 {
                     animator.SetLayerWeight(1, 1);
-                    //animator.SetLayerWeight(2, 0);
+                    animator.SetLayerWeight(2, 0);
                 }
                 else if (Shooting.instance.GetGunType() != GunType.Pistol)
                 {
                     animator.SetLayerWeight(1, 0);
-                    // animator.SetLayerWeight(2, 1);
+                    animator.SetLayerWeight(2, 1);
                 }
                 else
                 {
                     animator.SetLayerWeight(1, 0);
                 }
             }
+            animator.SetBool("isJump", isJumping);
+            if (isJumping)
+            {
+                movingMag = (Mathf.Abs(magnitudeX) + Mathf.Abs(magnitudeZ)) / 2;
+                animator.SetFloat("JumpSpeed", movingMag);
+            }
+            if (Input.GetButton("Fire1"))
+            {
+                animator.SetBool("Fire", true);
+            }
+            else
+            {
+                animator.SetBool("Fire", false);
+            }
+            animator.SetBool("Aim", isAiming);
+            animator.SetBool("reload", isReloading);
         }
     }
  

@@ -102,6 +102,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
     private Vector3 lastPlatformPos;
 
     public Transform rightHand;
+    public Transform leftHand;
     void Awake()
     {
         runData = new GameData();
@@ -114,14 +115,13 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
     }
     void Start()
     {
-        cardUI = FindAnyObjectByType<cardHolder>();
-        cardUI?.Init(this);
-
         Gun = Shooting.instance;
         manager = GameManager.instance;
         SpawnPlayer();
         PlayerArmor();
         UpdatePlayerUI();
+        cardUI = FindAnyObjectByType<cardHolder>();
+        cardUI?.Init(this);
     }
     void Update()
     {
@@ -173,6 +173,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
         {
             playerVel.y = -2f;
             jumpCount = 0;
+            playerAnimator.isJumping = false;
         }
 
         Jump();
@@ -328,11 +329,16 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
         }
         if (Input.GetButtonUp("Jump") && jumpCount < jumpMax)
         {
+            if(playerAnimator.isJumping == true)
+            {
+                playerAnimator.isJumping = false;
+            }
             jumpCharge *= jumpChargeRate;
             isJumping = false;
             playerVel.y = jumpSpeed + jumpCharge;
             jumpCount++;
             jumpCharge = 0;
+            playerAnimator.isJumping = true;
         }
     }
     void Charge()
@@ -595,7 +601,10 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
     void WeaponRotate()
     {
         //weaponPos.transform.rotation = firstPersonCamera.transform.rotation;
-        weaponPos.LookAt(playerIK.scope.position);
+        if (playerIK != null)
+        {
+            weaponPos.transform.LookAt(playerIK.scope.position);
+        }
     }
 
     // Health and UI interactions
@@ -903,12 +912,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
         {
             playerIK.scope = GameObject.FindGameObjectWithTag("LookAtScope").transform;
             playerIK.animator = playerAnimator.animator;
-            rightHand = playerIK.animator.GetBoneTransform(HumanBodyBones.RightHand);
-            if (rightHand != null)
-            {
-                weaponPos.SetParent(playerAnimator.animator.GetBoneTransform(HumanBodyBones.RightLowerArm), false);
-                weaponPos.transform.localPosition = playerAnimator.animator.GetBoneTransform(HumanBodyBones.RightHand).localPosition;
-            }
+            
         }
     }
 }

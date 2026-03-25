@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net.Mail;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Animations;
 using UnityEngine.Rendering;
 using UnityEngine.UIElements;
 
@@ -13,7 +14,7 @@ public class Shooting : MonoBehaviour
     public static Shooting instance;
 
     // [SerializeFields] for variables that we want to edit in Unity
-    [SerializeField] GameObject gunModel;
+    [SerializeField] public GameObject gunModel;
     [SerializeField] LayerMask ignoreLayer;
     [SerializeField] float shootRate;
     [SerializeField] int magSizeMax;
@@ -28,6 +29,7 @@ public class Shooting : MonoBehaviour
     //Public variables
     public List<GunStats> gunList = new List<GunStats>();
     public List<Attachment> attachmentList = new List<Attachment>();
+    AnimationControl animationControl;
     public int currentAmmo;
     public int startingMaxAmmo;
     public static float shootTimer;
@@ -182,7 +184,7 @@ public class Shooting : MonoBehaviour
             burstDelay = gunList[gunPos].burstDelay;
 
             recoil.UpdateRecoil(gunList[gunPos].recoil);
-            GameManager.instance.playerScript.weaponPos.SetParent(GameManager.instance.player.transform, false);
+            //GameManager.instance.playerScript.weaponPos.SetParent(GameManager.instance.player.transform, false);
             Destroy(gunModel);
             gunModel = Instantiate(gunList[gunPos].gunModel, invisiGun);
             gunModel.transform.localScale = gunList[gunPos].scale;
@@ -223,8 +225,6 @@ public class Shooting : MonoBehaviour
             shootTimer = 0;
             if (aud[0] != null) 
             GameManager.instance.playerScript.PlayAudio(aud[0], volume);
-
-
             Quaternion spreadRotation = shootPos.transform.rotation *
                 Quaternion.Euler(Random.Range(-currentSpread, currentSpread), Random.Range(-currentSpread, currentSpread), 0);
 
@@ -249,7 +249,6 @@ public class Shooting : MonoBehaviour
             shootTimer = 0;
             GameManager.instance.playerScript.PlayAudio(aud[0], volume);
 
-
             Quaternion spreadRotation = shootPos.transform.rotation *
                 Quaternion.Euler(Random.Range(-currentSpread, currentSpread), Random.Range(-currentSpread, currentSpread), 0);
 
@@ -268,6 +267,8 @@ public class Shooting : MonoBehaviour
     }
     public void HipFire()
     {
+        animationControl = GameManager.instance.playerScript.playerAnimator;
+        animationControl.isAiming = false;
         isADS = false;
         currentSpread = hipSpread;
 
@@ -277,10 +278,27 @@ public class Shooting : MonoBehaviour
 
 
         Camera.main.fieldOfView = 75;
+        if (playerIK != null)
+        {
+            ConstraintSource constraintSource = new ConstraintSource();
+            constraintSource.sourceTransform = playerIK.animator.GetBoneTransform(HumanBodyBones.RightHand);
+            constraintSource.weight = 0f;
+            GameManager.instance.playerScript.weaponPos.GetComponent<ParentConstraint>().SetSource(0, constraintSource);
+            GameManager.instance.playerScript.weaponPos.GetComponent<ParentConstraint>().constraintActive = false;
+            constraintSource.weight = 1f;
+            constraintSource.sourceTransform = gunModel.transform.Find("RightHandPos");
+            GameManager.instance.playerScript.rightHand.GetComponent<ParentConstraint>().SetSource(0, constraintSource);
+            GameManager.instance.playerScript.rightHand.GetComponent<ParentConstraint>().constraintActive = true;
+            constraintSource.sourceTransform = gunModel.transform.Find("LeftHandPos");
+            GameManager.instance.playerScript.leftHand.GetComponent<ParentConstraint>().SetSource(0, constraintSource);
+            GameManager.instance.playerScript.leftHand.GetComponent<ParentConstraint>().constraintActive = true;
+        }
     }
 
     public void ADS()
     {
+        animationControl = GameManager.instance.playerScript.playerAnimator;
+        animationControl.isAiming = true;
         isADS = true;
         currentSpread = adsSpread;
 
@@ -289,16 +307,34 @@ public class Shooting : MonoBehaviour
         recoil.recoil.Z = adsZ;
 
         Camera.main.fieldOfView = 75 - adsZoom;
+        if (playerIK != null)
+        {
+            ConstraintSource constraintSource = new ConstraintSource();
+            constraintSource.sourceTransform = playerIK.animator.GetBoneTransform(HumanBodyBones.RightHand);
+            constraintSource.weight = 1f;
+            GameManager.instance.playerScript.weaponPos.GetComponent<ParentConstraint>().SetSource(0, constraintSource);
+            GameManager.instance.playerScript.weaponPos.GetComponent<ParentConstraint>().constraintActive = true;
+            constraintSource.weight = 0f;
+            constraintSource.sourceTransform = gunModel.transform.Find("RightHandPos");
+            GameManager.instance.playerScript.rightHand.GetComponent<ParentConstraint>().SetSource(0, constraintSource);
+            GameManager.instance.playerScript.rightHand.GetComponent<ParentConstraint>().constraintActive = false;
+            constraintSource.sourceTransform = gunModel.transform.Find("LeftHandPos");
+            GameManager.instance.playerScript.leftHand.GetComponent<ParentConstraint>().SetSource(0, constraintSource);
+            GameManager.instance.playerScript.leftHand.GetComponent<ParentConstraint>().constraintActive = false;
+        }
     }
 
     // Called in Update if the currentAmmo is less than or equal to 0 and the player is not reloading
     IEnumerator Reload()
     {
+        animationControl = GameManager.instance.playerScript.playerAnimator;
+        animationControl.isReloading = true;
         reloading = true;                               // Sets reloading to true to stop the player from firing
         yield return new WaitForSeconds(reloadTime);    // Waits for a set amount of time determined by the reloadTime
         currentAmmo = magSizeMax;                   // Sets currentAmmo equal to the max ammo
         callAmmo();
         reloading = false;                              // Sets reloading back to false so the player can shoot again
+        animationControl.isReloading = false;
     }
 
     IEnumerator Burst()
@@ -341,8 +377,22 @@ public class Shooting : MonoBehaviour
     }
     public void SetHandPosition()
     {
-        playerIK.gunLeftHand = gunList[activeGun].leftHand;
-        playerIK.gunRightHand = gunList[activeGun].rightHand;
+        
+        playerIK.gunLeftHand = gunModel.transform.Find("LeftHandPos");
+        playerIK.gunRightHand = gunModel.transform.Find("RightHandPos");
+        ConstraintSource constraintSource = new ConstraintSource();
+        constraintSource.sourceTransform = playerIK.animator.GetBoneTransform(HumanBodyBones.RightHand);
+        constraintSource.weight = 0f;
+        GameManager.instance.playerScript.weaponPos.GetComponent<ParentConstraint>().SetSource(0, constraintSource);
+        GameManager.instance.playerScript.weaponPos.GetComponent<ParentConstraint>().constraintActive = false;
+        constraintSource.sourceTransform = gunModel.transform.Find("RightHandPos");
+        constraintSource.weight = 1f;
+        GameManager.instance.playerScript.rightHand.GetComponent<ParentConstraint>().SetSource(0, constraintSource);
+        constraintSource.sourceTransform = gunModel.transform.Find("LeftHandPos");
+        GameManager.instance.playerScript.leftHand.GetComponent<ParentConstraint>().SetSource(0, constraintSource);
+        GameManager.instance.playerScript.rightHand.GetComponent<ParentConstraint>().constraintActive = true;
+        GameManager.instance.playerScript.leftHand.GetComponent<ParentConstraint>().constraintActive = true;
         GameManager.instance.playerScript.UpdateAnimations();
+        animationControl = GameManager.instance.playerScript.playerAnimator;
     }
 }
