@@ -7,33 +7,41 @@ public class supportingGunScript : MonoBehaviour
 
     private void Start()
     {
+        defaultGun = new GunStats();
         defaultGun.gunRarity = GunRarity.Common;
+
+        // Also set default stats if you want
+        defaultGun.hipSpread = 5f;
+        defaultGun.adsSpread = 2f;
+        defaultGun.shootRate = 0.2f;
+        defaultGun.magSizeMax = 30;
+
     }
 
 
-    public void pickUpScope(GunStats gun)
+    public void pickUpScope(Attachments scope)
+    {
+        
+
+
+
+    }
+
+    public void pickUpForegrip(Attachments grip)
     {
 
 
 
-
     }
 
-    public void pickUpForegrip()
+    public void pickUplaser(Attachments laser)
     {
 
 
 
     }
 
-    public void pickUplaser()
-    {
-
-
-
-    }
-
-    public void pickUpMagazine()
+    public void pickUpMagazine(Attachments mag)
     {
 
 
