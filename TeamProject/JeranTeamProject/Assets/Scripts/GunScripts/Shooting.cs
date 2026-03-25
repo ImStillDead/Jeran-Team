@@ -433,7 +433,11 @@ public class Shooting : MonoBehaviour, IAttachmentPickup
         switch (attachment.attachmentType)
         {
             case AttachmentType.Sights:
-                if (scopeOject != null) Destroy(scopeOject);
+                if (scopeOject != null)
+                {
+                    Destroy(scopeOject.gameObject);
+                    scopeOject = null;
+                }
                 scopeOject = Instantiate(attachment.attachmentModel, scopePos);
                 scopeOject.transform.localPosition = Vector3.zero;
                 scopeOject.transform.localRotation = Quaternion.identity;
@@ -460,13 +464,15 @@ public class Shooting : MonoBehaviour, IAttachmentPickup
     {
 
         // Equip visually
-        AttachmentOnGun(attachment); 
+        AttachmentOnGun(attachment);
 
         // Apply stats
+        Debug.Log("****************" + adsSpread);
         adsSpread -= attachment.adsMod;
         hipSpread -= attachment.hipSpreadMod;
+        Debug.Log("**************Update" + adsSpread);
 
-        recoil.recoil.X -= attachment.recoilMod;
+        recoil.recoil.X += attachment.recoilMod;
         recoil.recoil.Y -= attachment.recoilMod;
 
         magSizeMax += (int)attachment.ammoCountMod;
