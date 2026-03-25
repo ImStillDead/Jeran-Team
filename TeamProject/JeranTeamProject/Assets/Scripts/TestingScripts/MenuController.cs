@@ -85,6 +85,13 @@ public class MenuController : MonoBehaviour
         menuActive.SetActive(true);
 
         menuButtonController(menuActive);
+
+        cardHolder cardUI = FindAnyObjectByType<cardHolder>();
+        if (cardUI != null)
+        {
+            cardUI.updateCards();
+        }
+
         Debug.Log(menuActive + " is active");
     }
 
