@@ -18,7 +18,7 @@ public class supportGameProgression : MonoBehaviour
     GameManager Manager;
     Shooting guns;
     int kills;
-    private HashSet<progess> unlocked = new HashSet<progess>();
+    public HashSet<progess> unlocked = new HashSet<progess>();
 
     //public void Awake()
     //{
@@ -89,6 +89,8 @@ public class supportGameProgression : MonoBehaviour
                 Debug.LogWarning("*********achievement unlocked************");
                 Unlock(progess.findAcommonWeapon);
                 Manager.addDialog("you found a Common weapon");
+
+
             }
 
             if (guns.gunList[index] == GameObject.FindGameObjectWithTag("Uncommon") && !unlocked.Contains(progess.findAUncommon))

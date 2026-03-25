@@ -6,7 +6,7 @@ public class Recoil : MonoBehaviour
     private Vector3 targetRotation;
 
     //Hipfire
-    RecoilScriptable recoil;
+    public RecoilScriptable recoil;
     void Start()
     {
         recoil = ScriptableObject.CreateInstance<RecoilScriptable>();
