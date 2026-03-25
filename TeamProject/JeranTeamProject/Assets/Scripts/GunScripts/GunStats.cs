@@ -35,6 +35,7 @@ public class GunStats : ScriptableObject
     public List<Attachment> foregripList;
     public List<Attachment> laserList;
     public List<Attachment> magazineList;
+    public Transform sightLocation;
     public Bullet bullet;
 
 

@@ -38,7 +38,7 @@ public class EnemyAI : MonoBehaviour, IDamage
     [SerializeField] int experienceReward;
     [SerializeField] int scoreReward = 100;
     [Header("Enemy Type")]
-    [SerializeField] EnemyType enemyType = EnemyType.RegularZombie; 
+   // [SerializeField] EnemyType enemyType = EnemyType.RegularZombie; 
     [Header("Showcase Mode")]
     [SerializeField] bool showcaseMode = false;
 
@@ -285,7 +285,7 @@ public class EnemyAI : MonoBehaviour, IDamage
             if (GameManager.instance != null)
             {
                 // Add score based on enemy type
-                GameManager.instance.AddScore(enemyType);
+               // GameManager.instance.AddScore(enemyType);
             }
             GameManager.instance.enemyBoardCount(-1);
             GameManager.instance.killCount++;
