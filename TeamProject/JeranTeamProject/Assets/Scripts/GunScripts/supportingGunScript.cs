@@ -11,17 +11,35 @@ public class supportingGunScript : MonoBehaviour
     }
 
 
-    public void pickUpScope()
+    public void pickUpScope(GunStats gun)
     {
-
-
 
 
 
 
     }
 
-    
+    public void pickUpForegrip()
+    {
+
+
+
+    }
+
+    public void pickUplaser()
+    {
+
+
+
+    }
+
+    public void pickUpMagazine()
+    {
+
+
+
+
+    }
 
 
     public void gunTierStats(GunStats gun)
@@ -68,6 +86,9 @@ public class supportingGunScript : MonoBehaviour
         gun.shootRate *= smallMultiplier;
         gun.magSizeMax = Mathf.CeilToInt(defaultGun.magSizeMax * smallMultiplier);
     }
+
+
+
 
 
 
