@@ -166,8 +166,15 @@ public class Shooting : MonoBehaviour, IAttachmentPickup
 
     private void locationFinder()
     {
-        scopePos = Shooting.instance.gunModel.GetComponentInChildren<Transform>().Find("SightPos");
+        Transform[] allChildren = Shooting.instance.gunModel.GetComponentsInChildren<Transform>();
 
+        foreach(Transform part in allChildren)
+        {
+            if (part.name == "SightPos") scopePos = part;
+
+
+
+        }
 
 
     }
