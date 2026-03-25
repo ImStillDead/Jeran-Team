@@ -16,17 +16,22 @@ MonoBehaviour:
   shootPos: {fileID: 0}
   recoil: {fileID: 11400000, guid: 56de06dbf8f45634890baaf0591c8b01, type: 2}
   bullet: {fileID: 11400000, guid: 9ec337e9d56f2f84eac6f2c83ff2b134, type: 2}
-  sightPos: {x: 0, y: 0, z: 0}
-  foregripPos: {x: 0, y: 0, z: 0}
-  laserPos: {x: 0, y: 0, z: 0}
   shootRate: 1
   magSizeMax: 1
   reloadTime: 4
-  spread: 20
   currentAmmo: 1
   gunRarity: 2
   gunType: 0
   isBurst: 0
+  hipSpread: 5
+  adsSpread: 0
+  hipX: -75
+  hipY: 75
+  hipZ: 0.38
+  adsX: -70
+  adsY: 70
+  adsZ: 0.38
+  adsZoom: 10
   scale: {x: 1, y: 1, z: 1}
   position: {x: 0, y: 0, z: 0}
   rotation: {x: 0, y: 1, z: 0, w: -0.00000004371139}
