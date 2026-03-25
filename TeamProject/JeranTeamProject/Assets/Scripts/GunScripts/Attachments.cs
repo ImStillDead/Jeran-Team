@@ -19,6 +19,7 @@ public class Attachments : ScriptableObject
     AttachmentType attachmentType;
     Vector3 position;
     GameObject attachmentModel;
+    public bool isEquipped;
 
     [Header("Modifiers")]
     [Range(5f, 75f)] public float adsMod;
