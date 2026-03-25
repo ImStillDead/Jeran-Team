@@ -241,8 +241,6 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
         characterController.center = newCenter;
 
         transform.localScale = new Vector3(transform.localScale.x, originalYScale * slideYScale, transform.localScale.z);
-
-        Debug.Log("Slide started");
     }
     void SlidingMovement()
     {
@@ -273,7 +271,6 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
         {
             playerVel.y = -2f;
         }
-        Debug.Log("Slide stopped");
     }
     public bool IsSliding()
     {
@@ -321,7 +318,6 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
 
         if (Input.GetButtonDown("Jump") && jumpCount < jumpMax)
         {
-            Debug.Log("***** jumped *****");
             isJumping = true;
         }
         if (Input.GetButtonUp("Jump") && jumpCount < jumpMax)
@@ -537,13 +533,10 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
             Vector3 origin = Camera.main.transform.position;
             Vector3 direction = Camera.main.transform.forward;
 
-            Debug.DrawRay(origin, direction * interactDis, Color.mediumVioletRed);
-
             if (Physics.Raycast(origin, direction, out RaycastHit hitInter, interactDis))
             {
                 if (hitInter.collider.TryGetComponent<iInteract>(out var interactable))
                 {
-                    Debug.Log($"Interacting with {hitInter.collider.name}");
                     interactable.Interacted();
                 }
             }

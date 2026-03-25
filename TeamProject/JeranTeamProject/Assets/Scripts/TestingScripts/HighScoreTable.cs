@@ -51,7 +51,7 @@ public class HighscoreTable : MonoBehaviour
         if (highscores == null || highscores.highscoreEntryList == null || highscores.highscoreEntryList.Count == 0)
         {
             // Initialize with empty table if no scores exist
-            Debug.Log("Initializing empty highscore table...");
+           // Debug.Log("Initializing empty highscore table...");
             highscores = new Highscores();
             highscores.highscoreEntryList = new List<HighscoreEntry>();
 
@@ -182,7 +182,7 @@ public class HighscoreTable : MonoBehaviour
         PlayerPrefs.SetString("highscoreTable", json);
         PlayerPrefs.Save();
 
-        Debug.Log($"Highscore saved! Name: {name}, Score: {score}, Time: {time:F2}s");
+       // Debug.Log($"Highscore saved! Name: {name}, Score: {score}, Time: {time:F2}s");
 
         RefreshHighscoreTable();
     }
@@ -259,7 +259,7 @@ public class HighscoreTable : MonoBehaviour
         PlayerPrefs.DeleteKey("highscoreTable");
         PlayerPrefs.Save();
         RefreshHighscoreTable();
-        Debug.Log("All high scores cleared");
+       // Debug.Log("All high scores cleared");
     }
 
     [System.Serializable]
