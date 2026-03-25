@@ -169,17 +169,20 @@ public class Shooting : MonoBehaviour, IAttachmentPickup
 
     private void locationFinder()
     {
-
-        Transform[] allChildren = Shooting.instance.gunModel.GetComponentsInChildren<Transform>();
-
-        foreach(Transform part in allChildren)
+        if(Shooting.instance.gunModel != null)
         {
-            if (part.name == "SightPos") scopePos = part;
+            Transform[] allChildren = Shooting.instance.gunModel.GetComponentsInChildren<Transform>();
 
-            if(part.name == "ForegripPos") foregripPos = part;
+            foreach(Transform part in allChildren)
+            {
+                if (part.name == "SightPos") scopePos = part;
 
-            if(part.name == "LaserPos") laserPos = part;
+                if(part.name == "ForegripPos") foregripPos = part;
 
+                if(part.name == "LaserPos") laserPos = part;
+
+
+            }
 
         }
 
