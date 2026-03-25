@@ -114,6 +114,9 @@ public class Shooting : MonoBehaviour, IAttachmentPickup
     // Update is called once per frame
     void Update()
     {
+        if(scopePos == null && laserPos == null && foregripPos == null)
+        locationFinder();
+
         shootTimer += Time.deltaTime;
 
         /*  Gets the input of the fire button and checks if the shoot timer is greater than
@@ -166,12 +169,16 @@ public class Shooting : MonoBehaviour, IAttachmentPickup
 
     private void locationFinder()
     {
+
         Transform[] allChildren = Shooting.instance.gunModel.GetComponentsInChildren<Transform>();
 
         foreach(Transform part in allChildren)
         {
             if (part.name == "SightPos") scopePos = part;
 
+            if(part.name == "ForegripPos") foregripPos = part;
+
+            if(part.name == "LaserPos") laserPos = part;
 
 
         }
