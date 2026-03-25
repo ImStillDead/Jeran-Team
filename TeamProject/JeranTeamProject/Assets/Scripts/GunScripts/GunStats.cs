@@ -31,7 +31,10 @@ public class GunStats : ScriptableObject
     public GameObject gunModel;
     public GameObject shootPos;
     public RecoilScriptable recoil;
-    public List<Attachment> attachmentList;
+    public List<Attachment> sightList;
+    public List<Attachment> foregripList;
+    public List<Attachment> laserList;
+    public List<Attachment> magazineList;
     public Bullet bullet;
 
 
