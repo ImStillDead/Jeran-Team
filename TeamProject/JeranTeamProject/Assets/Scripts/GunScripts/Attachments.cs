@@ -16,9 +16,10 @@ public enum AttachmentType
 public class Attachments : ScriptableObject
 {
     [Header("Placement")]
-    AttachmentType attachmentType;
-    Vector3 position;
-    GameObject attachmentModel;
+    public AttachmentType attachmentType;
+    public Transform position;
+    public Vector3 offset;
+    public GameObject attachmentModel;
     public bool isEquipped;
 
     [Header("Modifiers")]

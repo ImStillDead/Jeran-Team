@@ -7,7 +7,7 @@ using UnityEngine.Rendering;
 using UnityEngine.UIElements;
 
 
-public class Shooting : MonoBehaviour
+public class Shooting : MonoBehaviour, IAttachmentPickup
 {
 
     public static Shooting instance;
@@ -28,6 +28,25 @@ public class Shooting : MonoBehaviour
     //Public variables
     public List<GunStats> gunList = new List<GunStats>();
     public List<Attachment> attachmentList = new List<Attachment>();
+
+    public HashSet<AttachmentType> attachmentsOnGun = new HashSet<AttachmentType>();
+
+    private AttachmentType lastscope;
+    private AttachmentType lastforegrip;
+    private AttachmentType lastmagazine;
+    private AttachmentType lastlaser;
+
+    public GameObject scopeOject;
+    public GameObject foregripOject;
+    public GameObject magazineOject;
+    public GameObject laserOject;
+
+    public Transform scopePos;
+    public Transform foregripPos;
+    public Transform magazinePos;
+    public Transform laserPos;
+
+
     public int currentAmmo;
     public int startingMaxAmmo;
     public static float shootTimer;
@@ -63,6 +82,10 @@ public class Shooting : MonoBehaviour
     int pelletCount;
     bool isShotgun;
 
+    float baseAdsSpread;
+    float baseHipSpread;
+    int baseMagSize;
+
     bool isADS;
 
     bool burstFiring = true;
@@ -80,9 +103,20 @@ public class Shooting : MonoBehaviour
 
     }
 
+    void Start()
+    {
+        locationFinder();
+
+
+    }
+
+
     // Update is called once per frame
     void Update()
     {
+        if(scopePos == null && laserPos == null && foregripPos == null)
+        locationFinder();
+
         shootTimer += Time.deltaTime;
 
         /*  Gets the input of the fire button and checks if the shoot timer is greater than
@@ -100,13 +134,13 @@ public class Shooting : MonoBehaviour
         {
             shotgunFiring = true;
 
-            while(shotgunFiring)
+            while (shotgunFiring)
             {
-                while(pelletCount != pelletAmount)
+                while (pelletCount != pelletAmount)
                 {
                     ShotgunShot();
                 }
-                StartCoroutine(BurstPellet());              
+                StartCoroutine(BurstPellet());
                 shotgunFiring = false;
             }
         }
@@ -132,6 +166,28 @@ public class Shooting : MonoBehaviour
         }
 
     }
+
+    private void locationFinder()
+    {
+
+        Transform[] allChildren = Shooting.instance.gunModel.GetComponentsInChildren<Transform>();
+
+        foreach(Transform part in allChildren)
+        {
+            if (part.name == "SightPos") scopePos = part;
+
+            if(part.name == "ForegripPos") foregripPos = part;
+
+            if(part.name == "LaserPos") laserPos = part;
+
+
+        }
+
+
+    }
+
+
+
     public void callAmmo()
     {
         if (gunList.Count > 0)
@@ -201,10 +257,6 @@ public class Shooting : MonoBehaviour
             }
         }
     }
-    public void addAttachment(Attachments attachment)
-    {
-
-    }
     public void Shoot()
     {
         /*  Checks to see if the player is not reloading. If they are not, it fires a projectile
@@ -213,8 +265,8 @@ public class Shooting : MonoBehaviour
         if (!reloading)
         {
             shootTimer = 0;
-            if (aud[0] != null) 
-            GameManager.instance.playerScript.PlayAudio(aud[0], volume);
+            if (aud[0] != null)
+                GameManager.instance.playerScript.PlayAudio(aud[0], volume);
 
 
             Quaternion spreadRotation = shootPos.transform.rotation *
@@ -297,16 +349,16 @@ public class Shooting : MonoBehaviour
 
     IEnumerator Burst()
     {
-       burstFiring = false;
+        burstFiring = false;
 
         for (int i = 0; i < burstAmount; i++)
         {
-           Shoot();
-           yield return new WaitForSeconds(burstTime);
+            Shoot();
+            yield return new WaitForSeconds(burstTime);
         }
 
-       yield return new WaitForSeconds(burstDelay);
-       burstFiring = true;
+        yield return new WaitForSeconds(burstDelay);
+        burstFiring = true;
     }
 
     IEnumerator BurstPellet()
@@ -323,7 +375,7 @@ public class Shooting : MonoBehaviour
     public void GunListSwap(List<GunStats> listSwap)
     {
         gunList.Clear();
-        foreach(GunStats gun in listSwap)
+        foreach (GunStats gun in listSwap)
         {
             gunList.Add(gun);
         }
@@ -342,5 +394,96 @@ public class Shooting : MonoBehaviour
     {
         return shootTimer;
     }
+
+    public void AttachmentOnGun(Attachments accessory)
+    {
+        // Remove existing of same type
+        attachmentsOnGun.Remove(accessory.attachmentType);
+
+        attachmentsOnGun.Add(accessory.attachmentType);
+        accessory.isEquipped = true;
+
+        switch (accessory.attachmentType)
+        {
+            case AttachmentType.Sights:
+                scopeOject = accessory.attachmentModel;
+                accessory.position = scopePos;
+                break;
+
+            case AttachmentType.Foregrips:
+                foregripOject = accessory.attachmentModel;
+                accessory.position = foregripPos;
+                break;
+
+            case AttachmentType.Laser:
+                laserOject = accessory.attachmentModel;
+                accessory.position = laserPos;
+                break;
+
+            case AttachmentType.Magazines:
+                magazineOject = accessory.attachmentModel;
+                break;
+        }
+
+        addAttachment(accessory);
+    }
+
+    public void addAttachment(Attachments attachment)
+    {
+        switch (attachment.attachmentType)
+        {
+            case AttachmentType.Sights:
+                if (scopeOject != null)
+                {
+                    Destroy(scopeOject.gameObject);
+                    scopeOject = null;
+                }
+                scopeOject = Instantiate(attachment.attachmentModel, scopePos);
+                scopeOject.transform.localPosition = Vector3.zero;
+                scopeOject.transform.localRotation = Quaternion.identity;
+                break;
+
+            case AttachmentType.Foregrips:
+                if (foregripOject != null) Destroy(foregripOject);
+                foregripOject = Instantiate(attachment.attachmentModel);
+                break;
+
+            case AttachmentType.Laser:
+                if (laserOject != null) Destroy(laserOject);
+                laserOject = Instantiate(attachment.attachmentModel);
+                break;
+
+            case AttachmentType.Magazines:
+                if (magazineOject != null) Destroy(magazineOject);
+                magazineOject = Instantiate(attachment.attachmentModel);
+                break;
+        }
+    }
+
+    public void GetAttachmentsStats(Attachments attachment)
+    {
+
+        // Equip visually
+        AttachmentOnGun(attachment);
+
+        // Apply stats
+        Debug.Log("****************" + adsSpread);
+        adsSpread -= attachment.adsMod;
+        hipSpread -= attachment.hipSpreadMod;
+        Debug.Log("**************Update" + adsSpread);
+
+        recoil.recoil.X += attachment.recoilMod;
+        recoil.recoil.Y -= attachment.recoilMod;
+
+        magSizeMax += (int)attachment.ammoCountMod;
+
+        // clamp values so they don’t break
+        adsSpread = Mathf.Clamp(adsSpread, 0.1f, 100f);
+        hipSpread = Mathf.Clamp(hipSpread, 0.1f, 100f);
+
+
+    }
+
+
 
 }
