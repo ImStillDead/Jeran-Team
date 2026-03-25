@@ -103,6 +103,14 @@ public class Shooting : MonoBehaviour, IAttachmentPickup
 
     }
 
+    void Start()
+    {
+        locationFinder();
+
+
+    }
+
+
     // Update is called once per frame
     void Update()
     {
@@ -153,6 +161,14 @@ public class Shooting : MonoBehaviour, IAttachmentPickup
         {
             StartCoroutine(Reload());
         }
+
+    }
+
+    private void locationFinder()
+    {
+        scopePos = Shooting.instance.gunModel.GetComponentInChildren<Transform>().Find("SightPos");
+
+
 
     }
 
