@@ -17,6 +17,7 @@ MonoBehaviour:
   rightHand: {fileID: 0}
   leftHand: {fileID: 0}
   recoil: {fileID: 11400000, guid: 35444e5d5e7d07d4e8936c62a14b9b5e, type: 2}
+  sightLocation: {fileID: 0}
   bullet: {fileID: 11400000, guid: 7998a77a9bdb1da4b87632ba2f1c8b5b, type: 2}
   shootRate: 0.5
   magSizeMax: 9
@@ -25,17 +26,17 @@ MonoBehaviour:
   gunRarity: 0
   gunType: 0
   isBurst: 0
-  hipSpread: 0
-  adsSpread: 0
-  hipX: 0
-  hipY: 0
-  hipZ: 0
-  adsX: 0
-  adsY: 0
-  adsZ: 0
-  adsZoom: 0
-  scale: {x: 0.5993, y: 0.5993, z: 0.5993}
-  position: {x: 0.0981, y: 1.5566, z: 0.4234}
+  hipSpread: 10
+  adsSpread: 5
+  hipX: -8
+  hipY: 8
+  hipZ: 0.38
+  adsX: -6
+  adsY: 46
+  adsZ: 0.38
+  adsZoom: 5
+  scale: {x: 0.8, y: 0.8, z: 0.8}
+  position: {x: 0, y: 0, z: 0}
   rotation: {x: 0, y: 1, z: 0, w: -0.00000004371139}
   shootRotate: {x: 0, y: 1, z: 0, w: -0.00000004371139}
   burstTime: 0

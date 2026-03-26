@@ -36,6 +36,9 @@ public class EnemyAI : MonoBehaviour, IDamage
     [Header("Zombie Exp")]
     [SerializeField] int killReward;
     [SerializeField] int experienceReward;
+    [SerializeField] int scoreReward = 100;
+    [Header("Enemy Type")]
+   // [SerializeField] EnemyType enemyType = EnemyType.RegularZombie; 
     [Header("Showcase Mode")]
     [SerializeField] bool showcaseMode = false;
 
@@ -196,7 +199,7 @@ public class EnemyAI : MonoBehaviour, IDamage
         playerDir = GameManager.instance.player.transform.position - transform.position;
         angleToPlayer = Vector3.Angle(playerDir, transform.forward);
 
-        Debug.DrawRay(transform.position, playerDir, Color.red);
+        //Debug.DrawRay(transform.position, playerDir, Color.red);
         RaycastHit hit;
         if (Physics.Raycast(transform.position, playerDir, out hit))
         {

@@ -35,7 +35,11 @@ public class GunStats : ScriptableObject
     public Transform leftHand;
 
     public RecoilScriptable recoil;
-    public List<Attachment> attachmentList;
+    public List<Attachment> sightList;
+    public List<Attachment> foregripList;
+    public List<Attachment> laserList;
+    public List<Attachment> magazineList;
+    public Transform sightLocation;
     public Bullet bullet;
 
 

@@ -20,7 +20,7 @@ public class AnimationControl : MonoBehaviour
         player = GameManager.instance.player;
         playerController = GameManager.instance.playerScript;
         playerController.playerAnimator = this;
-
+        Shooting.instance.animationControl = this;
     }
 
     // Update is called once per frame

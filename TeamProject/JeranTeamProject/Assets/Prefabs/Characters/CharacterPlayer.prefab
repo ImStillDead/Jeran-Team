@@ -128,7 +128,7 @@ Transform:
   m_GameObject: {fileID: 1608946974504509990}
   serializedVersion: 2
   m_LocalRotation: {x: -0.008723475, y: -0.02617593, z: -0.00022843199, w: 0.9996193}
-  m_LocalPosition: {x: -0.052, y: 0.019, z: 0.372}
+  m_LocalPosition: {x: -0.058, y: 0.021, z: 0.522}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -161,6 +161,15 @@ MonoBehaviour:
   aud: []
   bulletScript: {fileID: 0}
   gunList: []
+  scopeOject: {fileID: 0}
+  foregripOject: {fileID: 0}
+  magazineOject: {fileID: 0}
+  laserOject: {fileID: 0}
+  scopePos: {fileID: 0}
+  foregripPos: {fileID: 0}
+  magazinePos: {fileID: 0}
+  laserPos: {fileID: 0}
+  animationControl: {fileID: 0}
   currentAmmo: 0
   startingMaxAmmo: 0
   volume: 0
@@ -335,7 +344,7 @@ Transform:
   m_GameObject: {fileID: 2129172508047573539}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.1, z: 0.134}
+  m_LocalPosition: {x: -0, y: 0.047, z: 0.176}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -794,10 +803,10 @@ ParentConstraint:
   m_Enabled: 1
   serializedVersion: 2
   m_Weight: 1
-  m_TranslationAtRest: {x: 0.07, y: 1.52, z: -0.03}
+  m_TranslationAtRest: {x: 0.05, y: 1.44, z: 0.03}
   m_RotationAtRest: {x: 9.14, y: 0, z: 0}
   m_TranslationOffsets:
-  - {x: 0, y: 0, z: 0}
+  - {x: 0, y: -0.1, z: 0}
   m_RotationOffsets:
   - {x: 0, y: 0, z: 0}
   m_AffectTranslationX: 1
@@ -1023,8 +1032,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CameraController
   player: {fileID: 4571722508075737141}
   sens: 300
-  lockVertMin: -65
-  lockVertMax: 65
+  lockVertMin: -45
+  lockVertMax: 45
   invertY: 0
   camRotX: 0
 --- !u!1 &6319568181952248023

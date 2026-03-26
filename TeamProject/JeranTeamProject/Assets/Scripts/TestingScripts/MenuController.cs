@@ -21,7 +21,7 @@ public class MenuController : MonoBehaviour
 
     public bool isPaused;
     float timeScaleOrg;
-
+    cardHolder cardUI;
 
 
     GameManager manager;
@@ -85,7 +85,14 @@ public class MenuController : MonoBehaviour
         menuActive.SetActive(true);
 
         menuButtonController(menuActive);
-        Debug.Log(menuActive + " is active");
+
+        cardUI = FindAnyObjectByType<cardHolder>();
+        if (cardUI != null)
+        {
+            cardUI.updateCards();
+        }
+
+      //  Debug.Log(menuActive + " is active");
     }
 
     public void openMenuButton(GameObject menu)
@@ -95,7 +102,7 @@ public class MenuController : MonoBehaviour
         menuActive.SetActive(true);
 
         menuButtonController(menuActive);
-        Debug.Log(menuActive + " is active");
+       // Debug.Log(menuActive + " is active");
     }
 
     public bool statePause(bool activeRet)

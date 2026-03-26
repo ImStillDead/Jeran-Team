@@ -13,19 +13,19 @@ public class MusicTrigger : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Something entered trigger: " + other.name);
+       /* Debug.Log("Something entered trigger: " + other.name);
         Debug.Log("Other tag: " + other.tag);
         Debug.Log("Root name: " + other.transform.root.name);
-        Debug.Log("Root tag: " + other.transform.root.tag);
+        Debug.Log("Root tag: " + other.transform.root.tag);*/
 
         if (MusicManager.instance == null)
         {
-            Debug.LogWarning("MusicManager instance is missing.");
+          //  Debug.LogWarning("MusicManager instance is missing.");
             return;
         }
         if (other.CompareTag("Player") || other.transform.root.CompareTag("Player"))
         {
-            Debug.Log("Player entered music trigger: " + musicType);
+           // Debug.Log("Player entered music trigger: " + musicType);
 
             switch (musicType)
             {

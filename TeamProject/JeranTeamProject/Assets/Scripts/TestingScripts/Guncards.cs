@@ -8,14 +8,16 @@ using static UnityEngine.GraphicsBuffer;
 
 public class Guncards : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 {
-    [SerializeField] Image card;
+    [Header("card object")]
+    [SerializeField] GameObject cardHolder;
+    [SerializeField] GameObject card;
     [SerializeField] Image gunImage;
     [SerializeField] GameObject gunObject;
     [SerializeField] Transform gunlocation;
     [SerializeField] Image overlay;
     [SerializeField] RawImage gunpreview;
 
-    [Header("GeneralUI")]
+    [Header("GeneralTextUI")]
     [SerializeField] TMP_Text gunName;
     [SerializeField] TMP_Text gunRarity;
 
@@ -44,12 +46,23 @@ public class Guncards : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     [SerializeField] Image magsizeFill;
     [SerializeField] TMP_Text magsizeNumber;
 
+    [Header("pannel colors")]
+    [SerializeField] Image background;
+    [SerializeField] Image namePanel;
+    [SerializeField] Image rarityPanel;
+    [SerializeField] Image statpanel;
+
+
+    [Header("rawimage unique to gunCard")]
+    public RawImage rawImage;
+    public Camera prefabCamera;
 
 
     GameManager manager;
     PlayerController player;
     Shooting Gun;
-    
+    cardHolder holder;
+
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -63,12 +76,19 @@ public class Guncards : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         Gun = player.Gun;
         if (Gun == null) { Debug.LogError("player.Gun is null!"); return; }
 
+        RenderTexture rt = new RenderTexture(256, 256, 16);
+        prefabCamera.targetTexture = rt;
+        rawImage.texture = rt;
+
+        card = transform.parent.gameObject;
+        cardHolder = card.transform.parent.gameObject;
     }
 
     public void OnPointerEnter(PointerEventData eventData)
     {
 
         overlay.color = Color.clear;
+        card.transform.SetAsLastSibling();
         Debug.Log("Mouse Enter");
 
     }
@@ -98,7 +118,21 @@ public class Guncards : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         }
     }
 
+    void setColor(byte Red, byte Green, byte Blue)
+    {
 
+        Color32 NColor = new Color32(Red, Green, Blue, 255);
+        Color32 BackColor = new Color32((byte)(Red * 0.7), (byte)(Green * 0.7), (byte)(Blue * 0.7), 255);
+
+        background.color = BackColor;
+        namePanel.color = NColor;
+        rarityPanel.color = NColor;
+        statpanel.color = NColor;
+
+    }
+
+
+    //sight ----laser---foregrip attatchments add
 
 
     public void setGunstats(int gunPos)
@@ -121,14 +155,13 @@ public class Guncards : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
         // Spawn new gun model
         gunObject = Instantiate(gun.gunModel, gunlocation);
-        foreach (Transform child in gunObject.GetComponentsInChildren<Transform>())
-        {
-            child.tag = "GunPreview";
-        }
+        gunObject.layer = LayerMask.NameToLayer("GunPreview");
         gunObject.transform.localRotation = Quaternion.identity;
         gunObject.transform.localPosition = Vector3.zero;
         gunObject.transform.localScale = Vector3.one;
-        
+
+        Debug.Log("set card gameobject to" + gun.gunModel);
+
 
         // UI
         gunName.text = gun.name;
@@ -146,7 +179,7 @@ public class Guncards : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         ADSaccuracyNumber.text = Mathf.RoundToInt(accADSPercent).ToString();
         ADSaccuracyFill.fillAmount = Mathf.Clamp01(accADSPercent / 100f);
 
-        int frrMult = Mathf.RoundToInt(gun.shootRate * 10f);
+        int frrMult = Mathf.RoundToInt(gun.shootRate * Gun.getShootTimer()); 
         firerateNumber.text = frrMult.ToString();
         firerateFill.fillAmount = Mathf.Clamp01(frrMult / 100f);
 
@@ -156,6 +189,52 @@ public class Guncards : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
         magsizeNumber.text = gun.magSizeMax.ToString();
         magsizeFill.fillAmount = Mathf.Clamp01(gun.magSizeMax / 500f);
+
+        Debug.Log("set gun dmg number to" + gun.bullet.damageAmount);
+        Debug.Log("set gun hip number to" + gun.hipSpread);
+        Debug.Log("set gun ads number to" + gun.adsSpread);
+        Debug.Log("set gun firerate number to" + gun.shootRate);
+        Debug.Log("set gun reload number to" + gun.reloadTime);
+        Debug.Log("set gun magsize number to" + gun.magSizeMax);
+
+        cardColor(gun);
+    }
+
+    void cardColor(GunStats color)
+    {
+
+
+
+
+        if(color != null && color.gunRarity == GunRarity.Common)
+        {
+            setColor(155, 155, 155);
+        }
+        else if(color != null && color.gunRarity == GunRarity.Uncommon)
+        {
+            setColor(123, 164, 79);
+        }
+        else if(color != null && color.gunRarity == GunRarity.Rare)
+        {
+            setColor(80, 137, 164);
+        }
+        else if(color != null && color.gunRarity == GunRarity.Perfected)
+        {
+            setColor(224, 174, 34);
+        }
+        else if(color != null && color.gunRarity == GunRarity.Exotic)
+        {
+            setColor(226, 62, 48);
+        }
+        else if(color != null && color.gunRarity == GunRarity.Special)
+        {
+
+        }
+
+
+
+
+
     }
 
 
