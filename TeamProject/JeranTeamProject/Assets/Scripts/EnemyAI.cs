@@ -199,7 +199,7 @@ public class EnemyAI : MonoBehaviour, IDamage
         playerDir = GameManager.instance.player.transform.position - transform.position;
         angleToPlayer = Vector3.Angle(playerDir, transform.forward);
 
-        Debug.DrawRay(transform.position, playerDir, Color.red);
+        //Debug.DrawRay(transform.position, playerDir, Color.red);
         RaycastHit hit;
         if (Physics.Raycast(transform.position, playerDir, out hit))
         {
@@ -282,11 +282,7 @@ public class EnemyAI : MonoBehaviour, IDamage
 
         if (HP <= 0)
         {
-            if (GameManager.instance != null)
-            {
-                // Add score based on enemy type
-               // GameManager.instance.AddScore(enemyType);
-            }
+            player.GetComponent<OnPlayerEnemySpawn>().spawnCount--;
             GameManager.instance.enemyBoardCount(-1);
             GameManager.instance.killCount++;
             GameManager.instance.prog.getkills(1);

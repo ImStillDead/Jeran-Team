@@ -43,7 +43,7 @@ public class supportGameProgression : MonoBehaviour
         if (!unlocked.Contains(achievement))
         {
             unlocked.Add(achievement);
-            Debug.Log("Unlocked: " + achievement);
+          //  Debug.Log("Unlocked: " + achievement);
         }
 
     }
@@ -53,27 +53,27 @@ public class supportGameProgression : MonoBehaviour
         kills += kill;
         if(kills >= 10 && !unlocked.Contains(progess.get10Kills))
         {
-            Debug.LogWarning("*********achievement unlocked************");
+          //  Debug.LogWarning("*********achievement unlocked************");
             Unlock(progess.get10Kills);
             Manager.addDialog("you killed 10 enemies"); //the addition to the dialog is temp for testing, it will be updated for a notif bar that willpop up and slide away.
         }
 
         if (kills >= 50 && !unlocked.Contains(progess.get50kills))
         {
-            Debug.LogWarning("*********achievement unlocked************");
+          //  Debug.LogWarning("*********achievement unlocked************");
             Unlock(progess.get50kills);
             Manager.addDialog("you killed 50 enemies");
         }
 
         if (kills >= 100 && !unlocked.Contains(progess.get100kills))
         {
-            Debug.LogWarning("*********achievement unlocked************");
+          //  Debug.LogWarning("*********achievement unlocked************");
             Unlock(progess.get100kills);
             Manager.addDialog("you killed 100 enemies");
         }
         if (kills >= 500 && !unlocked.Contains(progess.get500kills))
         {
-            Debug.LogWarning("*********achievement unlocked************");
+          //  Debug.LogWarning("*********achievement unlocked************");
             Unlock(progess.get500kills);
             Manager.addDialog("you killed 500 enemies");
         }
@@ -87,7 +87,7 @@ public class supportGameProgression : MonoBehaviour
             if (player.holster.gunList[index] == GameObject.FindGameObjectWithTag("Common") && !unlocked.Contains(progess.findAcommonWeapon))
             {
 
-                Debug.LogWarning("*********achievement unlocked************");
+               // Debug.LogWarning("*********achievement unlocked************");
                 Unlock(progess.findAcommonWeapon);
                 Manager.addDialog("you found a Common weapon");
 
@@ -97,7 +97,7 @@ public class supportGameProgression : MonoBehaviour
             if (player.holster.gunList[index] == GameObject.FindGameObjectWithTag("Uncommon") && !unlocked.Contains(progess.findAUncommon))
             {
 
-                Debug.LogWarning("*********achievement unlocked************");
+               // Debug.LogWarning("*********achievement unlocked************");
                 Unlock(progess.findAUncommon);
                 Manager.addDialog("you found a Uncommon weapon");
             }
@@ -120,10 +120,5 @@ public class supportGameProgression : MonoBehaviour
             Manager.addDialog("you survived 1 day");
 
         }
-
-
     }
-
-
-
 }

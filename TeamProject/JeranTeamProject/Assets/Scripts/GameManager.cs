@@ -410,7 +410,7 @@ public class GameManager : MonoBehaviour
     public void AddScore(int points)
     {
         currentScore += points;
-        Debug.Log($"Added {points} points! Total Score: {currentScore}");
+       // Debug.Log($"Added {points} points! Total Score: {currentScore}");
     }
 
     public void AddScore(EnemyType enemyType)
@@ -476,7 +476,7 @@ public class GameManager : MonoBehaviour
         float tempMaxHP = gameData.playerData.HPMax;
         if (gameData.playerData.experience >= gameData.playerData.levelUpCap)
         {
-            Debug.Log("you have leveled up");
+          //  Debug.Log("you have leveled up");
             gameData.playerData.level += 1;
             levelText.text = gameData.playerData.level.ToString();
             gameData.playerData.experience -= gameData.playerData.levelUpCap;
@@ -514,7 +514,7 @@ public class GameManager : MonoBehaviour
 
         stat *= statMultiplier;
 
-        Debug.Log("increase " + stat);
+       // Debug.Log("increase " + stat);
 
         return stat;
     }

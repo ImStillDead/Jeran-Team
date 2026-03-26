@@ -18,7 +18,7 @@ public class FileManager
         string fullPath = Path.Combine(dataDirPath, currentRunFile);
         string loadData = System.IO.File.ReadAllText(fullPath);
         GameData loadedData = JsonUtility.FromJson<GameData>(loadData);
-        Debug.Log("File Loaded" + fullPath);
+        //Debug.Log("File Loaded" + fullPath);
         return loadedData;
     }
     public GameData LoadGame()
@@ -26,7 +26,7 @@ public class FileManager
         string fullPath = Path.Combine(dataDirPath, dataFileName);
         string loadData = System.IO.File.ReadAllText(fullPath);
         GameData loadedData = JsonUtility.FromJson<GameData>(loadData);
-        Debug.Log("File Loaded" + fullPath);
+        //Debug.Log("File Loaded" + fullPath);
         return loadedData;
     }
     public void SaveRun(GameData data)
