@@ -92,7 +92,7 @@ public class MenuController : MonoBehaviour
             cardUI.updateCards();
         }
 
-        Debug.Log(menuActive + " is active");
+
     }
 
     public void openMenuButton(GameObject menu)
@@ -102,7 +102,7 @@ public class MenuController : MonoBehaviour
         menuActive.SetActive(true);
 
         menuButtonController(menuActive);
-        Debug.Log(menuActive + " is active");
+
     }
 
     public bool statePause(bool activeRet)

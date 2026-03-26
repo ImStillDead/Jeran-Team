@@ -137,9 +137,9 @@ public class Guncards : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     public void setGunstats(int gunPos)
     {
-        if (Gun == null || Gun.gunList == null) return;
+        if (Gun == null || player.holster.gunList == null) return;
 
-        var guns = player.Gun.gunList;
+        var guns = player.holster.gunList;
 
         if (gunPos < 0 || gunPos >= guns.Count) return;
 

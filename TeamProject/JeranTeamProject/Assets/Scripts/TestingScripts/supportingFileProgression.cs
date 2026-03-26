@@ -82,9 +82,9 @@ public class supportGameProgression : MonoBehaviour
 
     public void FindItem()
     {
-        for(int index = 0; index < guns.gunList.Count; index++)
+        for(int index = 0; index < player.holster.gunList.Count; index++)
         {
-            if (guns.gunList[index] == GameObject.FindGameObjectWithTag("Common") && !unlocked.Contains(progess.findAcommonWeapon))
+            if (player.holster.gunList[index] == GameObject.FindGameObjectWithTag("Common") && !unlocked.Contains(progess.findAcommonWeapon))
             {
 
                 Debug.LogWarning("*********achievement unlocked************");
@@ -94,7 +94,7 @@ public class supportGameProgression : MonoBehaviour
 
             }
 
-            if (guns.gunList[index] == GameObject.FindGameObjectWithTag("Uncommon") && !unlocked.Contains(progess.findAUncommon))
+            if (player.holster.gunList[index] == GameObject.FindGameObjectWithTag("Uncommon") && !unlocked.Contains(progess.findAUncommon))
             {
 
                 Debug.LogWarning("*********achievement unlocked************");

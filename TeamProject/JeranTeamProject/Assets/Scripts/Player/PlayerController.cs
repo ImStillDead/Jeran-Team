@@ -56,6 +56,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
     [SerializeField] GameObject torch;
     [SerializeField] AudioSource aud;
     [SerializeField] List<GameObject> MeshList;
+    
 
     private cardHolder cardUI;
     GameManager manager;
@@ -63,6 +64,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
     PlayerData staticBase;
     public Shooting Gun;
     GameData runData;
+    public GUNHolsters holster;
     public AnimationControl playerAnimator;
     public PlayerData playerData;
     public List<Pickups> itemList;
@@ -111,20 +113,23 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
     }
     void Start()
     {
-        cardUI = FindAnyObjectByType<cardHolder>();
-        cardUI?.Init(this);
 
         Gun = Shooting.instance;
+        holster = GetComponentInChildren<GUNHolsters>();
         manager = GameManager.instance;
+        cardUI?.Init(this);
+        cardUI = FindAnyObjectByType<cardHolder>();
+
         SpawnPlayer();
         PlayerArmor();
         UpdatePlayerUI();
+
     }
     void Update()
     {
         if (manager != null && manager.menus.isPaused)
             return;
-        
+
 
         UpdatePlayerUI();
         Movement();
@@ -464,11 +469,14 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
     IEnumerator DmgBoost()
     {
         dmgBoosting = true;
-        playerData.dmgAmmount = Gun.gunList[gunPos].bullet.damageAmount;
-        Gun.gunList[gunPos].bullet.damageAmount *= (int)activePick.dmgBoost;
+
+        GunStats current = holster.GetActiveGun();
+
+        playerData.dmgAmmount = current.bullet.damageAmount;
+        current.bullet.damageAmount *= (int)activePick.dmgBoost;
         boostTime = activePick.boostDur;
         yield return new WaitForSeconds(boostTime);
-        Gun.gunList[gunPos].bullet.damageAmount = playerData.dmgAmmount;
+        current.bullet.damageAmount = playerData.dmgAmmount;
         dmgBoosting = false;
     }
     IEnumerator SpeedBoost()
@@ -480,7 +488,6 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
     }
     void ChangeActiveInventory()
     {
-
         // Item Swap
         if (Input.GetButtonDown("Swap"))
         {
@@ -494,44 +501,30 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
                 ChangeItem(invPos);
             }
         }
-
-        if (Gun == null || Gun.gunList == null || Gun.gunList.Count == 0)
-            return;
-
-
-        // Weapon Scroll
-        if (Input.GetAxis("Mouse ScrollWheel") > 0)
+        if(holster != null && holster.GetActiveGun() != null)
         {
-            if (gunPos >= Gun.gunList.Count - 1)
-                gunPos = 0;
-            else
-                gunPos++;
 
-            UpdateGun();
-        }
-        else if (Input.GetAxis("Mouse ScrollWheel") < 0)
-        {
-            if (gunPos <= 0)
-                gunPos = Gun.gunList.Count - 1;
-            else
-                gunPos--;
+            // Weapon Scroll
+            if (Input.GetAxis("Mouse ScrollWheel") != 0)
+            {
+                holster.SwapHolsterGuns();
+            }
 
-            UpdateGun();
-        }
+            // Weapon Select 1-2
+            if (Input.GetButtonDown("Weapon1"))
+            {
 
-        // Weapon Select 1-2
-        if (Input.GetButtonDown("Weapon1") && Gun.gunList.Count > 0)
-        {
-            gunPos = 0;
-            UpdateGun();
+                holster.SwapHolsterGuns();
  
-        }
-        else if (Input.GetButtonDown("Weapon2") && Gun.gunList.Count > 1)
-        {
-            gunPos = 1;
-            UpdateGun();
+            }
+            else if (Input.GetButtonDown("Weapon2"))
+            {
 
+                holster.SwapHolsterGuns();
+
+            }
         }
+
 
     }
     void Interact()
@@ -554,44 +547,41 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
         }
     }
     // Gun interactions
+
+    public void UpdateActiveGun(GunStats newGun)
+    {
+        Gun.SetGun(newGun);
+    }
+    public void updateSwapGun(GunStats swapGun)
+    {
+        Gun.swapGun(swapGun);
+    }
+
     public void GetGunStats(GunStats gun)
     {
-        if (Gun.gunList.Contains(gun))
+        if (holster.gunList.Contains(gun))
         {
             canPickup = false;
         }
-        else if (Gun.gunList.Count >= gunMax)
+        else if (holster.gunList.Count >= gunMax)
         {
             canPickup = false;
         }
         else
         {
             canPickup = true;
-            Gun.gunList.Add(gun);
-            gunPos = Gun.gunList.Count - 1;
-            if (Gun.gunList.Count == 1)
+            holster.gunList.Add(gun);
+            gunPos = holster.gunList.Count - 1;
+            if (holster.gunList.Count == 1)
             {
-                Gun.changeGun(gunPos);
+
             }
         }
 
         cardUI?.updateCards();
 
     }
-    public void SwapGunPickup(GunStats gun)
-    {
-        Gun.gunList[gunPos] = gun;
-        Gun.changeGun(gunPos);
 
-        cardUI?.updateCards();
-
-    }
-    public void UpdateGun()
-    {
-        Gun.changeGun(gunPos);
-
-        cardUI?.updateCards();
-    }
     void WeaponRotate()
     {
         weaponPos.transform.rotation = firstPersonCamera.transform.rotation;
@@ -760,14 +750,15 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
         {
             itemList.Add(item);
         }
-        Gun.gunList.Clear();
-        foreach (GunStats gun in data.gunList)
+        if (holster != null)
         {
-            Gun.gunList.Add(gun);
-        }
-        if (!levelUp)
-        {
-            Gun.changeGun(0);
+            holster.gunList.Clear();
+            foreach (GunStats gun in data.gunList)
+            {
+                holster.ClearGunModels();
+                Shooting.instance.SetGun(gun);   //over here over here change this 
+            }
+            //holster.Init();
         }
         UpdatePlayerUI();
     }
@@ -844,6 +835,9 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
         foreach (GunStats gun in character.gunList)
         {
             playerData.gunList.Add(gun);
+            //holster.ClearGunModels();
+            Shooting.instance.SetGun(gun);
+            holster.swapCharacters = true;
         }
         //MeshChange
         Destroy(characterMesh);
@@ -872,6 +866,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
         foreach (GunStats gun in character.gunList)
         {
             staticBase.gunList.Add(gun);
+            holster.gunList.Add(gun);
         }
         SaveHub();
     }

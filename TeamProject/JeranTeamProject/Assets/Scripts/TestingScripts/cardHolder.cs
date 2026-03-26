@@ -42,23 +42,23 @@ public class cardHolder : MonoBehaviour
     {
         if (player == null)
         {
-            Debug.LogWarning("cardHolder: player is NULL");
+
             return;
         }
 
         if (player.Gun == null)
         {
-            Debug.LogWarning("cardHolder: player.Gun is NULL");
+   
             return;
         }
 
-        if (player.Gun.gunList == null)
+        if (player.holster.gunList == null)
         {
-            Debug.LogWarning("cardHolder: gunList is NULL");
+
             return;
         }
 
-        var gunlist = player.Gun.gunList;
+        var gunlist = player.holster.gunList;
 
 
 
