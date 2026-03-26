@@ -140,6 +140,7 @@ public class GameManager : MonoBehaviour
     }
     void Update()
     {
+
         if (Input.GetButtonDown("Cancel"))
         {
             menus.pauseMenu();
@@ -559,6 +560,13 @@ public class GameManager : MonoBehaviour
         if (playerScript != null)
         {
             playerSpawn = GameObject.FindWithTag("PlayerSpawn");
+            playerScript.SwapCharacter(baseCharacter);
+        }
+    }
+    private void LateUpdate()
+    {
+        if(playerScript.characterMesh == null)
+        {
             playerScript.SwapCharacter(baseCharacter);
         }
     }
