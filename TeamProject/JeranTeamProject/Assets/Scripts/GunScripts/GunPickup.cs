@@ -32,7 +32,7 @@ public class GunPickup : MonoBehaviour
             else
             {
                 canSwap = true;
-                Debug.Log("Cannot Pick Up, Would You like to Swap?");
+               // Debug.Log("Cannot Pick Up, Would You like to Swap?");
             }
         }
     }

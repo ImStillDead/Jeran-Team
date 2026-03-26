@@ -49,7 +49,7 @@ public class MusicManager : MonoBehaviour
     {
         if (trackArray == null || trackArray.Length == 0)
         {
-            Debug.LogWarning("Track array is empty or null.");
+           // Debug.LogWarning("Track array is empty or null.");
             return;
         }
         int randomIndex = Random.Range(0, trackArray.Length);
@@ -61,19 +61,19 @@ public class MusicManager : MonoBehaviour
     {
         if (musicSource == null)
         {
-            Debug.LogWarning("Music source is not assigned.");
+           // Debug.LogWarning("Music source is not assigned.");
             return;
         }
         if (newTrack == null)
         {
-            Debug.LogWarning("New track is null.");
+            //Debug.LogWarning("New track is null.");
             return;
         }
 
-        Debug.Log(" Tryng to play track: " + newTrack.name);
+      //  Debug.Log(" Tryng to play track: " + newTrack.name);
         if (musicSource.clip == newTrack)
         {
-            Debug.Log("Already playing this track.");
+            //Debug.Log("Already playing this track.");
             return; 
         }
         if (fadeCoroutine != null)
