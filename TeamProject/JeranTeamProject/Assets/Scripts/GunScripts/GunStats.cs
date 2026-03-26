@@ -30,6 +30,10 @@ public class GunStats : ScriptableObject
     [Header("Dragged Stuff")]
     public GameObject gunModel;
     public GameObject shootPos;
+
+    public Transform rightHand;
+    public Transform leftHand;
+
     public RecoilScriptable recoil;
     public List<Attachment> sightList;
     public List<Attachment> foregripList;

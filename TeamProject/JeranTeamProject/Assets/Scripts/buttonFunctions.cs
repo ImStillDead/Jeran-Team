@@ -89,12 +89,12 @@ public class ButtonFunctions : MonoBehaviour
     public void NewGame()
     {
         DataManager.instance.NewGame();
-        SceneManager.LoadScene(2);
+        SceneManager.LoadScene(1);
     }
 
     public void StartGame()
     {
-        SceneManager.LoadScene(2);
+        SceneManager.LoadScene(1);
     }
     public void NextLevel()
     {
@@ -108,10 +108,10 @@ public class ButtonFunctions : MonoBehaviour
         }
         else
         {
+            manager.UpdateRun();
             SceneManager.LoadScene(index);
             manager.sceneIndex = index;
             manager.resetObjective();
-            manager.UpdateRun();
             manager.playerScript.SpawnPlayer();
             manager.playerScript.LoadRun();
             manager.menus.stateUnpause();
