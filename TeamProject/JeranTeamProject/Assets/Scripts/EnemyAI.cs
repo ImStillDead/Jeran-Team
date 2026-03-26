@@ -282,11 +282,7 @@ public class EnemyAI : MonoBehaviour, IDamage
 
         if (HP <= 0)
         {
-            if (GameManager.instance != null)
-            {
-                // Add score based on enemy type
-               // GameManager.instance.AddScore(enemyType);
-            }
+            player.GetComponent<OnPlayerEnemySpawn>().spawnCount--;
             GameManager.instance.enemyBoardCount(-1);
             GameManager.instance.killCount++;
             GameManager.instance.prog.getkills(1);

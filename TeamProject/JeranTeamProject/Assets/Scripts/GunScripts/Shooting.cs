@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net.Mail;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Animations;
 using UnityEngine.Rendering;
 using UnityEngine.UIElements;
 
@@ -13,7 +14,7 @@ public class Shooting : MonoBehaviour, IAttachmentPickup
     public static Shooting instance;
 
     // [SerializeFields] for variables that we want to edit in Unity
-    [SerializeField] GameObject gunModel;
+    [SerializeField] public GameObject gunModel;
     [SerializeField] LayerMask ignoreLayer;
     [SerializeField] float shootRate;
     [SerializeField] int magSizeMax;
@@ -21,7 +22,7 @@ public class Shooting : MonoBehaviour, IAttachmentPickup
     [SerializeField] GameObject bullet;
     [SerializeField] Transform shootPos;
     [SerializeField] Transform invisiGun;
-
+    IKController playerIK;
     [SerializeField] AudioClip[] aud;
     [SerializeField] Bullet bulletScript;
 
@@ -47,6 +48,7 @@ public class Shooting : MonoBehaviour, IAttachmentPickup
     public Transform laserPos;
 
 
+    public AnimationControl animationControl;
     public int currentAmmo;
     public int startingMaxAmmo;
     public static float shootTimer;
@@ -101,16 +103,14 @@ public class Shooting : MonoBehaviour, IAttachmentPickup
 
         recoil = GameObject.Find("CameraRot/CameraRecoil").GetComponent<Recoil>();
 
+
     }
 
     void Start()
     {
         locationFinder();
-
-
+        animationControl = GameManager.instance.playerScript.playerAnimator;
     }
-
-
     // Update is called once per frame
     void Update()
     {
@@ -169,7 +169,7 @@ public class Shooting : MonoBehaviour, IAttachmentPickup
 
     private void locationFinder()
     {
-
+        if(gunModel == null) {  return; }
         Transform[] allChildren = Shooting.instance.gunModel.GetComponentsInChildren<Transform>();
 
         foreach(Transform part in allChildren)
@@ -238,11 +238,14 @@ public class Shooting : MonoBehaviour, IAttachmentPickup
             burstDelay = gunList[gunPos].burstDelay;
 
             recoil.UpdateRecoil(gunList[gunPos].recoil);
+            //GameManager.instance.playerScript.weaponPos.SetParent(GameManager.instance.player.transform, false);
             Destroy(gunModel);
             gunModel = Instantiate(gunList[gunPos].gunModel, invisiGun);
             gunModel.transform.localScale = gunList[gunPos].scale;
             gunModel.transform.localPosition = gunList[gunPos].postion;
             gunModel.transform.localRotation = gunList[gunPos].rotation;
+            gunList[gunPos].leftHand = gunModel.transform.Find("LeftHandPos");
+            gunList[gunPos].rightHand = gunModel.transform.Find("RightHandPos");
             shootPos = gunModel.transform.GetChild(0);
             changeBullet();
             callAmmo();
@@ -255,6 +258,11 @@ public class Shooting : MonoBehaviour, IAttachmentPickup
             {
                 isShotgun = false;
             }
+            playerIK = GameManager.instance.playerScript.playerIK;
+            if(playerIK != null)
+            {
+                SetHandPosition();
+            }
         }
     }
     public void Shoot()
@@ -265,16 +273,12 @@ public class Shooting : MonoBehaviour, IAttachmentPickup
         if (!reloading)
         {
             shootTimer = 0;
-            if (aud[0] != null)
-                GameManager.instance.playerScript.PlayAudio(aud[0], volume);
-
-
+            if (aud[0] != null) 
+            GameManager.instance.playerScript.PlayAudio(aud[0], volume);
             Quaternion spreadRotation = shootPos.transform.rotation *
                 Quaternion.Euler(Random.Range(-currentSpread, currentSpread), Random.Range(-currentSpread, currentSpread), 0);
 
-
             Instantiate(bullet, shootPos.position, spreadRotation);
-
 
             currentAmmo = currentAmmo - 1;
             callAmmo();
@@ -294,7 +298,6 @@ public class Shooting : MonoBehaviour, IAttachmentPickup
         {
             shootTimer = 0;
             GameManager.instance.playerScript.PlayAudio(aud[0], volume);
-
 
             Quaternion spreadRotation = shootPos.transform.rotation *
                 Quaternion.Euler(Random.Range(-currentSpread, currentSpread), Random.Range(-currentSpread, currentSpread), 0);
@@ -323,6 +326,11 @@ public class Shooting : MonoBehaviour, IAttachmentPickup
 
 
         Camera.main.fieldOfView = 75;
+        if(playerIK.gunRightHand != null)
+        {
+            animationControl.isAiming = false;
+            GameManager.instance.playerScript.weaponPos.GetComponent<ParentConstraint>().weight = 1f;
+        }
     }
 
     public void ADS()
@@ -335,16 +343,25 @@ public class Shooting : MonoBehaviour, IAttachmentPickup
         recoil.recoil.Z = adsZ;
 
         Camera.main.fieldOfView = 75 - adsZoom;
+        if (playerIK.gunRightHand != null)
+        {
+            animationControl.isAiming = true;
+            GameManager.instance.playerScript.weaponPos.GetComponent<ParentConstraint>().weight = 0f;
+        }
+        
     }
 
     // Called in Update if the currentAmmo is less than or equal to 0 and the player is not reloading
     IEnumerator Reload()
     {
+        
+        animationControl.isReloading = true;
         reloading = true;                               // Sets reloading to true to stop the player from firing
         yield return new WaitForSeconds(reloadTime);    // Waits for a set amount of time determined by the reloadTime
         currentAmmo = magSizeMax;                   // Sets currentAmmo equal to the max ammo
         callAmmo();
         reloading = false;                              // Sets reloading back to false so the player can shoot again
+        animationControl.isReloading = false;
     }
 
     IEnumerator Burst()
@@ -385,9 +402,24 @@ public class Shooting : MonoBehaviour, IAttachmentPickup
     {
         return gunList[activeGun].gunType;
     }
-    public Transform GetGunPosition()
+    public void SetHandPosition()
     {
-        return invisiGun;
+        playerIK.gunLeftHand = gunModel.transform.Find("LeftHandPos");
+        playerIK.gunRightHand = gunModel.transform.Find("RightHandPos");
+        ConstraintSource constraintSource = new ConstraintSource();
+        constraintSource.sourceTransform = playerIK.animator.GetBoneTransform(HumanBodyBones.RightLowerArm);
+        constraintSource.weight = 1f;
+        GameManager.instance.playerScript.weaponPos.GetComponent<ParentConstraint>().SetSource(0, constraintSource);
+        GameManager.instance.playerScript.weaponPos.GetComponent<ParentConstraint>().constraintActive = true;
+        GameManager.instance.playerScript.weaponPos.GetComponent<ParentConstraint>().weight = 1f;
+        //constraintSource.sourceTransform = gunModel.transform.Find("RightHandPos");
+        //constraintSource.weight = 1f;
+        //GameManager.instance.playerScript.rightHand.GetComponent<ParentConstraint>().SetSource(0, constraintSource);
+        //GameManager.instance.playerScript.rightHand.GetComponent<ParentConstraint>().constraintActive = true;
+        //constraintSource.sourceTransform = gunModel.transform.Find("LeftHandPos");
+        //GameManager.instance.playerScript.leftHand.GetComponent<ParentConstraint>().SetSource(0, constraintSource);
+        //GameManager.instance.playerScript.leftHand.GetComponent<ParentConstraint>().constraintActive = true;
+        //GameManager.instance.playerScript.UpdateAnimations();
     }
 
     public float getShootTimer()
@@ -477,7 +509,7 @@ public class Shooting : MonoBehaviour, IAttachmentPickup
 
         magSizeMax += (int)attachment.ammoCountMod;
 
-        // clamp values so they don’t break
+        // clamp values so they donï¿½t break
         adsSpread = Mathf.Clamp(adsSpread, 0.1f, 100f);
         hipSpread = Mathf.Clamp(hipSpread, 0.1f, 100f);
 
