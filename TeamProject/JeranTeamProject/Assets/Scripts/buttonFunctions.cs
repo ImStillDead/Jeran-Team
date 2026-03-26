@@ -57,7 +57,7 @@ public class ButtonFunctions : MonoBehaviour
     {
         if (GameManager.instance == null)
         {
-            Debug.LogError("GameManager.instance is null! Cannot restart.");
+            //Debug.LogError("GameManager.instance is null! Cannot restart.");
             return;
         }
         if (manager.playerScript != null)
