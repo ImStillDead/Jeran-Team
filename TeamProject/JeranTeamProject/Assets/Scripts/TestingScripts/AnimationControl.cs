@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class AnimationControl : MonoBehaviour
 {
-    public Animator animator;
+    [SerializeField] public Animator animator;
     private GameObject player;
     private PlayerController playerController;
     //Animation Settings

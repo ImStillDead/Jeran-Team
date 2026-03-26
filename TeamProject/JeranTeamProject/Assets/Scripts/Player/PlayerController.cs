@@ -36,7 +36,8 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
     [SerializeField] int enemyViewDis;
     [SerializeField] int gravity;
     [SerializeField] int hubIndex;
-    
+    [SerializeField] GameObject lookAt;
+
 
     [Header("Dash Settings")]
     [SerializeField] float dashForce = 30f;
@@ -60,11 +61,11 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
 
     private cardHolder cardUI;
     GameManager manager;
-    GameObject characterMesh;
+    public GameObject characterMesh;
     PlayerData staticBase;
     public Shooting Gun;
     GameData runData;
-    public IKController playerIK;
+    [SerializeField] public IKController playerIK;
     public AnimationControl playerAnimator;
     public PlayerData playerData;
     public List<Pickups> itemList;
@@ -101,14 +102,15 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
     private Transform currentPlatform;
     private Vector3 lastPlatformPos;
 
+    public List<SetBoneContraint> boneRigs = new List<SetBoneContraint>();
     public Transform rightHand;
     public Transform leftHand;
+
     void Awake()
     {
         runData = new GameData();
         staticBase = new PlayerData();
         playerData = new PlayerData();
-        
         characterController = GetComponent<CharacterController>();
         SetupDashing();
         SetupSliding();
@@ -357,12 +359,10 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
         if (Input.GetButtonDown("Sprint"))
         {
             speed *= sprintMod;
-            //playerAnimator.isRunning = true;
         }
         else if (Input.GetButtonUp("Sprint"))
         {
             speed /= sprintMod;
-           // playerAnimator.isRunning = false;
         }
     }
     //Torch
@@ -600,11 +600,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
     }
     void WeaponRotate()
     {
-        //weaponPos.transform.rotation = firstPersonCamera.transform.rotation;
-        if (playerIK != null)
-        {
-            weaponPos.transform.LookAt(playerIK.scope.position);
-        }
+        weaponPos.transform.LookAt(lookAt.transform);
     }
 
     // Health and UI interactions
@@ -906,13 +902,10 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
 
     public void UpdateAnimations()
     {
-        playerAnimator.animator = characterMesh.GetComponent<Animator>();
-        playerIK = characterMesh.GetComponent<IKController>();
-        if (playerIK != null)
+        playerAnimator.animator.avatar = characterMesh.GetComponent<Animator>().avatar;
+        foreach(SetBoneContraint rig in boneRigs)
         {
-            playerIK.scope = GameObject.FindGameObjectWithTag("LookAtScope").transform;
-            playerIK.animator = playerAnimator.animator;
-            
+            rig.updateRig();
         }
     }
 }

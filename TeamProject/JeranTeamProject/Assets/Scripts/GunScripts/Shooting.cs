@@ -80,8 +80,12 @@ public class Shooting : MonoBehaviour
 
         recoil = GameObject.Find("CameraRot/CameraRecoil").GetComponent<Recoil>();
 
-    }
 
+    }
+    private void Start()
+    {
+        animationControl = GameManager.instance.playerScript.playerAnimator;
+    }
     // Update is called once per frame
     void Update()
     {
@@ -267,7 +271,6 @@ public class Shooting : MonoBehaviour
     }
     public void HipFire()
     {
-        animationControl = GameManager.instance.playerScript.playerAnimator;
         animationControl.isAiming = false;
         isADS = false;
         currentSpread = hipSpread;
@@ -278,26 +281,14 @@ public class Shooting : MonoBehaviour
 
 
         Camera.main.fieldOfView = 75;
-        if (playerIK != null)
+        if(playerIK != null)
         {
-            ConstraintSource constraintSource = new ConstraintSource();
-            constraintSource.sourceTransform = playerIK.animator.GetBoneTransform(HumanBodyBones.RightHand);
-            constraintSource.weight = 0f;
-            GameManager.instance.playerScript.weaponPos.GetComponent<ParentConstraint>().SetSource(0, constraintSource);
-            GameManager.instance.playerScript.weaponPos.GetComponent<ParentConstraint>().constraintActive = false;
-            constraintSource.weight = 1f;
-            constraintSource.sourceTransform = gunModel.transform.Find("RightHandPos");
-            GameManager.instance.playerScript.rightHand.GetComponent<ParentConstraint>().SetSource(0, constraintSource);
-            GameManager.instance.playerScript.rightHand.GetComponent<ParentConstraint>().constraintActive = true;
-            constraintSource.sourceTransform = gunModel.transform.Find("LeftHandPos");
-            GameManager.instance.playerScript.leftHand.GetComponent<ParentConstraint>().SetSource(0, constraintSource);
-            GameManager.instance.playerScript.leftHand.GetComponent<ParentConstraint>().constraintActive = true;
+            GameManager.instance.playerScript.weaponPos.GetComponent<ParentConstraint>().weight = 1f;
         }
     }
 
     public void ADS()
     {
-        animationControl = GameManager.instance.playerScript.playerAnimator;
         animationControl.isAiming = true;
         isADS = true;
         currentSpread = adsSpread;
@@ -309,25 +300,15 @@ public class Shooting : MonoBehaviour
         Camera.main.fieldOfView = 75 - adsZoom;
         if (playerIK != null)
         {
-            ConstraintSource constraintSource = new ConstraintSource();
-            constraintSource.sourceTransform = playerIK.animator.GetBoneTransform(HumanBodyBones.RightHand);
-            constraintSource.weight = 1f;
-            GameManager.instance.playerScript.weaponPos.GetComponent<ParentConstraint>().SetSource(0, constraintSource);
-            GameManager.instance.playerScript.weaponPos.GetComponent<ParentConstraint>().constraintActive = true;
-            constraintSource.weight = 0f;
-            constraintSource.sourceTransform = gunModel.transform.Find("RightHandPos");
-            GameManager.instance.playerScript.rightHand.GetComponent<ParentConstraint>().SetSource(0, constraintSource);
-            GameManager.instance.playerScript.rightHand.GetComponent<ParentConstraint>().constraintActive = false;
-            constraintSource.sourceTransform = gunModel.transform.Find("LeftHandPos");
-            GameManager.instance.playerScript.leftHand.GetComponent<ParentConstraint>().SetSource(0, constraintSource);
-            GameManager.instance.playerScript.leftHand.GetComponent<ParentConstraint>().constraintActive = false;
+            GameManager.instance.playerScript.weaponPos.GetComponent<ParentConstraint>().weight = 0f;
         }
+        
     }
 
     // Called in Update if the currentAmmo is less than or equal to 0 and the player is not reloading
     IEnumerator Reload()
     {
-        animationControl = GameManager.instance.playerScript.playerAnimator;
+        
         animationControl.isReloading = true;
         reloading = true;                               // Sets reloading to true to stop the player from firing
         yield return new WaitForSeconds(reloadTime);    // Waits for a set amount of time determined by the reloadTime
@@ -377,22 +358,21 @@ public class Shooting : MonoBehaviour
     }
     public void SetHandPosition()
     {
-        
         playerIK.gunLeftHand = gunModel.transform.Find("LeftHandPos");
         playerIK.gunRightHand = gunModel.transform.Find("RightHandPos");
         ConstraintSource constraintSource = new ConstraintSource();
-        constraintSource.sourceTransform = playerIK.animator.GetBoneTransform(HumanBodyBones.RightHand);
-        constraintSource.weight = 0f;
-        GameManager.instance.playerScript.weaponPos.GetComponent<ParentConstraint>().SetSource(0, constraintSource);
-        GameManager.instance.playerScript.weaponPos.GetComponent<ParentConstraint>().constraintActive = false;
-        constraintSource.sourceTransform = gunModel.transform.Find("RightHandPos");
+        constraintSource.sourceTransform = playerIK.animator.GetBoneTransform(HumanBodyBones.RightLowerArm);
         constraintSource.weight = 1f;
-        GameManager.instance.playerScript.rightHand.GetComponent<ParentConstraint>().SetSource(0, constraintSource);
-        constraintSource.sourceTransform = gunModel.transform.Find("LeftHandPos");
-        GameManager.instance.playerScript.leftHand.GetComponent<ParentConstraint>().SetSource(0, constraintSource);
-        GameManager.instance.playerScript.rightHand.GetComponent<ParentConstraint>().constraintActive = true;
-        GameManager.instance.playerScript.leftHand.GetComponent<ParentConstraint>().constraintActive = true;
-        GameManager.instance.playerScript.UpdateAnimations();
-        animationControl = GameManager.instance.playerScript.playerAnimator;
+        GameManager.instance.playerScript.weaponPos.GetComponent<ParentConstraint>().SetSource(0, constraintSource);
+        GameManager.instance.playerScript.weaponPos.GetComponent<ParentConstraint>().constraintActive = true;
+        GameManager.instance.playerScript.weaponPos.GetComponent<ParentConstraint>().weight = 1f;
+        //constraintSource.sourceTransform = gunModel.transform.Find("RightHandPos");
+        //constraintSource.weight = 1f;
+        //GameManager.instance.playerScript.rightHand.GetComponent<ParentConstraint>().SetSource(0, constraintSource);
+        //GameManager.instance.playerScript.rightHand.GetComponent<ParentConstraint>().constraintActive = true;
+        //constraintSource.sourceTransform = gunModel.transform.Find("LeftHandPos");
+        //GameManager.instance.playerScript.leftHand.GetComponent<ParentConstraint>().SetSource(0, constraintSource);
+        //GameManager.instance.playerScript.leftHand.GetComponent<ParentConstraint>().constraintActive = true;
+        //GameManager.instance.playerScript.UpdateAnimations();
     }
 }
