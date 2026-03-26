@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Net.Mail;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Animations;
 using UnityEngine.Rendering;
 using UnityEngine.UIElements;
 
@@ -26,7 +27,7 @@ public class Shooting : MonoBehaviour
     [SerializeField] Bullet bulletScript;
     public GunStats currentGun;
     [SerializeField] GUNHolsters shootingHolster;
-
+    public AnimationControl animationControl;
     public GameObject scopeOject;
     public GameObject foregripOject;
     public GameObject magazineOject;
@@ -57,6 +58,7 @@ public class Shooting : MonoBehaviour
     public float adsZoom;
 
     public Recoil recoil;
+    IKController playerIK;
 
     public bool isBurst;
 
@@ -96,8 +98,8 @@ public class Shooting : MonoBehaviour
 
     void Start()
     {
-
-        locationFinder();
+        animationControl = GameManager.instance.playerScript.playerAnimator;
+            locationFinder();
 
     }
 
@@ -200,17 +202,15 @@ public class Shooting : MonoBehaviour
     public void SetGun(GunStats newGun)
     {
         currentGun = newGun;
-        newGun = null;
         ApplyGunStats(currentGun, true);
-
-        Debug.Log(currentGun);
+        
 
     }
     public void swapGun(GunStats gun)
     {
         currentGun = gun;
-        gun = null;
         ApplyGunStats(currentGun, false);
+      
 
     }
 
@@ -263,7 +263,7 @@ public class Shooting : MonoBehaviour
 
         gunModel.transform.localScale = gun.scale;
         gunModel.transform.localPosition = gun.postion;
-        gunModel.transform.localRotation = Quaternion.Euler(0,180,0);
+        gunModel.transform.localRotation = Quaternion.Euler(0, 180, 0);
         shootPos.transform.localPosition = Vector3.zero + new Vector3(-0.05f, 0, 0f);
 
         shootingHolster.AddGun(currentGun);
@@ -518,13 +518,12 @@ public class Shooting : MonoBehaviour
                 break;
         }
 
- 
+
         RemoveAttachmentModel(newAttachment.attachmentType);
 
-        // APPLY NEW ONE
         ApplyAttachment(newAttachment);
 
-        // GIVE OLD ATTACHMENT BACK TO PICKUP (LIKE GUN SWAP)
+
         if (pickup != null && oldAttachment != null)
         {
             pickup.SetAttachment(oldAttachment);
@@ -561,4 +560,18 @@ public class Shooting : MonoBehaviour
         }
     }
 
+
+    public void SetHandPosition()
+    {
+        if (animationControl == null) { animationControl = GameManager.instance.player.GetComponent<AnimationControl>(); }
+        playerIK.gunLeftHand = gunModel.transform.Find("LeftHandPos");
+        playerIK.gunRightHand = gunModel.transform.Find("RightHandPos");
+        ConstraintSource constraintSource = new ConstraintSource();
+        constraintSource.sourceTransform = playerIK.animator.GetBoneTransform(HumanBodyBones.RightLowerArm);
+        constraintSource.weight = 1f;
+        GameManager.instance.playerScript.weaponPos.GetComponent<ParentConstraint>().SetSource(0, constraintSource);
+        GameManager.instance.playerScript.weaponPos.GetComponent<ParentConstraint>().constraintActive = true;
+        GameManager.instance.playerScript.weaponPos.GetComponent<ParentConstraint>().weight = 1f;
+
+    }
 }

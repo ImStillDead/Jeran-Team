@@ -35,7 +35,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
     [SerializeField] int enemyViewDis;
     [SerializeField] int gravity;
     [SerializeField] int hubIndex;
-    
+
 
     [Header("Dash Settings")]
     [SerializeField] float dashForce = 30f;
@@ -51,12 +51,17 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
 
     [Header("Other Settings")]
     [SerializeField] int moneyOnPlayer;
-    [SerializeField] Transform weaponPos;
+    [SerializeField] public Transform weaponPos;
     [SerializeField] GameObject firstPersonCamera;
     [SerializeField] GameObject torch;
     [SerializeField] AudioSource aud;
     [SerializeField] List<GameObject> MeshList;
-    
+    [SerializeField] public IKController playerIK;
+
+    public List<SetBoneContraint> boneRigs = new List<SetBoneContraint>();
+    public Transform rightHand;
+    public Transform leftHand;
+
 
     private cardHolder cardUI;
     GameManager manager;
@@ -106,7 +111,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
         runData = new GameData();
         staticBase = new PlayerData();
         playerData = new PlayerData();
-        
+
         characterController = GetComponent<CharacterController>();
         SetupDashing();
         SetupSliding();
@@ -119,6 +124,8 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
         manager = GameManager.instance;
         cardUI?.Init(this);
         cardUI = FindAnyObjectByType<cardHolder>();
+        
+
 
         SpawnPlayer();
         PlayerArmor();
@@ -159,7 +166,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
 
         if (currentPlatform != null)
         {
-    
+
 
             lastPlatformPos.y = manager.player.transform.position.y;
             platformVelocity = currentPlatform.position - lastPlatformPos;
@@ -363,7 +370,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
         else if (Input.GetButtonUp("Sprint"))
         {
             speed /= sprintMod;
-           // playerAnimator.isRunning = false;
+            // playerAnimator.isRunning = false;
         }
     }
     //Torch
@@ -501,7 +508,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
                 ChangeItem(invPos);
             }
         }
-        if(holster != null && holster.GetActiveGun() != null)
+        if (holster != null && holster.GetActiveGun() != null)
         {
 
             // Weapon Scroll
@@ -515,7 +522,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
             {
 
                 holster.SwapHolsterGuns();
- 
+
             }
             else if (Input.GetButtonDown("Weapon2"))
             {
@@ -755,8 +762,8 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
             holster.gunList.Clear();
             foreach (GunStats gun in data.gunList)
             {
-                holster.ClearGunModels();
-                Shooting.instance.SetGun(gun);   //over here over here change this 
+                //holster.ClearGunModels();
+                UpdateActiveGun(gun);   //over here over here change this asaadsf
             }
             //holster.Init();
         }
@@ -779,13 +786,13 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
     //SaveData
     public void SaveHub()
     {
-        if(DataManager.instance != null)
+        if (DataManager.instance != null)
         {
             DataManager.instance.hubData.playerData = staticBase;
             DataManager.instance.hubData.sceneIndex = hubIndex;
         }
     }
-    public void SaveRun() 
+    public void SaveRun()
     {
         if (DataManager.instance != null)
         {
@@ -835,10 +842,9 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
         foreach (GunStats gun in character.gunList)
         {
             playerData.gunList.Add(gun);
-            //holster.ClearGunModels();
-            Shooting.instance.SetGun(gun);
             holster.swapCharacters = true;
         }
+        holster.ClearGunModels();
         //MeshChange
         Destroy(characterMesh);
         characterMesh = Instantiate(character.mesh, this.transform);
@@ -884,16 +890,22 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
         if (other.transform == currentPlatform)
         {
             currentPlatform = null;
-            
+
         }
     }
 
     public void UpdateAnimations()
     {
-        
+        playerAnimator.animator.avatar = characterMesh.GetComponent<Animator>().avatar;
+        foreach (SetBoneContraint rig in boneRigs)
+        {
+            rig.updateRig();
+        }
     }
     void UpdateAnimator()
     {
         playerAnimator.animator = characterMesh.GetComponent<Animator>();
     }
+
+
 }

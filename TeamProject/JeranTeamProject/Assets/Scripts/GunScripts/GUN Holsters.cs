@@ -28,7 +28,7 @@ public class GUNHolsters : MonoBehaviour
         // Only proceed if there are at least 2 guns
         if (gunList.Count < 2)
         {
-            Debug.LogWarning("Gun list has less than 2 guns!");
+            //Debug.LogWarning("Gun list can only have 2 guns!");
             return;
         }
 
@@ -71,8 +71,6 @@ public class GUNHolsters : MonoBehaviour
         activeGunModel = holsterGunModel;
         holsterGunModel = tempModel;
 
-        Debug.LogWarning("is this thing working?????????");
-
         player.updateSwapGun(gunList[0]);
 
     }
@@ -104,22 +102,22 @@ public class GUNHolsters : MonoBehaviour
 
     public void SwapWithPickup(GunStats pickupGun, GunPickup pickup)
     {
-  
+        if (activeGunModel != null)
+            Destroy(activeGunModel);
+
         GunStats oldGun = activeGunStats;
 
 
         activeGunStats = pickupGun;
         gunList[0] = activeGunStats;
 
-        player.updateSwapGun(activeGunStats);
-
-
-        pickup.UpdatePickup(oldGun);
-
+        player.UpdateActiveGun(activeGunStats);
 
         activeGunModel = Instantiate(activeGunStats.gunModel, gunPos1);
         activeGunModel.transform.localPosition = Vector3.zero;
-        Destroy(activeGunModel);
+
+        pickup.UpdatePickup(oldGun);
+
 
     }
 

@@ -34,9 +34,9 @@ public class GunPickup : MonoBehaviour, IPickup, iInteract
                 }
                 else
                 {
-
                     holster.SwapWithPickup(gun, this);
                     //holster.SwapHolsterGuns();
+
                 }
 
             }
