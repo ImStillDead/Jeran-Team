@@ -169,7 +169,7 @@ public class Shooting : MonoBehaviour, IAttachmentPickup
 
     private void locationFinder()
     {
-
+        if(gunModel == null) {  return; }
         Transform[] allChildren = Shooting.instance.gunModel.GetComponentsInChildren<Transform>();
 
         foreach(Transform part in allChildren)
