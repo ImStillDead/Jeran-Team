@@ -21,7 +21,7 @@ public class MenuController : MonoBehaviour
 
     public bool isPaused;
     float timeScaleOrg;
-
+    cardHolder cardUI;
 
 
     GameManager manager;
@@ -86,7 +86,7 @@ public class MenuController : MonoBehaviour
 
         menuButtonController(menuActive);
 
-        cardHolder cardUI = FindAnyObjectByType<cardHolder>();
+        cardUI = FindAnyObjectByType<cardHolder>();
         if (cardUI != null)
         {
             cardUI.updateCards();

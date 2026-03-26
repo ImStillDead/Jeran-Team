@@ -45,6 +45,7 @@ public class supportGameProgression : MonoBehaviour
             unlocked.Add(achievement);
           //  Debug.Log("Unlocked: " + achievement);
         }
+
     }
 
     public void getkills(int kill)

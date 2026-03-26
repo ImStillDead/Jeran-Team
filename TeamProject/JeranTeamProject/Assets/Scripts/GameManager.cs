@@ -44,7 +44,7 @@ public class GameManager : MonoBehaviour
     public float gameTime;
     public int currentScore;
     public bool isGameActive = true;
-    public HighscoreTable highscoreTable;
+    //public HighscoreTable highscoreTable;
     public int regularZombiePoints = 100;
     public int heavyZombiePoints = 250;
     public int spitterPoints = 150;
@@ -442,15 +442,15 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void EndGame()
-    {
-        isGameActive = false;
+    //public void EndGame()
+    //{
+    //    isGameActive = false;
 
-        if (highscoreTable != null && highscoreTable.IsHighScore(currentScore))
-        {
-            highscoreTable.ShowHighScoreInput(currentScore, gameTime);
-        }
-    }
+    //    if (highscoreTable != null && highscoreTable.IsHighScore(currentScore))
+    //    {
+    //        highscoreTable.ShowHighScoreInput(currentScore, gameTime);
+    //    }
+    //}
 
     public void EnemyKilled(EnemyType enemyType = EnemyType.RegularZombie)
     {
@@ -460,7 +460,7 @@ public class GameManager : MonoBehaviour
 
     public void CompleteLevel()
     {
-        EndGame();
+        //EndGame();
     }
 
     //Experience

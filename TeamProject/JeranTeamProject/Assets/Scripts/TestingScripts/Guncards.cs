@@ -88,9 +88,7 @@ public class Guncards : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
 
         overlay.color = Color.clear;
-
-        
-
+        card.transform.SetAsLastSibling();
         Debug.Log("Mouse Enter");
 
     }

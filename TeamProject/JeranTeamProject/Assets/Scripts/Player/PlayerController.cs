@@ -122,6 +122,10 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
     }
     void Update()
     {
+        if (manager != null && manager.menus.isPaused)
+            return;
+        
+
         UpdatePlayerUI();
         Movement();
         Sprint();
