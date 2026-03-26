@@ -433,11 +433,11 @@ public class Shooting : MonoBehaviour, IAttachmentPickup
         switch (attachment.attachmentType)
         {
             case AttachmentType.Sights:
-                if (scopeOject != null)
-                {
-                    Destroy(scopeOject.gameObject);
-                    scopeOject = null;
-                }
+                //if (scopeOject != null)
+                //{
+                //    Destroy(scopeOject.gameObject);
+                //    scopeOject = null;
+                //}
                 scopeOject = Instantiate(attachment.attachmentModel, scopePos);
                 scopeOject.transform.localPosition = Vector3.zero;
                 scopeOject.transform.localRotation = Quaternion.identity;
