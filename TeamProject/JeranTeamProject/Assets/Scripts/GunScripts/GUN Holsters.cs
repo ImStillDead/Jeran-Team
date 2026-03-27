@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.AdaptivePerformance;
 
 public class GUNHolsters : MonoBehaviour
 {
@@ -18,7 +19,7 @@ public class GUNHolsters : MonoBehaviour
 
     bool canSwap = true;
     float swapCooldown = 0.2f;
-
+    cardHolder holder;
     public bool swapCharacters;
 
     void Start()
@@ -31,8 +32,6 @@ public class GUNHolsters : MonoBehaviour
             //Debug.LogWarning("Gun list can only have 2 guns!");
             return;
         }
-
-
     }
 
 

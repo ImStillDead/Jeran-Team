@@ -60,6 +60,7 @@ public class Shooting : MonoBehaviour
     public Recoil recoil;
     IKController playerIK;
 
+
     public bool isBurst;
 
     public float burstTime;
@@ -204,7 +205,7 @@ public class Shooting : MonoBehaviour
         currentGun = newGun;
         ApplyGunStats(currentGun, true);
         
-
+        
     }
     public void swapGun(GunStats gun)
     {
@@ -260,6 +261,8 @@ public class Shooting : MonoBehaviour
 
         locationFinder();
         setAttachmentModel();
+
+   
 
         gunModel.transform.localScale = gun.scale;
         gunModel.transform.localPosition = gun.postion;

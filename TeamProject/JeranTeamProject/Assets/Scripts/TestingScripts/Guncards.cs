@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using static UnityEngine.GraphicsBuffer;
 
-public class Guncards : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+public class Guncards : MonoBehaviour/* IPointerEnterHandler, IPointerExitHandler*/
 {
     [Header("card object")]
     [SerializeField] GameObject cardHolder;
@@ -84,20 +84,19 @@ public class Guncards : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         cardHolder = card.transform.parent.gameObject;
     }
 
-    public void OnPointerEnter(PointerEventData eventData)
-    {
+    //public void OnPointerEnter(PointerEventData eventData)
+    //{
 
-        overlay.color = Color.clear;
-        card.transform.SetAsLastSibling();
-        Debug.Log("Mouse Enter");
+    //    overlay.color = Color.clear;
+    //    Debug.Log("Mouse Enter");
 
-    }
+    //}
 
-    public void OnPointerExit(PointerEventData eventData)
-    {
-        overlay.color = new Color32(0, 0, 0, 133);
-        Debug.Log("Mouse Exit");
-    }
+    //public void OnPointerExit(PointerEventData eventData)
+    //{
+    //    overlay.color = new Color32(0, 0, 0, 133);
+    //    Debug.Log("Mouse Exit");
+    //}
 
     void SetAlpha(float alpha)
     {
