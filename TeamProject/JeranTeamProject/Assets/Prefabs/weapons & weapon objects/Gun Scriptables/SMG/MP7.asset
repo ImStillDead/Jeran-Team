@@ -1,0 +1,49 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac26794e551912b4db37d6875a3c37b8, type: 3}
+  m_Name: MP7
+  m_EditorClassIdentifier: Assembly-CSharp::GunStats
+  gunModel: {fileID: 1370818091203708301, guid: d062ecdc70000174e82795123f34ea39, type: 3}
+  shootPos: {fileID: 1228954792775569764, guid: 8c01093d56399be4385b32cf44abb91f, type: 3}
+  rightHand: {fileID: 0}
+  leftHand: {fileID: 0}
+  recoil: {fileID: 11400000, guid: 6ce915e0dc81c644e8199baaf0ba474d, type: 2}
+  sightLocation: {fileID: 0}
+  bullet: {fileID: 11400000, guid: 4697cae3a76785a44956d8886c285946, type: 2}
+  shootRate: 0.05
+  magSizeMax: 20
+  reloadTime: 2
+  currentAmmo: 20
+  gunRarity: 0
+  gunType: 4
+  isBurst: 0
+  hipSpread: 15
+  adsSpread: 10
+  hipX: -5
+  hipY: 5
+  hipZ: 0.38
+  adsX: -3
+  adsY: 3
+  adsZ: 0.38
+  adsZoom: 10
+  scale: {x: 1, y: 1, z: 1}
+  position: {x: 0, y: 0, z: 0}
+  rotation: {x: 0, y: 1, z: 0, w: -0.00000004371139}
+  shootRotate: {x: 0, y: 0, z: 0, w: 1}
+  burstTime: 0
+  burstDelay: 0
+  rechamberTime: 0
+  burstAmount: 0
+  pelletAmount: 0
+  shotSound:
+  - {fileID: 8300000, guid: 843ca06fe8416504389a564a58521fc9, type: 3}
+  shotSoundVol: 0.059
