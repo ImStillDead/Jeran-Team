@@ -1,16 +1,23 @@
 using UnityEngine;
+using UnityEngine.UI;
 
 public class scrollscript : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public Scrollbar bar;
+    float scroll = Input.GetAxis("Mouse ScrollWheel");
+
+    private void Update()
     {
         
+        if(scroll > 0f)
+        {
+           bar.value= scroll;
+
+        }
+  
+
+
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+
 }
