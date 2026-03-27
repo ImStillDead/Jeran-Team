@@ -11,7 +11,7 @@ public class ButtonFunctions : MonoBehaviour
     {
         "MainDevScene",
         "HubWorld",
-
+        "CristobalDevAguilar"
     };
 
     public void Start()
@@ -97,6 +97,13 @@ public class ButtonFunctions : MonoBehaviour
     {
         DataManager.instance.NewGame();
         SceneManager.LoadScene(1);
+    }
+
+    public void DevDisplay()
+    {
+
+        SceneManager.LoadScene("CristobalDevAguilar");
+
     }
 
     public void StartGame()
