@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using UnityEngine.Animations;
 using UnityEngine.SceneManagement;
 using UnityEngine.TextCore.Text;
 
@@ -35,6 +36,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
     [SerializeField] int enemyViewDis;
     [SerializeField] int gravity;
     [SerializeField] int hubIndex;
+    [SerializeField] GameObject lookAt;
 
 
     [Header("Dash Settings")]
@@ -56,20 +58,14 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
     [SerializeField] GameObject torch;
     [SerializeField] AudioSource aud;
     [SerializeField] List<GameObject> MeshList;
-    [SerializeField] public IKController playerIK;
-
-    public List<SetBoneContraint> boneRigs = new List<SetBoneContraint>();
-    public Transform rightHand;
-    public Transform leftHand;
-
 
     private cardHolder cardUI;
     GameManager manager;
-    GameObject characterMesh;
+    public GameObject characterMesh;
     PlayerData staticBase;
     public Shooting Gun;
     GameData runData;
-    public GUNHolsters holster;
+    [SerializeField] public IKController playerIK;
     public AnimationControl playerAnimator;
     public PlayerData playerData;
     public List<Pickups> itemList;
@@ -106,37 +102,34 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
     private Transform currentPlatform;
     private Vector3 lastPlatformPos;
 
+    public List<SetBoneContraint> boneRigs = new List<SetBoneContraint>();
+    public Transform rightHand;
+    public Transform leftHand;
+
     void Awake()
     {
         runData = new GameData();
         staticBase = new PlayerData();
         playerData = new PlayerData();
-
         characterController = GetComponent<CharacterController>();
         SetupDashing();
         SetupSliding();
     }
     void Start()
     {
-
         Gun = Shooting.instance;
-        holster = GetComponentInChildren<GUNHolsters>();
         manager = GameManager.instance;
-        cardUI?.Init(this);
-        cardUI = FindAnyObjectByType<cardHolder>();
-        
-
-
         SpawnPlayer();
         PlayerArmor();
         UpdatePlayerUI();
-
+        cardUI = FindAnyObjectByType<cardHolder>();
+        cardUI?.Init(this);
     }
     void Update()
     {
         if (manager != null && manager.menus.isPaused)
             return;
-
+        
 
         UpdatePlayerUI();
         Movement();
@@ -166,7 +159,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
 
         if (currentPlatform != null)
         {
-
+    
 
             lastPlatformPos.y = manager.player.transform.position.y;
             platformVelocity = currentPlatform.position - lastPlatformPos;
@@ -186,10 +179,10 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
         {
             playerVel.y = -2f;
             jumpCount = 0;
+            playerAnimator.isJumping = false;
         }
 
         Jump();
-        UpdateAnimations();
         ChangeActiveInventory();
         Interact();
         UseItem();
@@ -257,8 +250,6 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
         characterController.center = newCenter;
 
         transform.localScale = new Vector3(transform.localScale.x, originalYScale * slideYScale, transform.localScale.z);
-
-        Debug.Log("Slide started");
     }
     void SlidingMovement()
     {
@@ -289,7 +280,6 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
         {
             playerVel.y = -2f;
         }
-        Debug.Log("Slide stopped");
     }
     public bool IsSliding()
     {
@@ -337,16 +327,20 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
 
         if (Input.GetButtonDown("Jump") && jumpCount < jumpMax)
         {
-            Debug.Log("***** jumped *****");
             isJumping = true;
         }
         if (Input.GetButtonUp("Jump") && jumpCount < jumpMax)
         {
+            if(playerAnimator.isJumping == true)
+            {
+                playerAnimator.isJumping = false;
+            }
             jumpCharge *= jumpChargeRate;
             isJumping = false;
             playerVel.y = jumpSpeed + jumpCharge;
             jumpCount++;
             jumpCharge = 0;
+            playerAnimator.isJumping = true;
         }
     }
     void Charge()
@@ -365,12 +359,10 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
         if (Input.GetButtonDown("Sprint"))
         {
             speed *= sprintMod;
-            //playerAnimator.isRunning = true;
         }
         else if (Input.GetButtonUp("Sprint"))
         {
             speed /= sprintMod;
-            // playerAnimator.isRunning = false;
         }
     }
     //Torch
@@ -476,14 +468,11 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
     IEnumerator DmgBoost()
     {
         dmgBoosting = true;
-
-        GunStats current = holster.GetActiveGun();
-
-        playerData.dmgAmmount = current.bullet.damageAmount;
-        current.bullet.damageAmount *= (int)activePick.dmgBoost;
+        playerData.dmgAmmount = Gun.gunList[gunPos].bullet.damageAmount;
+        Gun.gunList[gunPos].bullet.damageAmount *= (int)activePick.dmgBoost;
         boostTime = activePick.boostDur;
         yield return new WaitForSeconds(boostTime);
-        current.bullet.damageAmount = playerData.dmgAmmount;
+        Gun.gunList[gunPos].bullet.damageAmount = playerData.dmgAmmount;
         dmgBoosting = false;
     }
     IEnumerator SpeedBoost()
@@ -495,6 +484,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
     }
     void ChangeActiveInventory()
     {
+
         // Item Swap
         if (Input.GetButtonDown("Swap"))
         {
@@ -508,30 +498,46 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
                 ChangeItem(invPos);
             }
         }
-        if (holster != null && holster.GetActiveGun() != null)
+
+        if (Gun == null || Gun.gunList == null || Gun.gunList.Count == 0)
+            return;
+
+
+        // Weapon Scroll
+        if (Input.GetAxis("Mouse ScrollWheel") > 0)
         {
+            if (gunPos >= Gun.gunList.Count - 1)
+                gunPos = 0;
+            else
+                gunPos++;
 
-            // Weapon Scroll
-            if (Input.GetAxis("Mouse ScrollWheel") != 0)
-            {
-                holster.SwapHolsterGuns();
-            }
+            UpdateGun();
+            UpdateAnimations();
+        }
+        else if (Input.GetAxis("Mouse ScrollWheel") < 0)
+        {
+            if (gunPos <= 0)
+                gunPos = Gun.gunList.Count - 1;
+            else
+                gunPos--;
 
-            // Weapon Select 1-2
-            if (Input.GetButtonDown("Weapon1"))
-            {
-
-                holster.SwapHolsterGuns();
-
-            }
-            else if (Input.GetButtonDown("Weapon2"))
-            {
-
-                holster.SwapHolsterGuns();
-
-            }
+            UpdateGun();
+            UpdateAnimations();
         }
 
+        // Weapon Select 1-2
+        if (Input.GetButtonDown("Weapon1") && Gun.gunList.Count > 0)
+        {
+            gunPos = 0;
+            UpdateGun();
+ 
+        }
+        else if (Input.GetButtonDown("Weapon2") && Gun.gunList.Count > 1)
+        {
+            gunPos = 1;
+            UpdateGun();
+
+        }
 
     }
     void Interact()
@@ -541,57 +547,57 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
             Vector3 origin = Camera.main.transform.position;
             Vector3 direction = Camera.main.transform.forward;
 
-            Debug.DrawRay(origin, direction * interactDis, Color.mediumVioletRed);
-
             if (Physics.Raycast(origin, direction, out RaycastHit hitInter, interactDis))
             {
                 if (hitInter.collider.TryGetComponent<iInteract>(out var interactable))
                 {
-                    Debug.Log($"Interacting with {hitInter.collider.name}");
                     interactable.Interacted();
                 }
             }
         }
     }
     // Gun interactions
-
-    public void UpdateActiveGun(GunStats newGun)
-    {
-        Gun.SetGun(newGun);
-    }
-    public void updateSwapGun(GunStats swapGun)
-    {
-        Gun.swapGun(swapGun);
-    }
-
     public void GetGunStats(GunStats gun)
     {
-        if (holster.gunList.Contains(gun))
+        if (Gun.gunList.Contains(gun))
         {
             canPickup = false;
         }
-        else if (holster.gunList.Count >= gunMax)
+        else if (Gun.gunList.Count >= gunMax)
         {
             canPickup = false;
         }
         else
         {
             canPickup = true;
-            holster.gunList.Add(gun);
-            gunPos = holster.gunList.Count - 1;
-            if (holster.gunList.Count == 1)
+            Gun.gunList.Add(gun);
+            gunPos = Gun.gunList.Count - 1;
+            if (Gun.gunList.Count == 1)
             {
-
+                Gun.changeGun(gunPos);
             }
         }
 
         cardUI?.updateCards();
 
     }
+    public void SwapGunPickup(GunStats gun)
+    {
+        Gun.gunList[gunPos] = gun;
+        Gun.changeGun(gunPos);
 
+        cardUI?.updateCards();
+
+    }
+    public void UpdateGun()
+    {
+        Gun.changeGun(gunPos);
+
+        cardUI?.updateCards();
+    }
     void WeaponRotate()
     {
-        weaponPos.transform.rotation = firstPersonCamera.transform.rotation;
+        weaponPos.transform.LookAt(lookAt.transform);
     }
 
     // Health and UI interactions
@@ -757,15 +763,14 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
         {
             itemList.Add(item);
         }
-        if (holster != null)
+        Gun.gunList.Clear();
+        foreach (GunStats gun in data.gunList)
         {
-            holster.gunList.Clear();
-            foreach (GunStats gun in data.gunList)
-            {
-                //holster.ClearGunModels();
-                UpdateActiveGun(gun);   //over here over here change this asaadsf
-            }
-            //holster.Init();
+            Gun.gunList.Add(gun);
+        }
+        if (!levelUp)
+        {
+            Gun.changeGun(0);
         }
         UpdatePlayerUI();
     }
@@ -786,13 +791,13 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
     //SaveData
     public void SaveHub()
     {
-        if (DataManager.instance != null)
+        if(DataManager.instance != null)
         {
             DataManager.instance.hubData.playerData = staticBase;
             DataManager.instance.hubData.sceneIndex = hubIndex;
         }
     }
-    public void SaveRun()
+    public void SaveRun() 
     {
         if (DataManager.instance != null)
         {
@@ -842,14 +847,13 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
         foreach (GunStats gun in character.gunList)
         {
             playerData.gunList.Add(gun);
-            holster.swapCharacters = true;
         }
-        holster.ClearGunModels();
+        weaponPos.SetParent(GameManager.instance.player.transform);
         //MeshChange
         Destroy(characterMesh);
         characterMesh = Instantiate(character.mesh, this.transform);
         characterMesh.transform.localPosition = Vector3.zero;
-        UpdateAnimator();
+        UpdateAnimations();
         UpdateStatic(playerData);
         UpdatePlayer(playerData);
     }
@@ -872,7 +876,6 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
         foreach (GunStats gun in character.gunList)
         {
             staticBase.gunList.Add(gun);
-            holster.gunList.Add(gun);
         }
         SaveHub();
     }
@@ -890,22 +893,16 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
         if (other.transform == currentPlatform)
         {
             currentPlatform = null;
-
+            
         }
     }
 
     public void UpdateAnimations()
     {
         playerAnimator.animator.avatar = characterMesh.GetComponent<Animator>().avatar;
-        foreach (SetBoneContraint rig in boneRigs)
+        foreach(SetBoneContraint rig in boneRigs)
         {
             rig.updateRig();
         }
     }
-    void UpdateAnimator()
-    {
-        playerAnimator.animator = characterMesh.GetComponent<Animator>();
-    }
-
-
 }

@@ -1,72 +1,65 @@
 using UnityEngine;
 
-public class GunPickup : MonoBehaviour, IPickup, iInteract
+public class GunPickup : MonoBehaviour
 {
-    [SerializeField] private GunStats gun;
-    private GameObject gunModel;
-    private GUNHolsters holster;
-    bool pickedupBefore = false;
-
+    [SerializeField] GunStats gun;
+    GameObject gunModel;
+    private IGunPickup pick = null;
+    private bool canSwap;
     private void Start()
     {
-        holster = Shooting.instance?.GetComponentInParent<GUNHolsters>();
-
-        if (gunModel == null && gun != null && gun.gunModel != null)
+        if(gunModel == null)
         {
-            gunModel = Instantiate(gun.gunModel, transform);
+            gunModel = Instantiate(gun.gunModel, this.transform);
+            gunModel.transform.localScale *= 3;
             gunModel.transform.localPosition = Vector3.zero;
-            gunModel.transform.localScale = gun.scale * 3;
         }
+        GameManager.instance.pickUpObjects.Add(gameObject);
     }
-
     private void OnTriggerEnter(Collider other)
     {
-       if (other.CompareTag("Player"))
+        pick = other.GetComponent<IGunPickup>();
+
+        if(pick != null)
         {
-            if (Shooting.instance != null && gun != null)
+            gun.currentAmmo = gun.magSizeMax;
+            pick.GetGunStats(gun);
+            if (Shooting.instance.gunList.Count < 2)
             {
-                             
-                if(holster.gunList.Count < 2)
-                {
-                    Shooting.instance.SetGun(gun);
-                    pickedupBefore = true;
-                    Destroy(gameObject);
-                }
-                else
-                {
-                    holster.SwapWithPickup(gun, this);
-                    //holster.SwapHolsterGuns();
-
-                }
-
+                Destroy(gameObject);
+                GameManager.instance.pickUpObjects.Remove(this.gameObject);
             }
-
-
-            else if (holster.gunList.Count >= 2)
+            else
             {
-                Debug.Log("gunlist is full press interact to swap weapons");
+                canSwap = true;
+               // Debug.Log("Cannot Pick Up, Would You like to Swap?");
             }
-
         }
     }
-
-    public void UpdatePickup(GunStats newGun)
+    private void OnTriggerStay(Collider other)
     {
-        gun = newGun;
-
-        if (gunModel != null)
-            Destroy(gunModel);
-
-        if (gun != null && gun.gunModel != null)
+        pick = other.GetComponent<IGunPickup>();
+        if (pick != null && canSwap)
         {
-            gunModel = Instantiate(gun.gunModel, transform);
-            gunModel.transform.localPosition = Vector3.zero;
-            gunModel.transform.localScale = gun.scale * 3;
+            if (Input.GetButtonDown("Interact"))
+            {
+                SwapGun();
+            }
+        }
+        else
+        {
+            canSwap = true;
         }
     }
-
-    public void Interacted()
+    public void SwapGun()
     {
-        holster.SwapWithPickup(gun, this);
+        GunStats tempGun = Shooting.instance.Swap();
+        GameManager.instance.playerScript.SwapGunPickup(gun);
+        gun = tempGun;
+        Destroy(gunModel);
+        gunModel = Instantiate(gun.gunModel, this.transform);
+        gunModel.transform.localPosition = Vector3.zero;
+        gunModel.transform.localScale = gun.scale * 3;
+        canSwap = false;
     }
 }
