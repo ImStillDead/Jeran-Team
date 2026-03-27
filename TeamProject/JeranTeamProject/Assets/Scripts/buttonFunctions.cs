@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -6,6 +7,12 @@ public class ButtonFunctions : MonoBehaviour
 {
     GameManager manager;
 
+    public List<string> excludedScenes = new List<string>()
+    {
+        "MainDevScene",
+        "HubWorld",
+
+    };
 
     public void Start()
     {
@@ -117,8 +124,35 @@ public class ButtonFunctions : MonoBehaviour
             manager.menus.stateUnpause();
         }
     }
-    
+
+    public void LoadRandomScene()
+    {
+        int totalScenes = SceneManager.sceneCountInBuildSettings;
+        List<string> validScenes = new List<string>();
+
+        for (int i = 0; i < totalScenes; i++)
+        {
+            string scenePath = SceneUtility.GetScenePathByBuildIndex(i);
+            string sceneName = System.IO.Path.GetFileNameWithoutExtension(scenePath);
+
+            if (!excludedScenes.Contains(sceneName))
+            {
+                validScenes.Add(sceneName);
+            }
+        }
+
+        if (validScenes.Count == 0)
+        {
+            Debug.LogWarning("No valid scenes to load!");
+            return;
+        }
+
+        int ran = GameManager.instance.randomNumberPicker(validScenes.Count);
+
+        SceneManager.LoadScene(ran);
+    }
 
 
-    
+
+
 }
