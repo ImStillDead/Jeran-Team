@@ -119,53 +119,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &47755970
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 47755971}
-  - component: {fileID: 47755972}
-  m_Layer: 0
-  m_Name: ASynceLoader
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &47755971
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 47755970}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 717.06085, y: 0, z: 4787.4443}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &47755972
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 47755970}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 0}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::LoadScene
-  loadingScreen: {fileID: 0}
-  mainMenu: {fileID: 0}
-  loadingSlider: {fileID: 0}
 --- !u!1 &330585543
 GameObject:
   m_ObjectHideFlags: 0
@@ -1298,6 +1251,10 @@ PrefabInstance:
       propertyPath: m_IsActive
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3401963942599723224, guid: 734cd4afb6bdf4049abc924a0d1f06aa, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4121238687945122007, guid: 734cd4afb6bdf4049abc924a0d1f06aa, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -1305,6 +1262,18 @@ PrefabInstance:
     - target: {fileID: 5441922806447242413, guid: 734cd4afb6bdf4049abc924a0d1f06aa, type: 3}
       propertyPath: m_Name
       value: MainMenu
+      objectReference: {fileID: 0}
+    - target: {fileID: 6574945338961549126, guid: 734cd4afb6bdf4049abc924a0d1f06aa, type: 3}
+      propertyPath: loadingScreen
+      value: 
+      objectReference: {fileID: 865767396}
+    - target: {fileID: 6574945338961549126, guid: 734cd4afb6bdf4049abc924a0d1f06aa, type: 3}
+      propertyPath: progressSlider
+      value: 
+      objectReference: {fileID: 1028632417}
+    - target: {fileID: 6574945338961549126, guid: 734cd4afb6bdf4049abc924a0d1f06aa, type: 3}
+      propertyPath: sliderSmoothingSpeed
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7321933903393217144, guid: 734cd4afb6bdf4049abc924a0d1f06aa, type: 3}
       propertyPath: m_text
@@ -1417,7 +1386,6 @@ PrefabInstance:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
-  - {fileID: 47755971}
   - {fileID: 865767397}
   - {fileID: 330585546}
   - {fileID: 410087041}
