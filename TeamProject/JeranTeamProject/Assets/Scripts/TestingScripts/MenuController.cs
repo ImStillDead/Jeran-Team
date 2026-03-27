@@ -46,6 +46,17 @@ public class MenuController : MonoBehaviour
                    //only within the main menu of course. 
         }   
 
+        if(menuWin == null && menuLose == null && winMainButton == null && loseMainButton == null)
+        {
+            menuWin = null;
+            menuLose = null;
+            winMainButton = null;
+            loseMainButton = null;
+
+            return;
+        }
+
+
     }
 
     public void Update()
