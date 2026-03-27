@@ -35,13 +35,15 @@ public class GunStats : ScriptableObject
     public Transform leftHand;
 
     public RecoilScriptable recoil;
-    public List<Attachment> sightList;
-    public List<Attachment> foregripList;
-    public List<Attachment> laserList;
-    public List<Attachment> magazineList;
     public Transform sightLocation;
     public Bullet bullet;
 
+    [Header("attachments")]
+    public Attachments sight;
+    public Attachments foregrip;
+    public Attachments laser;
+    public Attachments magazine;
+    public List<Attachments> equippedAttachments = new List<Attachments>();
 
     [Header("Gun Info")]
     [Range(0.05f, 10f)] public float shootRate;
@@ -86,4 +88,37 @@ public class GunStats : ScriptableObject
     public AudioClip[] shotSound;
     [Range(0, 1)] public float shotSoundVol;
     internal Vector3 postion;
+
+
+
+    public void ApplyAttachment(Attachments attachment)
+    {
+        // Remove old attachment of same type
+        switch (attachment.attachmentType)
+        {
+            case AttachmentType.Sights:
+                sight = attachment;
+                break;
+
+            case AttachmentType.Foregrips:
+                foregrip = attachment;
+                break;
+
+            case AttachmentType.Laser:
+                laser = attachment;
+                break;
+
+            case AttachmentType.Magazines:
+                magazine = attachment;
+                break;
+        }
+
+        // Track in list (optional but useful)
+        if (!equippedAttachments.Contains(attachment))
+            equippedAttachments.Add(attachment);
+
+
+
+    }
+
 }

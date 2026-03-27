@@ -23,42 +23,60 @@ public class cardHolder : MonoBehaviour
         player = GameManager.instance.playerScript;
 
 
-        if (player == null || player.Gun == null)
-        {
-            return;
-        }
-
-
-        card1.gameObject.SetActive(false);
-        card2.gameObject.SetActive(false);
-
-
     }
 
+    private void OnEnable()
+    {
+        // Grab player reference
+        if (player == null)
+            player = GameManager.instance.playerScript;
 
+        // Ensure the card prefabs exist
+        EnsureCardsExist();
+
+        // Update cards immediately
+        updateCards();
+    }
+
+    void EnsureCardsExist()
+    {
+        if (cardUI1 == null && card1 != null)
+        {
+            GameObject obj1 = Instantiate(prefab, card1);
+            obj1.transform.localPosition = Vector3.zero;
+            cardUI1 = obj1.GetComponent<Guncards>();
+        }
+
+        if (cardUI2 == null && card2 != null)
+        {
+            GameObject obj2 = Instantiate(prefab, card2);
+            obj2.transform.localPosition = Vector3.zero;
+            cardUI2 = obj2.GetComponent<Guncards>();
+        }
+    }
 
 
     public void updateCards()
     {
         if (player == null)
         {
-            Debug.LogWarning("cardHolder: player is NULL");
+
             return;
         }
 
         if (player.Gun == null)
         {
-            Debug.LogWarning("cardHolder: player.Gun is NULL");
+   
             return;
         }
 
-        if (player.Gun.gunList == null)
+        if (player.holster.gunList == null)
         {
-            Debug.LogWarning("cardHolder: gunList is NULL");
+
             return;
         }
 
-        var gunlist = player.Gun.gunList;
+        var gunlist = player.holster.gunList;
 
 
 
@@ -69,12 +87,6 @@ public class cardHolder : MonoBehaviour
         }
         if (gunlist.Count > 0)
         {
-            if (cardUI1 == null)
-            {
-                GameObject obj1 = Instantiate(prefab, card1);
-                obj1.transform.localPosition = Vector3.zero;
-                cardUI1 = obj1.GetComponent<Guncards>();
-            }
 
             cardUI1.setGunstats(0);
             cardUI1.gameObject.SetActive(true);
@@ -87,12 +99,6 @@ public class cardHolder : MonoBehaviour
         }
         if (gunlist.Count > 1)
         {
-            if (cardUI2 == null)
-            {
-                GameObject obj2 = Instantiate(prefab, card2);// make card at location,? maybe fix static location to be more consistant. 
-                obj2.transform.localPosition = Vector3.zero;
-                cardUI2 = obj2.GetComponent<Guncards>();
-            }
 
             cardUI2.setGunstats(1);                          //hopefully update the stats from the gun and put them on the card to read. 
             cardUI2.gameObject.SetActive(true);
