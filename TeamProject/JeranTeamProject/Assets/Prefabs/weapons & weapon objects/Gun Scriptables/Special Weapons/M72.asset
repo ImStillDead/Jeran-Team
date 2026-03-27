@@ -14,14 +14,17 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GunStats
   gunModel: {fileID: 4669841312380762000, guid: 32396e083f4280f4582484b628cc7b83, type: 3}
   shootPos: {fileID: 0}
+  rightHand: {fileID: 0}
+  leftHand: {fileID: 0}
   recoil: {fileID: 11400000, guid: 56de06dbf8f45634890baaf0591c8b01, type: 2}
+  sightLocation: {fileID: 0}
   bullet: {fileID: 11400000, guid: 9ec337e9d56f2f84eac6f2c83ff2b134, type: 2}
   shootRate: 1
   magSizeMax: 1
   reloadTime: 4
   currentAmmo: 1
   gunRarity: 2
-  gunType: 0
+  gunType: 6
   isBurst: 0
   hipSpread: 5
   adsSpread: 0
