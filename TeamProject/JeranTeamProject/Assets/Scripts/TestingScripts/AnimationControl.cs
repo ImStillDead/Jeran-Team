@@ -14,28 +14,13 @@ public class AnimationControl : MonoBehaviour
     float reach;
     public Transform leftHand;
     float movingMag;
-    GUNHolsters holster;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        if (animator == null)
-        {
-            animator = player.GetComponent<Animator>();
-            if (animator == null)
-            {
-                Debug.LogError("No Animator found on the player!");
-            }
-        }
-
         player = GameManager.instance.player;
         playerController = GameManager.instance.playerScript;
         playerController.playerAnimator = this;
         Shooting.instance.animationControl = this;
-        holster = player.GetComponentInChildren<GUNHolsters>();
-        if (holster == null)
-        {
-            Debug.LogError("GUNHolsters component missing on player!");
-        }
     }
 
     // Update is called once per frame
@@ -57,7 +42,7 @@ public class AnimationControl : MonoBehaviour
             animator.SetFloat("VelocityX", magnitudeX);
             animator.SetFloat("VelocityZ", magnitudeZ);
             //GunCheckAnimations 
-            if (holster != null && holster.gunList.Count > 0)
+            if (Shooting.instance.gunList.Count > 0)
             {
                 if (Shooting.instance.GetGunType() == GunType.Pistol)
                 {
