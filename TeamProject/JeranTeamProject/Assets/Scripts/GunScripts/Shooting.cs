@@ -80,7 +80,7 @@ public class Shooting : MonoBehaviour, IAttachmentPickup
 
     // Other Variables
     bool reloading;
-    int activeGun;
+    public int activeGun;
     int pelletCount;
     bool isShotgun;
 
@@ -244,8 +244,8 @@ public class Shooting : MonoBehaviour, IAttachmentPickup
             gunModel.transform.localScale = gunList[gunPos].scale;
             gunModel.transform.localPosition = gunList[gunPos].postion;
             gunModel.transform.localRotation = gunList[gunPos].rotation;
-            gunList[gunPos].leftHand = gunModel.transform.Find("LeftHandPos");
-            gunList[gunPos].rightHand = gunModel.transform.Find("RightHandPos");
+            //gunList[gunPos].leftHand = gunModel.transform.Find("LeftHandPos");
+            //gunList[gunPos].rightHand = gunModel.transform.Find("RightHandPos");
             shootPos = gunModel.transform.GetChild(0);
             changeBullet();
             callAmmo();
