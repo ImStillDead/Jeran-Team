@@ -14,9 +14,9 @@ public class MenuController : MonoBehaviour, IPointerEnterHandler
 
     public GameObject menuPause;
     [SerializeField] private Button firstMainButton;
-    [SerializeField] GameObject menuWin;
+    [SerializeField] public GameObject menuWin;
     [SerializeField] private Button winMainButton;
-    [SerializeField] GameObject menuLose;
+    [SerializeField] public GameObject menuLose;
     [SerializeField] private Button loseMainButton;
 
     public bool isPaused;

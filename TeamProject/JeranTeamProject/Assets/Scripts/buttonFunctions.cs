@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System.Collections;
+using Unity.VisualScripting;
 
 public class ButtonFunctions : MonoBehaviour
 {
@@ -202,6 +203,7 @@ public class ButtonFunctions : MonoBehaviour
 
     public void LoadRandomScene()
     {
+
         int totalScenes = SceneManager.sceneCountInBuildSettings;
         List<string> validScenes = new List<string>();
 
@@ -213,6 +215,7 @@ public class ButtonFunctions : MonoBehaviour
             if (!excludedScenes.Contains(sceneName))
             {
                 validScenes.Add(sceneName);
+
             }
         }
 
@@ -222,8 +225,30 @@ public class ButtonFunctions : MonoBehaviour
             return;
         }
 
-        int ran = UnityEngine.Random.Range(0, totalScenes);
-        LoadSceneWithProgress(validScenes[ran]);
+        // Keep picking until we get a valid scene (though validScenes already guarantees it)
+        string sceneToLoad = null;
+        while (sceneToLoad == null)
+        {
+            int ran = UnityEngine.Random.Range(0, validScenes.Count); // MUST use validScenes.Count
+            sceneToLoad = validScenes[ran];
+        }
+
+        Debug.Log("Loading scene: " + sceneToLoad);
+        loadSceneAtStart(sceneToLoad);
+
+        if(sceneToLoad != null)
+        {
+            manager.menus.menuWin.SetActive(false);
+
+        }
+
+
+
+
+    }
+    private void loadSceneAtStart(string input)
+    {
+        StartCoroutine(LoadScreen(input));
     }
 
     private void LoadSceneWithProgress(int sceneIndex)
@@ -236,6 +261,60 @@ public class ButtonFunctions : MonoBehaviour
         StartCoroutine(LoadSceneAsync(sceneName));
     }
 
+    private IEnumerator LoadScreen(string sceneIndex)
+    {
+        if (loadingScreen != null)
+            loadingScreen.SetActive(true);
+
+        if (progressSlider != null)
+            progressSlider.value = 0;
+
+
+        yield return null; 
+
+        float startTime = Time.time;
+        float currentDisplayProgress = 0f;
+
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneIndex);
+        asyncLoad.allowSceneActivation = false;
+
+        while (asyncLoad.progress < 0.9f)
+        {
+            float targetProgress = Mathf.Clamp01(asyncLoad.progress / 0.9f);
+            currentDisplayProgress = Mathf.Lerp(currentDisplayProgress, targetProgress, Time.deltaTime * sliderSmoothingSpeed);
+
+            if (progressSlider != null)
+                progressSlider.value = currentDisplayProgress;
+
+            yield return null;
+        }
+
+        while (currentDisplayProgress < 0.99f)
+        {
+            currentDisplayProgress = Mathf.Lerp(currentDisplayProgress, 1f, Time.deltaTime * sliderSmoothingSpeed);
+
+            if (progressSlider != null)
+                progressSlider.value = currentDisplayProgress;
+
+            yield return null;
+        }
+
+        if (progressSlider != null)
+            progressSlider.value = 1f;
+
+        float elapsedTime = Time.time - startTime;
+        if (elapsedTime < minimumLoadTime)
+        {
+            float remainingTime = minimumLoadTime - elapsedTime;
+            yield return new WaitForSeconds(remainingTime);
+        }
+
+        asyncLoad.allowSceneActivation = true;
+        yield return new WaitForSeconds(0.1f);
+
+        if (loadingScreen != null)
+            loadingScreen.SetActive(false);
+    }
     private IEnumerator LoadSceneAsync(int sceneIndex)
     {
         if (loadingScreen != null)
