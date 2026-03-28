@@ -485,6 +485,11 @@ public class GameManager : MonoBehaviour
             gameData.playerData.HPMax = playerStatUpgrade(tempMaxHP);
             playerScript.Heal((int)tempMaxHP / 4);
             gameData.playerData.HP = playerScript.playerData.HP;
+            gameData.playerData.itemList.Clear();
+            foreach(Pickups item in playerScript.playerData.itemList)
+            {
+                gameData.playerData.itemList.Add(item);
+            }
             playerScript.UpdatePlayer(gameData.playerData);
         }
 

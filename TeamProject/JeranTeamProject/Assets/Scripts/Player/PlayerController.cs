@@ -387,19 +387,19 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
 
         if (itemList.Contains(item))
         {
-            itemIndex = itemList.IndexOf(item);
-            itemList[itemIndex].uesage++;
+            invPos = itemList.IndexOf(item);
+            itemList[invPos].uesage++;
 
         }
         else
         {
             itemList.Add(item);
-            itemIndex = itemList.Count - 1;
-            itemList[itemIndex].uesage = 1;
+            invPos = itemList.Count - 1;
+            itemList[invPos].uesage = 1;
         }
         if (activePick == null)
         {
-            ChangeItem(itemIndex);
+            ChangeItem(invPos);
         }
     }
     //Itemes and Interactions
@@ -660,7 +660,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
         }
         if (itemList.Count > 0 && itemList[0] != null)
         {
-            manager.updateItem(itemList[itemIndex].itemIndex);
+            manager.updateItem(itemList[invPos].itemIndex);
         }
         manager.UpdateUI(playerData);
     }
@@ -856,7 +856,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
         UpdateAnimations();
         UpdateStatic(playerData);
         UpdatePlayer(playerData);
-        UpdatePlayer(playerData);
+        
     }
     void UpdateStatic(PlayerData character)
     {
