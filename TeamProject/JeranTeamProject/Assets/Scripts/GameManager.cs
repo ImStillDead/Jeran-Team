@@ -391,9 +391,30 @@ public class GameManager : MonoBehaviour
 
         playDir.y = 0;
 
-        obje.transform.rotation = Quaternion.LookRotation(-playDir);
+        obje.transform.rotation = Quaternion.LookRotation(playDir);
 
     }
+
+    public void guiAlwaysFacePlayerOnPivot(GameObject obje, Transform pivot)
+    {
+        if (obje == null) return;
+
+
+        Vector3 playDir = player.transform.position - pivot.position;
+
+        playDir.y = 0;
+
+
+        playDir.Normalize();
+
+        float radius = Vector3.Distance(obje.transform.position, pivot.position);
+
+        obje.transform.position = pivot.position + playDir * radius;
+
+        obje.transform.rotation = Quaternion.LookRotation(playDir);
+
+    }
+
     public void UpdateUI(PlayerData update)
     {
         moneyCount.text = update.money.ToString();
