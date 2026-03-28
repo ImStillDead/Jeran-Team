@@ -154,6 +154,7 @@ public class ButtonFunctions : MonoBehaviour
                 manager.playerScript?.SpawnPlayer();
                 manager.playerScript?.LoadRun();
                 manager.menus?.stateUnpause();
+                manager.playerScript?.UpdateEnemySpawn(index - 1);
             }
         }
     }

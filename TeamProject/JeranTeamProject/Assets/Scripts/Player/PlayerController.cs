@@ -129,7 +129,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
     {
         if (manager != null && manager.menus.isPaused)
             return;
-        
+
 
         UpdatePlayerUI();
         Movement();
@@ -159,7 +159,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
 
         if (currentPlatform != null)
         {
-    
+
 
             lastPlatformPos.y = manager.player.transform.position.y;
             platformVelocity = currentPlatform.position - lastPlatformPos;
@@ -331,7 +331,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
         }
         if (Input.GetButtonUp("Jump") && jumpCount < jumpMax)
         {
-            if(playerAnimator.isJumping == true)
+            if (playerAnimator.isJumping == true)
             {
                 playerAnimator.isJumping = false;
             }
@@ -530,7 +530,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
         {
             gunPos = 0;
             UpdateGun();
- 
+
         }
         else if (Input.GetButtonDown("Weapon2") && Gun.gunList.Count > 1)
         {
@@ -791,13 +791,13 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
     //SaveData
     public void SaveHub()
     {
-        if(DataManager.instance != null)
+        if (DataManager.instance != null)
         {
             DataManager.instance.hubData.playerData = staticBase;
             DataManager.instance.hubData.sceneIndex = hubIndex;
         }
     }
-    public void SaveRun() 
+    public void SaveRun()
     {
         if (DataManager.instance != null)
         {
@@ -893,16 +893,29 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
         if (other.transform == currentPlatform)
         {
             currentPlatform = null;
-            
+
         }
     }
 
     public void UpdateAnimations()
     {
         playerAnimator.animator.avatar = characterMesh.GetComponent<Animator>().avatar;
-        foreach(SetBoneContraint rig in boneRigs)
+        foreach (SetBoneContraint rig in boneRigs)
         {
             rig.updateRig();
+        }
+    }
+
+    public void UpdateEnemySpawn(int level)
+    {
+        GetComponent<OnPlayerEnemySpawn>().spawnCount = 3;
+        for (int i = 0; i < level; i++)
+        {
+            GetComponent<OnPlayerEnemySpawn>().spawnCount += 7;
+        }
+        
+        if(GetComponent<OnPlayerEnemySpawn>().spawnCount > 30) {
+            GetComponent<OnPlayerEnemySpawn>().spawnCount = 30;
         }
     }
 }

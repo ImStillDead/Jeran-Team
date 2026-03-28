@@ -569,13 +569,6 @@ public class GameManager : MonoBehaviour
             Shooting.instance.changeGun(0);
         }
     }
-    private void LateUpdate()
-    {
-        if(playerScript.characterMesh == null)
-        {
-            playerScript.SwapCharacter(baseCharacter);
-        }
-    }
     public void UpdateRun()
     {
         gameData.sceneIndex = sceneIndex;
