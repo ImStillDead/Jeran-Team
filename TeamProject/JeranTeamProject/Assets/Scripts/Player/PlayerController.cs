@@ -848,7 +848,6 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
         {
             playerData.gunList.Add(gun);
         }
-        weaponPos.SetParent(GameManager.instance.player.transform);
         //MeshChange
         Destroy(characterMesh);
         characterMesh = Instantiate(character.mesh, this.transform);
@@ -856,7 +855,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
         UpdateAnimations();
         UpdateStatic(playerData);
         UpdatePlayer(playerData);
-        
+        Shooting.instance.changeGun(0);
     }
     void UpdateStatic(PlayerData character)
     {

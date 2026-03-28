@@ -326,7 +326,7 @@ public class Shooting : MonoBehaviour, IAttachmentPickup
 
 
         Camera.main.fieldOfView = 75;
-        if(playerIK.gunRightHand != null)
+        if (playerIK.gunRightHand != null)
         {
             animationControl.isAiming = false;
             GameManager.instance.playerScript.weaponPos.GetComponent<ParentConstraint>().weight = 1f;
@@ -404,6 +404,7 @@ public class Shooting : MonoBehaviour, IAttachmentPickup
     }
     public void SetHandPosition()
     {
+        if (animationControl == null) { animationControl = GameManager.instance.player.GetComponent<AnimationControl>(); }
         playerIK.gunLeftHand = gunModel.transform.Find("LeftHandPos");
         playerIK.gunRightHand = gunModel.transform.Find("RightHandPos");
         ConstraintSource constraintSource = new ConstraintSource();
