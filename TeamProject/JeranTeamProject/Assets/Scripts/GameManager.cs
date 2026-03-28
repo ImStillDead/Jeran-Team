@@ -560,6 +560,7 @@ public class GameManager : MonoBehaviour
         {
             playerSpawn = GameObject.FindWithTag("PlayerSpawn");
             playerScript.SwapCharacter(baseCharacter);
+            Shooting.instance.changeGun(0);
         }
     }
     public void UpdateRun()

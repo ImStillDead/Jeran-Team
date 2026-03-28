@@ -856,6 +856,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
         UpdateAnimations();
         UpdateStatic(playerData);
         UpdatePlayer(playerData);
+        UpdatePlayer(playerData);
     }
     void UpdateStatic(PlayerData character)
     {
