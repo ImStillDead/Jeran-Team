@@ -33,7 +33,7 @@ public class GunStats : ScriptableObject
 
     public Transform rightHand;
     public Transform leftHand;
-
+    public bool canHold;
     public RecoilScriptable recoil;
     public List<Attachment> sightList;
     public List<Attachment> foregripList;
