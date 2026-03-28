@@ -222,7 +222,7 @@ public class ButtonFunctions : MonoBehaviour
             return;
         }
 
-        int ran = GameManager.instance.randomNumberPicker(validScenes.Count);
+        int ran = UnityEngine.Random.Range(0, totalScenes);
         LoadSceneWithProgress(validScenes[ran]);
     }
 
