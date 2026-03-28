@@ -6,7 +6,7 @@ using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
-public class MenuController : MonoBehaviour
+public class MenuController : MonoBehaviour, IPointerEnterHandler
 {
 
     [SerializeField] GameObject menuActive;
@@ -30,7 +30,13 @@ public class MenuController : MonoBehaviour
     {
         manager = GameManager.instance; //pretty sure this has no uses.
     }
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        Button btn = GetComponentInParent<Button>();
 
+        setFirstButton(btn);
+
+    }
 
     void Start()
     {

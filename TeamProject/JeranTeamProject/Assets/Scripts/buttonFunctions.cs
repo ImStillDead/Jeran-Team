@@ -9,13 +9,16 @@ public class ButtonFunctions : MonoBehaviour
 {
     GameManager manager;
 
+    Button btn;
+
     [Header("Scene Exclusion")]
     public List<string> excludedScenes = new List<string>()
     {
         "MainDevScene",
         "HubWorld",
-        "CristobalDevAguilar"
+        "DevDisplay"
     };
+    private int Levelcompletecounter;
 
     [Header("Loading Screen UI")]
     [SerializeField] private GameObject loadingScreen;
@@ -29,6 +32,8 @@ public class ButtonFunctions : MonoBehaviour
 
     void Awake()
     {
+        btn = GetComponentInChildren<Button>();
+
         if (instance == null)
         {
             instance = this;
@@ -69,8 +74,10 @@ public class ButtonFunctions : MonoBehaviour
     }
 
     public void MainMenu()
-    {
+    {   
+        if(DataManager.instance == null)
         DataManager.instance?.SaveData(DataManager.instance.hubData);
+        if(manager != null)
         manager?.UpdateRun();
         LoadSceneWithProgress(0);
     }
@@ -124,7 +131,7 @@ public class ButtonFunctions : MonoBehaviour
 
     public void DevDisplay()
     {
-        LoadSceneWithProgress("CristobalDevAguilar");
+        LoadSceneWithProgress("DevDisplay");
     }
 
     public void StartGame()
@@ -158,6 +165,41 @@ public class ButtonFunctions : MonoBehaviour
         }
     }
 
+    public void nextRandLevel()
+    {
+        DontDestroyOnLoad(this);
+        Levelcompletecounter++;
+        LoadRandomScene();
+    }
+    public void backToHub(bool win)
+    {
+        int exitpretence = Levelcompletecounter % 5;
+
+
+        if (exitpretence == 0 && win == true)
+        {
+            activebuttonInCode(true);
+            LoadSceneWithProgress(1);
+        }
+        else if(win == false)
+        {
+            activebuttonInCode(true);
+            SceneManager.LoadScene(1);
+        }
+        else
+        {
+            activebuttonInCode(false);
+        }
+
+
+    }
+
+    public void activebuttonInCode(bool active)
+    {
+        btn.interactable = active;
+    }
+
+
     public void LoadRandomScene()
     {
         int totalScenes = SceneManager.sceneCountInBuildSettings;
@@ -180,7 +222,7 @@ public class ButtonFunctions : MonoBehaviour
             return;
         }
 
-        int ran = GameManager.instance.randomNumberPicker(validScenes.Count);
+        int ran = UnityEngine.Random.Range(0, totalScenes);
         LoadSceneWithProgress(validScenes[ran]);
     }
 

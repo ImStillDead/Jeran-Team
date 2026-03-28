@@ -150,6 +150,7 @@ GameObject:
   - component: {fileID: 2085509774857320037}
   - component: {fileID: 4905858691092418533}
   - component: {fileID: 3312161579105642541}
+  - component: {fileID: 1459684609062237864}
   m_Layer: 6
   m_Name: Boss
   m_TagString: Enemy
@@ -288,6 +289,22 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!111 &1459684609062237864
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 185043765624766606}
+  m_Enabled: 1
+  serializedVersion: 4
+  m_Animation: {fileID: 0}
+  m_Animations: []
+  m_WrapMode: 0
+  m_PlayAutomatically: 1
+  m_AnimatePhysics: 0
+  m_UpdateMode: 0
+  m_CullingType: 0
 --- !u!1 &289040447725157044
 GameObject:
   m_ObjectHideFlags: 0
