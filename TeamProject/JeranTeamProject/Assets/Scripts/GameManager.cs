@@ -25,6 +25,7 @@ public class GameManager : MonoBehaviour
     public GameObject player;
     public PlayerController playerScript;
 
+
     [Header("Static Objects")]
     [SerializeField] CharacterSelect baseCharacter;
     [SerializeField] GameObject VolumeSlider;

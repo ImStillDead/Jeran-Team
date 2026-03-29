@@ -63,13 +63,13 @@ public class chest : MonoBehaviour , iInteract
             }
         }
 
-        else if (isOpen == true)
-        {
-            closeChest();
+        //else if (isOpen == true)
+        //{
+        //    closeChest();
 
-            if(itemGiven != null) 
-            itemGiven.gameObject.SetActive(false);
-        }
+        //    if(itemGiven != null) 
+        //    itemGiven.gameObject.SetActive(false);
+        //}
     }
     void openChest()
     {   
@@ -88,5 +88,21 @@ public class chest : MonoBehaviour , iInteract
 
         return item;
     }
+
+    public void addToList(Shooting gun)
+    {
+        GameObject gunadd = gun.gunModel;
+
+
+        if (!items.Contains(gunadd)){
+
+            items.Add(gunadd);
+
+        }
+
+
+
+    }
+
 
 }

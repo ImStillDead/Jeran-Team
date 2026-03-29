@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Data.SqlTypes;
 
 [Serializable]
-public class PlayerData 
+public class PlayerData
 {
     public int level;
     public float experience;
@@ -37,5 +37,15 @@ public class PlayerData
         money = 0;
         gunList = new List<GunStats>();
         itemList = new List<Pickups>();
-}
+    }
+
+    public void SetPlayerLvl(int set)
+    {
+        level = set;
+    }
+    public int getPlayerLvl()
+    {
+        return level;
+    }
+
 }

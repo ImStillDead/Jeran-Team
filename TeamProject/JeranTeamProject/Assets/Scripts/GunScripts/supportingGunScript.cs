@@ -96,6 +96,17 @@ public class supportingGunScript : MonoBehaviour
     }
 
 
+    public void RandomTierPicker(GunStats gun)
+    {
+        if (gun == null) return;
+
+
+
+
+
+
+    }
+
 
 
 
