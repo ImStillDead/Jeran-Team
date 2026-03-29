@@ -70,6 +70,8 @@ public class Shooting : MonoBehaviour, IAttachmentPickup
     public Recoil recoil;
 
     public bool isBurst;
+    
+    public bool canShoot;
 
     public float burstTime;
     public float rechamberTime;
@@ -93,6 +95,7 @@ public class Shooting : MonoBehaviour, IAttachmentPickup
     bool burstFiring = true;
     bool shotgunFiring;
 
+
     void Awake()
     {
         if (instance == null)
@@ -100,6 +103,8 @@ public class Shooting : MonoBehaviour, IAttachmentPickup
             instance = this;
         }
         currentAmmo = magSizeMax;  // Sets currentAmmo equal to the maxAmmo
+
+        canShoot = true;
 
         recoil = GameObject.Find("CameraRot/CameraRecoil").GetComponent<Recoil>();
 
@@ -357,11 +362,13 @@ public class Shooting : MonoBehaviour, IAttachmentPickup
         
         animationControl.isReloading = true;
         reloading = true;                               // Sets reloading to true to stop the player from firing
+        canShoot = false;
         yield return new WaitForSeconds(reloadTime);    // Waits for a set amount of time determined by the reloadTime
         currentAmmo = magSizeMax;                   // Sets currentAmmo equal to the max ammo
         callAmmo();
         reloading = false;                              // Sets reloading back to false so the player can shoot again
         animationControl.isReloading = false;
+        canShoot = true;
     }
 
     IEnumerator Burst()
@@ -389,15 +396,7 @@ public class Shooting : MonoBehaviour, IAttachmentPickup
         return gunList[activeGun];
     }
 
-    public void GunListSwap(List<GunStats> listSwap)
-    {
-        gunList.Clear();
-        foreach (GunStats gun in listSwap)
-        {
-            gunList.Add(gun);
-        }
-        changeGun(0);
-    }
+
     public GunType GetGunType()
     {
         return gunList[activeGun].gunType;

@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -23,53 +24,69 @@ public class MenuController : MonoBehaviour, IPointerEnterHandler
     float timeScaleOrg;
     cardHolder cardUI;
 
+    [Header("Loading Screen UI")]
+    [SerializeField] private GameObject loadingScreen;
+    [SerializeField] private Slider progressSlider;
+
+    [Header("Loading Settings")]
+    [SerializeField] private float minimumLoadTime = 2f;
+    [SerializeField] private float sliderSmoothingSpeed = 5f;
 
     GameManager manager;
 
+    private static MenuController instance;
+    public static MenuController Instance => instance;
+
     private void Awake()
     {
-        manager = GameManager.instance; //pretty sure this has no uses.
+        // Singleton pattern
+        if (instance == null)
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+            return;
+        }
+
+        manager = GameManager.instance;
+
+        // Initialize loading screen
+        if (loadingScreen != null)
+            loadingScreen.SetActive(false);
     }
+
     public void OnPointerEnter(PointerEventData eventData)
     {
         Button btn = GetComponentInParent<Button>();
-
         setFirstButton(btn);
-
     }
 
     void Start()
     {
         timeScaleOrg = Time.timeScale;
 
-        if (menuPause != null && firstMainButton != null )
+        if (menuPause != null && firstMainButton != null)
         {
             setMenuButton(menuPause);
+            setFirstButton(firstMainButton);
+        }
 
-            setFirstButton(firstMainButton);   
-                
-                   //this is so we dont have to click on a button within the main menu and seamlessly use the buttons
-                   //only within the main menu of course. 
-        }   
-
-        if(menuWin == null && menuLose == null && winMainButton == null && loseMainButton == null)
+        if (menuWin == null && menuLose == null && winMainButton == null && loseMainButton == null)
         {
             menuWin = null;
             menuLose = null;
             winMainButton = null;
             loseMainButton = null;
-
             return;
         }
-
-
     }
 
     public void Update()
     {
-        if(statePause(false)) stateUnpause();
-
-
+        if (statePause(false)) stateUnpause();
     }
 
     void setFirstButton(Button button)
@@ -77,7 +94,7 @@ public class MenuController : MonoBehaviour, IPointerEnterHandler
         if (EventSystem.current != null)
         {
             EventSystem.current.SetSelectedGameObject(null);
-            EventSystem.current.SetSelectedGameObject(button.gameObject);   //this is so we dont have to click on a button within the main menu and seamlessly use the buttons
+            EventSystem.current.SetSelectedGameObject(button.gameObject);
         }
     }
 
@@ -96,8 +113,7 @@ public class MenuController : MonoBehaviour, IPointerEnterHandler
 
     public void setMenuButton(GameObject menu)
     {
-        if (menuActive != null) menuActive.SetActive(false);  //when making a new button make sure the button that goes is supposed to open the submenu make sure to have this activate as well,
-                                                              // it will update the current active menu which will give you the ability to use controller or keyboard imputs as controlls for the menu.
+        if (menuActive != null) menuActive.SetActive(false);
         menuActive = menu;
         menuActive.SetActive(true);
 
@@ -108,18 +124,15 @@ public class MenuController : MonoBehaviour, IPointerEnterHandler
         {
             cardUI.updateCards();
         }
-
-      //  Debug.Log(menuActive + " is active");
     }
 
     public void openMenuButton(GameObject menu)
     {
-        statePause(true);                                     
+        statePause(true);
         menuActive = menu;
         menuActive.SetActive(true);
 
         menuButtonController(menuActive);
-       // Debug.Log(menuActive + " is active");
     }
 
     public bool statePause(bool activeRet)
@@ -130,7 +143,6 @@ public class MenuController : MonoBehaviour, IPointerEnterHandler
             Time.timeScale = 0;
             Cursor.visible = true;
             Cursor.lockState = CursorLockMode.None;
-            
         }
 
         return activeRet;
@@ -138,7 +150,6 @@ public class MenuController : MonoBehaviour, IPointerEnterHandler
 
     public void stateUnpause()
     {
-
         isPaused = false;
         Time.timeScale = timeScaleOrg;
         Cursor.visible = false;
@@ -153,15 +164,13 @@ public class MenuController : MonoBehaviour, IPointerEnterHandler
 
     public void youWin()
     {
-
         setMenuButton(menuWin);
         setFirstButton(winMainButton);
         statePause(true);
         menuActive = menuWin;
         menuActive.SetActive(true);
-        manager.killCount_text.text = manager.killCount.ToString();
-
-
+        if (manager != null)
+            manager.killCount_text.text = manager.killCount.ToString();
     }
 
     public void youLose()
@@ -176,9 +185,204 @@ public class MenuController : MonoBehaviour, IPointerEnterHandler
     public void menuButtonController(GameObject menuNameHere)
     {
         Button firstButton = menuNameHere.GetComponentInChildren<Button>();
-        EventSystem.current.SetSelectedGameObject(null);
-        EventSystem.current.SetSelectedGameObject(firstButton.gameObject);
+        if (EventSystem.current != null && firstButton != null)
+        {
+            EventSystem.current.SetSelectedGameObject(null);
+            EventSystem.current.SetSelectedGameObject(firstButton.gameObject);
+        }
+    }
 
-    } //this is the main function that allows us to use contoller input as controlls for menus.
+    public void LoadSceneWithProgress(int sceneIndex)
+    {
+        StartCoroutine(LoadSceneAsync(sceneIndex));
+    }
 
+    public void LoadSceneWithProgress(string sceneName)
+    {
+        StartCoroutine(LoadSceneAsync(sceneName));
+    }
+
+    private IEnumerator LoadSceneAsync(int sceneIndex)
+    {
+        // Pause the game before showing loading screen
+        statePause(true);
+
+        // Show loading screen
+        if (loadingScreen != null)
+        {
+            loadingScreen.SetActive(true);
+            // Make sure the loading screen is on top of everything
+            Canvas loadingCanvas = loadingScreen.GetComponentInParent<Canvas>();
+            if (loadingCanvas != null)
+            {
+                loadingCanvas.sortingOrder = 1000;
+            }
+        }
+
+        if (progressSlider != null)
+        {
+            progressSlider.value = 0;
+        }
+
+        // Force time scale to 1 for loading screen animations (but game is still "paused" via UI)
+        Time.timeScale = 1f;
+
+        float startTime = Time.realtimeSinceStartup;
+        float currentDisplayProgress = 0f;
+
+        // Start loading the scene
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneIndex);
+
+        if (asyncLoad == null)
+        {
+            if (loadingScreen != null)
+                loadingScreen.SetActive(false);
+            stateUnpause();
+            yield break;
+        }
+
+        asyncLoad.allowSceneActivation = false;
+
+        // Wait for loading to progress
+        while (asyncLoad.progress < 0.9f)
+        {
+            float targetProgress = Mathf.Clamp01(asyncLoad.progress / 0.9f);
+            currentDisplayProgress = Mathf.Lerp(currentDisplayProgress, targetProgress, Time.deltaTime * sliderSmoothingSpeed);
+
+            if (progressSlider != null)
+                progressSlider.value = currentDisplayProgress;
+
+            yield return null;
+        }
+
+        // Smoothly fill the rest of the bar
+        while (currentDisplayProgress < 0.99f)
+        {
+            currentDisplayProgress = Mathf.Lerp(currentDisplayProgress, 1f, Time.deltaTime * sliderSmoothingSpeed);
+
+            if (progressSlider != null)
+                progressSlider.value = currentDisplayProgress;
+
+            yield return null;
+        }
+
+        if (progressSlider != null)
+            progressSlider.value = 1f;
+
+        // Ensure minimum load time
+        float elapsedTime = Time.realtimeSinceStartup - startTime;
+        if (elapsedTime < minimumLoadTime)
+        {
+            float remainingTime = minimumLoadTime - elapsedTime;
+            yield return new WaitForSecondsRealtime(remainingTime);
+        }
+
+        // Allow scene activation
+        asyncLoad.allowSceneActivation = true;
+
+        // Wait for scene to actually load
+        yield return new WaitForSecondsRealtime(0.1f);
+
+        // Wait one more frame to ensure scene is ready
+        yield return null;
+
+        // Hide loading screen
+        if (loadingScreen != null)
+            loadingScreen.SetActive(false);
+
+        // Unpause the game after scene is loaded
+        stateUnpause();
+    }
+
+    private IEnumerator LoadSceneAsync(string sceneName)
+    {
+        // Pause the game before showing loading screen
+        statePause(true);
+
+        // Show loading screen
+        if (loadingScreen != null)
+        {
+            loadingScreen.SetActive(true);
+            // Make sure the loading screen is on top of everything
+            Canvas loadingCanvas = loadingScreen.GetComponentInParent<Canvas>();
+            if (loadingCanvas != null)
+            {
+                loadingCanvas.sortingOrder = 1000;
+            }
+        }
+
+        if (progressSlider != null)
+        {
+            progressSlider.value = 0;
+        }
+
+        // Force time scale to 1 for loading screen animations (but game is still "paused" via UI)
+        Time.timeScale = 1f;
+
+        float startTime = Time.realtimeSinceStartup;
+        float currentDisplayProgress = 0f;
+
+        // Start loading the scene
+        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName);
+
+        if (asyncLoad == null)
+        {
+            if (loadingScreen != null)
+                loadingScreen.SetActive(false);
+            stateUnpause();
+            yield break;
+        }
+
+        asyncLoad.allowSceneActivation = false;
+
+        // Wait for loading to progress
+        while (asyncLoad.progress < 0.9f)
+        {
+            float targetProgress = Mathf.Clamp01(asyncLoad.progress / 0.9f);
+            currentDisplayProgress = Mathf.Lerp(currentDisplayProgress, targetProgress, Time.deltaTime * sliderSmoothingSpeed);
+
+            if (progressSlider != null)
+                progressSlider.value = currentDisplayProgress;
+
+            yield return null;
+        }
+
+        // Smoothly fill the rest of the bar
+        while (currentDisplayProgress < 0.99f)
+        {
+            currentDisplayProgress = Mathf.Lerp(currentDisplayProgress, 1f, Time.deltaTime * sliderSmoothingSpeed);
+
+            if (progressSlider != null)
+                progressSlider.value = currentDisplayProgress;
+
+            yield return null;
+        }
+
+        if (progressSlider != null)
+            progressSlider.value = 1f;
+
+        // Ensure minimum load time
+        float elapsedTime = Time.realtimeSinceStartup - startTime;
+        if (elapsedTime < minimumLoadTime)
+        {
+            float remainingTime = minimumLoadTime - elapsedTime;
+            yield return new WaitForSecondsRealtime(remainingTime);
+        }
+
+        // Allow scene activation
+        asyncLoad.allowSceneActivation = true;
+
+        // Wait for scene to actually load
+        yield return new WaitForSecondsRealtime(0.1f);
+
+        // Wait one more frame to ensure scene is ready
+        yield return null;
+
+        // Hide loading screen
+        if (loadingScreen != null)
+            loadingScreen.SetActive(false);
+
+        // Unpause the game after scene is loaded
+        stateUnpause();
+    }
 }

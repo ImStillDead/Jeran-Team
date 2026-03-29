@@ -9,7 +9,6 @@ using Unity.VisualScripting;
 public class ButtonFunctions : MonoBehaviour
 {
     GameManager manager;
-
     Button btn;
 
     [Header("Scene Exclusion")]
@@ -20,14 +19,6 @@ public class ButtonFunctions : MonoBehaviour
         "DevDisplay"
     };
     private int Levelcompletecounter;
-
-    [Header("Loading Screen UI")]
-    [SerializeField] private GameObject loadingScreen;
-    [SerializeField] private Slider progressSlider;
-
-    [Header("Loading Settings")]
-    [SerializeField] private float minimumLoadTime = 2f;
-    [SerializeField] private float sliderSmoothingSpeed = 5f;
 
     private static ButtonFunctions instance;
 
@@ -45,9 +36,6 @@ public class ButtonFunctions : MonoBehaviour
             Destroy(gameObject);
             return;
         }
-
-        if (loadingScreen != null)
-            loadingScreen.SetActive(false);
     }
 
     public void Start()
@@ -75,12 +63,12 @@ public class ButtonFunctions : MonoBehaviour
     }
 
     public void MainMenu()
-    {   
-        if(DataManager.instance == null)
-        DataManager.instance?.SaveData(DataManager.instance.hubData);
-        if(manager != null)
-        manager?.UpdateRun();
-        LoadSceneWithProgress(0);
+    {
+        if (DataManager.instance == null)
+            DataManager.instance?.SaveData(DataManager.instance.hubData);
+        if (manager != null)
+            manager?.UpdateRun();
+        MenuController.Instance?.LoadSceneWithProgress(0);
     }
 
     public void ContinueRun()
@@ -88,7 +76,7 @@ public class ButtonFunctions : MonoBehaviour
         if (DataManager.instance != null && DataManager.instance.currentRun != null)
         {
             GameData load = DataManager.instance.currentRun.LoadRun();
-            LoadSceneWithProgress(load.sceneIndex);
+            MenuController.Instance?.LoadSceneWithProgress(load.sceneIndex);
             manager?.menus?.stateUnpause();
             manager?.LoadRun();
         }
@@ -127,17 +115,17 @@ public class ButtonFunctions : MonoBehaviour
     public void NewGame()
     {
         DataManager.instance?.NewGame();
-        LoadSceneWithProgress(1);
+        MenuController.Instance?.LoadSceneWithProgress(1);
     }
 
     public void DevDisplay()
     {
-        LoadSceneWithProgress("DevDisplay");
+        MenuController.Instance?.LoadSceneWithProgress("DevDisplay");
     }
 
     public void StartGame()
     {
-        LoadSceneWithProgress(1);
+        MenuController.Instance?.LoadSceneWithProgress(1);
     }
 
     public void NextLevel()
@@ -149,11 +137,11 @@ public class ButtonFunctions : MonoBehaviour
         {
             DataManager.instance?.SaveData(DataManager.instance.hubData);
             manager?.UpdateRun();
-            LoadSceneWithProgress(0);
+            MenuController.Instance?.LoadSceneWithProgress(0);
         }
         else
         {
-            LoadSceneWithProgress(index);
+            MenuController.Instance?.LoadSceneWithProgress(index);
             if (manager != null)
             {
                 manager.sceneIndex = index;
@@ -172,27 +160,25 @@ public class ButtonFunctions : MonoBehaviour
         Levelcompletecounter++;
         LoadRandomScene();
     }
+
     public void backToHub(bool win)
     {
         int exitpretence = Levelcompletecounter % 5;
 
-
         if (exitpretence == 0 && win == true)
         {
             activebuttonInCode(true);
-            LoadSceneWithProgress(1);
+            MenuController.Instance?.LoadSceneWithProgress(1);
         }
-        else if(win == false)
+        else if (win == false)
         {
             activebuttonInCode(true);
-            SceneManager.LoadScene(1);
+            MenuController.Instance?.LoadSceneWithProgress(1);
         }
         else
         {
             activebuttonInCode(false);
         }
-
-
     }
 
     public void activebuttonInCode(bool active)
@@ -200,10 +186,8 @@ public class ButtonFunctions : MonoBehaviour
         btn.interactable = active;
     }
 
-
     public void LoadRandomScene()
     {
-
         int totalScenes = SceneManager.sceneCountInBuildSettings;
         List<string> validScenes = new List<string>();
 
@@ -215,7 +199,6 @@ public class ButtonFunctions : MonoBehaviour
             if (!excludedScenes.Contains(sceneName))
             {
                 validScenes.Add(sceneName);
-
             }
         }
 
@@ -236,186 +219,14 @@ public class ButtonFunctions : MonoBehaviour
         Debug.Log("Loading scene: " + sceneToLoad);
         loadSceneAtStart(sceneToLoad);
 
-        if(sceneToLoad != null)
+        if (sceneToLoad != null)
         {
             manager.menus.menuWin.SetActive(false);
-
         }
-
-
-
-
     }
+
     private void loadSceneAtStart(string input)
     {
-        StartCoroutine(LoadScreen(input));
-    }
-
-    private void LoadSceneWithProgress(int sceneIndex)
-    {
-        StartCoroutine(LoadSceneAsync(sceneIndex));
-    }
-
-    private void LoadSceneWithProgress(string sceneName)
-    {
-        StartCoroutine(LoadSceneAsync(sceneName));
-    }
-
-    private IEnumerator LoadScreen(string sceneIndex)
-    {
-        if (loadingScreen != null)
-            loadingScreen.SetActive(true);
-
-        if (progressSlider != null)
-            progressSlider.value = 0;
-
-
-        yield return null; 
-
-        float startTime = Time.time;
-        float currentDisplayProgress = 0f;
-
-        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneIndex);
-        asyncLoad.allowSceneActivation = false;
-
-        while (asyncLoad.progress < 0.9f)
-        {
-            float targetProgress = Mathf.Clamp01(asyncLoad.progress / 0.9f);
-            currentDisplayProgress = Mathf.Lerp(currentDisplayProgress, targetProgress, Time.deltaTime * sliderSmoothingSpeed);
-
-            if (progressSlider != null)
-                progressSlider.value = currentDisplayProgress;
-
-            yield return null;
-        }
-
-        while (currentDisplayProgress < 0.99f)
-        {
-            currentDisplayProgress = Mathf.Lerp(currentDisplayProgress, 1f, Time.deltaTime * sliderSmoothingSpeed);
-
-            if (progressSlider != null)
-                progressSlider.value = currentDisplayProgress;
-
-            yield return null;
-        }
-
-        if (progressSlider != null)
-            progressSlider.value = 1f;
-
-        float elapsedTime = Time.time - startTime;
-        if (elapsedTime < minimumLoadTime)
-        {
-            float remainingTime = minimumLoadTime - elapsedTime;
-            yield return new WaitForSeconds(remainingTime);
-        }
-
-        asyncLoad.allowSceneActivation = true;
-        yield return new WaitForSeconds(0.1f);
-
-        if (loadingScreen != null)
-            loadingScreen.SetActive(false);
-    }
-    private IEnumerator LoadSceneAsync(int sceneIndex)
-    {
-        if (loadingScreen != null)
-            loadingScreen.SetActive(true);
-
-        if (progressSlider != null)
-            progressSlider.value = 0;
-
-        float startTime = Time.time;
-        float currentDisplayProgress = 0f;
-
-        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneIndex);
-        asyncLoad.allowSceneActivation = false;
-
-        while (asyncLoad.progress < 0.9f)
-        {
-            float targetProgress = Mathf.Clamp01(asyncLoad.progress / 0.9f);
-            currentDisplayProgress = Mathf.Lerp(currentDisplayProgress, targetProgress, Time.deltaTime * sliderSmoothingSpeed);
-
-            if (progressSlider != null)
-                progressSlider.value = currentDisplayProgress;
-
-            yield return null;
-        }
-
-        while (currentDisplayProgress < 0.99f)
-        {
-            currentDisplayProgress = Mathf.Lerp(currentDisplayProgress, 1f, Time.deltaTime * sliderSmoothingSpeed);
-
-            if (progressSlider != null)
-                progressSlider.value = currentDisplayProgress;
-
-            yield return null;
-        }
-
-        if (progressSlider != null)
-            progressSlider.value = 1f;
-
-        float elapsedTime = Time.time - startTime;
-        if (elapsedTime < minimumLoadTime)
-        {
-            float remainingTime = minimumLoadTime - elapsedTime;
-            yield return new WaitForSeconds(remainingTime);
-        }
-
-        asyncLoad.allowSceneActivation = true;
-        yield return new WaitForSeconds(0.1f);
-
-        if (loadingScreen != null)
-            loadingScreen.SetActive(false);
-    }
-
-    private IEnumerator LoadSceneAsync(string sceneName)
-    {
-        if (loadingScreen != null)
-            loadingScreen.SetActive(true);
-
-        if (progressSlider != null)
-            progressSlider.value = 0;
-
-        float startTime = Time.time;
-        float currentDisplayProgress = 0f;
-
-        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(sceneName);
-        asyncLoad.allowSceneActivation = false;
-
-        while (asyncLoad.progress < 0.9f)
-        {
-            float targetProgress = Mathf.Clamp01(asyncLoad.progress / 0.9f);
-            currentDisplayProgress = Mathf.Lerp(currentDisplayProgress, targetProgress, Time.deltaTime * sliderSmoothingSpeed);
-
-            if (progressSlider != null)
-                progressSlider.value = currentDisplayProgress;
-
-            yield return null;
-        }
-
-        while (currentDisplayProgress < 0.99f)
-        {
-            currentDisplayProgress = Mathf.Lerp(currentDisplayProgress, 1f, Time.deltaTime * sliderSmoothingSpeed);
-
-            if (progressSlider != null)
-                progressSlider.value = currentDisplayProgress;
-
-            yield return null;
-        }
-
-        if (progressSlider != null)
-            progressSlider.value = 1f;
-
-        float elapsedTime = Time.time - startTime;
-        if (elapsedTime < minimumLoadTime)
-        {
-            float remainingTime = minimumLoadTime - elapsedTime;
-            yield return new WaitForSeconds(remainingTime);
-        }
-
-        asyncLoad.allowSceneActivation = true;
-        yield return new WaitForSeconds(0.1f);
-
-        if (loadingScreen != null)
-            loadingScreen.SetActive(false);
+        MenuController.Instance?.LoadSceneWithProgress(input);
     }
 }
