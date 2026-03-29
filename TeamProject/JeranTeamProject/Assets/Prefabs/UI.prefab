@@ -326,6 +326,10 @@ MonoBehaviour:
   menuLose: {fileID: 3545787626654110575}
   loseMainButton: {fileID: 5786219522266089030}
   isPaused: 0
+  loadingScreen: {fileID: 5776365387721069153}
+  progressSlider: {fileID: 5065249523819962053}
+  minimumLoadTime: 2
+  sliderSmoothingSpeed: 1
 --- !u!1 &145246113389395680
 GameObject:
   m_ObjectHideFlags: 0
@@ -763,10 +767,6 @@ MonoBehaviour:
   - MainDevScene
   - HubWorld
   - CristobalDevAguilar
-  loadingScreen: {fileID: 0}
-  progressSlider: {fileID: 0}
-  minimumLoadTime: 2
-  sliderSmoothingSpeed: 5
 --- !u!1 &852892231293960463
 GameObject:
   m_ObjectHideFlags: 0
@@ -2196,6 +2196,7 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1174044259454704873}
   - {fileID: 2463495387407627325}
   - {fileID: 4532022217718445175}
   - {fileID: 1724732162003462955}
@@ -7120,6 +7121,96 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Slider
+--- !u!1001 &3896126344586403416
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 3960778526486469259}
+    m_Modifications:
+    - target: {fileID: 2763760241962074801, guid: aac987c4e391c0445bdc7ed429730a7d, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -270.03955
+      objectReference: {fileID: 0}
+    - target: {fileID: 2763760241962074801, guid: aac987c4e391c0445bdc7ed429730a7d, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 49.36438
+      objectReference: {fileID: 0}
+    - target: {fileID: 2763760241962074801, guid: aac987c4e391c0445bdc7ed429730a7d, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -525.29266
+      objectReference: {fileID: 0}
+    - target: {fileID: 2763760241962074801, guid: aac987c4e391c0445bdc7ed429730a7d, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2763760241962074801, guid: aac987c4e391c0445bdc7ed429730a7d, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2763760241962074801, guid: aac987c4e391c0445bdc7ed429730a7d, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2763760241962074801, guid: aac987c4e391c0445bdc7ed429730a7d, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2763760241962074801, guid: aac987c4e391c0445bdc7ed429730a7d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2763760241962074801, guid: aac987c4e391c0445bdc7ed429730a7d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2763760241962074801, guid: aac987c4e391c0445bdc7ed429730a7d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5166193203303774241, guid: aac987c4e391c0445bdc7ed429730a7d, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7365663525741841465, guid: aac987c4e391c0445bdc7ed429730a7d, type: 3}
+      propertyPath: m_Name
+      value: LoadingScreen
+      objectReference: {fileID: 0}
+    - target: {fileID: 7365663525741841465, guid: aac987c4e391c0445bdc7ed429730a7d, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8669867304556095598, guid: aac987c4e391c0445bdc7ed429730a7d, type: 3}
+      propertyPath: m_AnchorMax.y
+      value: 0
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: aac987c4e391c0445bdc7ed429730a7d, type: 3}
+--- !u!4 &1174044259454704873 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2763760241962074801, guid: aac987c4e391c0445bdc7ed429730a7d, type: 3}
+  m_PrefabInstance: {fileID: 3896126344586403416}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &5065249523819962053 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8095981048214339741, guid: aac987c4e391c0445bdc7ed429730a7d, type: 3}
+  m_PrefabInstance: {fileID: 3896126344586403416}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Slider
+--- !u!1 &5776365387721069153 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7365663525741841465, guid: aac987c4e391c0445bdc7ed429730a7d, type: 3}
+  m_PrefabInstance: {fileID: 3896126344586403416}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &4523662806149458460
 PrefabInstance:
   m_ObjectHideFlags: 0
