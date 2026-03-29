@@ -38,4 +38,12 @@ public class PlayerData
         gunList = new List<GunStats>();
         itemList = new List<Pickups>();
 }
+    public void GunListSwap(List<GunStats> listSwap)
+    {
+        gunList.Clear();
+        foreach (GunStats gun in listSwap)
+        {
+            gunList.Add(gun);
+        }
+    }
 }

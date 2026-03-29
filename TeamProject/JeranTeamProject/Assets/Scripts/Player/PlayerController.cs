@@ -129,7 +129,11 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
     {
         if (manager != null && manager.menus.isPaused)
             return;
-        
+
+        if (Gun.gunList[gunPos] != playerData.gunList[gunPos])
+        {
+            playerData.GunListSwap(Gun.gunList);
+        }
 
         UpdatePlayerUI();
         Movement();
@@ -591,7 +595,10 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
     }
     public void UpdateGun()
     {
-        Gun.changeGun(gunPos);
+        if(Shooting.instance.canShoot != false)
+        {
+            Gun.changeGun(gunPos);
+        }
 
         cardUI?.updateCards();
     }
