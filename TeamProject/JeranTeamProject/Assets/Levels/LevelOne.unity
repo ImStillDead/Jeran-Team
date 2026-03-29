@@ -62495,6 +62495,79 @@ Mesh:
       - serializedVersion: 1
         m_IndexStart: 0
         m_IndexCount: 0
+--- !u!1001 &288805951
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 2763760241962074801, guid: aac987c4e391c0445bdc7ed429730a7d, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 689.96045
+      objectReference: {fileID: 0}
+    - target: {fileID: 2763760241962074801, guid: aac987c4e391c0445bdc7ed429730a7d, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 589.3644
+      objectReference: {fileID: 0}
+    - target: {fileID: 2763760241962074801, guid: aac987c4e391c0445bdc7ed429730a7d, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -525.29266
+      objectReference: {fileID: 0}
+    - target: {fileID: 2763760241962074801, guid: aac987c4e391c0445bdc7ed429730a7d, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2763760241962074801, guid: aac987c4e391c0445bdc7ed429730a7d, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2763760241962074801, guid: aac987c4e391c0445bdc7ed429730a7d, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2763760241962074801, guid: aac987c4e391c0445bdc7ed429730a7d, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2763760241962074801, guid: aac987c4e391c0445bdc7ed429730a7d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2763760241962074801, guid: aac987c4e391c0445bdc7ed429730a7d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2763760241962074801, guid: aac987c4e391c0445bdc7ed429730a7d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7365663525741841465, guid: aac987c4e391c0445bdc7ed429730a7d, type: 3}
+      propertyPath: m_Name
+      value: LoadingScreen
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: aac987c4e391c0445bdc7ed429730a7d, type: 3}
+--- !u!114 &288805952 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 8095981048214339741, guid: aac987c4e391c0445bdc7ed429730a7d, type: 3}
+  m_PrefabInstance: {fileID: 288805951}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67db9e8f0e2ae9c40bc1e2b64352a6b4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.UI.Slider
+--- !u!1 &288805953 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7365663525741841465, guid: aac987c4e391c0445bdc7ed429730a7d, type: 3}
+  m_PrefabInstance: {fileID: 288805951}
+  m_PrefabAsset: {fileID: 0}
 --- !u!43 &295549521
 Mesh:
   m_ObjectHideFlags: 0
@@ -218612,6 +218685,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6930104768347528510, guid: 1871e5117a43b6a428afeb2ec882ee0e, type: 3}
+      propertyPath: loadingScreen
+      value: 
+      objectReference: {fileID: 288805953}
+    - target: {fileID: 6930104768347528510, guid: 1871e5117a43b6a428afeb2ec882ee0e, type: 3}
+      propertyPath: progressSlider
+      value: 
+      objectReference: {fileID: 288805952}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -304480,6 +304561,7 @@ Mesh:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
+  - {fileID: 288805951}
   - {fileID: 1272773806}
   - {fileID: 1125329105}
   - {fileID: 2144763338}

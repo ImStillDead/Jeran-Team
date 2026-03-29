@@ -620,8 +620,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 865767396}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 886.35596, y: -0.00001, z: 2357.8953}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 886.35596, y: 0, z: 2357.8953}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1314,6 +1314,18 @@ PrefabInstance:
     - target: {fileID: 8034655292340855440, guid: 734cd4afb6bdf4049abc924a0d1f06aa, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8764232235920197864, guid: 734cd4afb6bdf4049abc924a0d1f06aa, type: 3}
+      propertyPath: loadingScreen
+      value: 
+      objectReference: {fileID: 865767396}
+    - target: {fileID: 8764232235920197864, guid: 734cd4afb6bdf4049abc924a0d1f06aa, type: 3}
+      propertyPath: progressSlider
+      value: 
+      objectReference: {fileID: 1028632417}
+    - target: {fileID: 8764232235920197864, guid: 734cd4afb6bdf4049abc924a0d1f06aa, type: 3}
+      propertyPath: sliderSmoothingSpeed
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
