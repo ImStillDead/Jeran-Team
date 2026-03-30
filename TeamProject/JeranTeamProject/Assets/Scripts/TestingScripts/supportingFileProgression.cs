@@ -14,28 +14,27 @@ public enum progess
 
 public class supportGameProgression : MonoBehaviour
 {
+    public GameManager Manager;
     PlayerController player;
-    GameManager Manager;
-    Shooting guns;
     int kills;
     public HashSet<progess> unlocked = new HashSet<progess>();
 
-    //public void Awake()
-    //{
-    //    Manager = DataManager.manager;
-    //    if (Manager != null && Manager.playerScript != null)
-    //    {
-    //        player = Manager.playerScript;
-    //    }
-
-    //}
     private void Start()
     {
-        Manager = DataManager.manager;
-        if (Manager != null && Manager.playerScript != null)
-        {
+
+        if (Manager != null)
             player = Manager.playerScript;
+
+    }
+
+    private void Update()
+    {
+        
+        if(kills != Manager.killCount)
+        {
+            kills = Manager.killCount;
         }
+
     }
 
     public void Unlock(progess achievement)
@@ -43,72 +42,114 @@ public class supportGameProgression : MonoBehaviour
         if (!unlocked.Contains(achievement))
         {
             unlocked.Add(achievement);
-          //  Debug.Log("Unlocked: " + achievement);
+            //  Debug.Log("Unlocked: " + achievement);
         }
 
     }
 
-    public void getkills(int kill)
+    public int getkills()
     {
-        kills += kill;
-        if(kills >= 10 && !unlocked.Contains(progess.get10Kills))
+        if (Manager == null)
         {
-          //  Debug.LogWarning("*********achievement unlocked************");
-            Unlock(progess.get10Kills);
-            Manager.addDialog("you killed 10 enemies"); //the addition to the dialog is temp for testing, it will be updated for a notif bar that willpop up and slide away.
+            Debug.LogWarning("GameManager destroyed, cannot show dialog!");
+            return 0;
         }
+
+        int highestTier = 0;
+
+        if (kills >= 10 && !unlocked.Contains(progess.get10Kills))
+            Unlock(progess.get10Kills);
+        if (kills >= 10) highestTier = 1;
 
         if (kills >= 50 && !unlocked.Contains(progess.get50kills))
-        {
-          //  Debug.LogWarning("*********achievement unlocked************");
             Unlock(progess.get50kills);
-            Manager.addDialog("you killed 50 enemies");
-        }
+        if (kills >= 50) highestTier = 2;
 
         if (kills >= 100 && !unlocked.Contains(progess.get100kills))
-        {
-          //  Debug.LogWarning("*********achievement unlocked************");
             Unlock(progess.get100kills);
-            Manager.addDialog("you killed 100 enemies");
-        }
-        if (kills >= 500 && !unlocked.Contains(progess.get500kills))
-        {
-          //  Debug.LogWarning("*********achievement unlocked************");
-            Unlock(progess.get500kills);
-            Manager.addDialog("you killed 500 enemies");
-        }
+        if (kills >= 100) highestTier = 3;
 
+        if (kills >= 500 && !unlocked.Contains(progess.get500kills))
+            Unlock(progess.get500kills);
+        if (kills >= 500) highestTier = 4;
+
+        if (kills >= 1000 && !unlocked.Contains(progess.get1000kills))
+            Unlock(progess.get1000kills);
+        if (kills >= 1000) highestTier = 5;
+
+        if (kills >= 40000 && !unlocked.Contains(progess.get40000kills))
+            Unlock(progess.get40000kills);
+        if (kills >= 40000) highestTier = 6;
+
+        return highestTier;
     }
 
-    public void FindItem()
+    public int FindItem()
     {
-        for(int index = 0; index < guns.gunList.Count; index++)
+        int progression = 0;
+
+        for(int index = 0; index < player.Gun.gunList.Count; index++)
         {
-            if (guns.gunList[index] == GameObject.FindGameObjectWithTag("Common") && !unlocked.Contains(progess.findAcommonWeapon))
+            if (player.Gun.gunList[index] == GameObject.FindGameObjectWithTag("Common") && !unlocked.Contains(progess.findAcommonWeapon))
             {
 
-               // Debug.LogWarning("*********achievement unlocked************");
                 Unlock(progess.findAcommonWeapon);
                 Manager.addDialog("you found a Common weapon");
-
+                progression = 1;
 
             }
 
-            if (guns.gunList[index] == GameObject.FindGameObjectWithTag("Uncommon") && !unlocked.Contains(progess.findAUncommon))
+            if (player.Gun.gunList[index] == GameObject.FindGameObjectWithTag("Uncommon") && !unlocked.Contains(progess.findAUncommon))
             {
-
-               // Debug.LogWarning("*********achievement unlocked************");
                 Unlock(progess.findAUncommon);
                 Manager.addDialog("you found a Uncommon weapon");
+                progression = 2;
+
+            }
+
+            if (player.Gun.gunList[index] == GameObject.FindGameObjectWithTag("Rare") && !unlocked.Contains(progess.findARare))
+            {
+                Unlock(progess.findARare);
+               
+                progression = 3;
+
+            }
+
+            if (player.Gun.gunList[index] == GameObject.FindGameObjectWithTag("Perfected") && !unlocked.Contains(progess.findAPerfected))
+            {
+                Unlock(progess.findAPerfected);
+                Manager.addDialog("you found a Uncommon weapon");
+                progression = 4;
+            }
+
+            if (player.Gun.gunList[index] == GameObject.FindGameObjectWithTag("Perfected") && !unlocked.Contains(progess.findAPerfected))
+            {
+                Unlock(progess.findAPerfected);
+                Manager.addDialog("you found a Uncommon weapon");
+                progression = 5;
+            }
+            if (player.Gun.gunList[index] == GameObject.FindGameObjectWithTag("Exotic") && !unlocked.Contains(progess.findAExotic))
+            {
+                Unlock(progess.findAExotic);
+                Manager.addDialog("you found a Uncommon weapon");
+                progression = 6;
+            }
+            if (player.Gun.gunList[index] == GameObject.FindGameObjectWithTag("Special") && !unlocked.Contains(progess.findASpecial))
+            {
+                Unlock(progess.findASpecial);
+                Manager.addDialog("you found a Uncommon weapon");
+                progression = 7;
             }
 
         }
 
+
+        return progression;
     }
 
     public void surviveDays()
     {
-        if(Manager.DAYs == 1 && !unlocked.Contains(progess.survive1Day))
+        if (Manager.DAYs == 1 && !unlocked.Contains(progess.survive1Day))
         {
             Unlock(progess.survive1Day);
             Manager.addDialog("you survived 1 day");
@@ -118,7 +159,23 @@ public class supportGameProgression : MonoBehaviour
         {
             Unlock(progess.survive5days);
             Manager.addDialog("you survived 1 day");
-
         }
+        if (Manager.DAYs == 10 && !unlocked.Contains(progess.survive10days))
+        {
+            Unlock(progess.survive10days);
+            Manager.addDialog("you survived 1 day");
+        }
+        if (Manager.DAYs == 15 && !unlocked.Contains(progess.survive15days))
+        {
+            Unlock(progess.survive15days);
+            Manager.addDialog("you survived 1 day");
+        }
+        if (Manager.DAYs == 20 && !unlocked.Contains(progess.completeArun))
+        {
+            Unlock(progess.completeArun);
+            Manager.addDialog("you survived 1 day");
+        }
+
+
     }
 }

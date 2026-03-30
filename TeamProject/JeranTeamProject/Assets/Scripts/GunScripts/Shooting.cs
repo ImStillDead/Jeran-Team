@@ -17,7 +17,7 @@ public class Shooting : MonoBehaviour, IAttachmentPickup
     [SerializeField] public GameObject gunModel;
     [SerializeField] LayerMask ignoreLayer;
     [SerializeField] float shootRate;
-    [SerializeField] int magSizeMax;
+    [SerializeField] public int magSizeMax;
     [SerializeField] public float reloadTime;
     [SerializeField] GameObject bullet;
     [SerializeField] Transform shootPos;
@@ -81,7 +81,7 @@ public class Shooting : MonoBehaviour, IAttachmentPickup
 
 
     // Other Variables
-    bool reloading;
+    public bool reloading;
     public int activeGun;
     int pelletCount;
     bool isShotgun;
@@ -94,6 +94,8 @@ public class Shooting : MonoBehaviour, IAttachmentPickup
 
     bool burstFiring = true;
     bool shotgunFiring;
+    GameManager manager;
+    float reloadProgress;
 
 
     void Awake()
@@ -113,6 +115,7 @@ public class Shooting : MonoBehaviour, IAttachmentPickup
 
     void Start()
     {
+        manager = GameManager.instance;
         locationFinder();
         animationControl = GameManager.instance.playerScript.playerAnimator;
     }
@@ -278,20 +281,41 @@ public class Shooting : MonoBehaviour, IAttachmentPickup
         if (!reloading)
         {
             shootTimer = 0;
-            if (aud[0] != null) 
-            GameManager.instance.playerScript.PlayAudio(aud[0], volume);
+            if (aud[0] != null)
+                GameManager.instance.playerScript.PlayAudio(aud[0], volume);
             Quaternion spreadRotation = shootPos.transform.rotation *
                 Quaternion.Euler(Random.Range(-currentSpread, currentSpread), Random.Range(-currentSpread, currentSpread), 0);
 
             Instantiate(bullet, shootPos.position, spreadRotation);
-
-            currentAmmo = currentAmmo - 1;
+            currentAmmo--;
+            UpdateReloadBar();
             callAmmo();
 
             recoil.RecoilFire();
         }
 
 
+    }
+
+    public void UpdateReloadBar()
+    {
+        if (manager.reloadBar == null) return;
+
+        if (reloading)
+        {
+            // Fill over time
+            reloadProgress += Time.deltaTime / reloadTime;
+
+            manager.reloadBar.fillAmount = Mathf.Lerp(manager.reloadBar.fillAmount, 1, Time.deltaTime * reloadTime);
+        }
+        else
+        {
+            // INSTANT chunk based on ammo
+            float fraction = (float)currentAmmo / magSizeMax;
+            manager.reloadBar.fillAmount = fraction;
+
+            reloadProgress = 0f; // reset for next reload
+        }
     }
 
     public void ShotgunShot()

@@ -264,6 +264,7 @@ public class EnemyAI : MonoBehaviour, IDamage
         if (showcaseMode || !canSpit) return;
         spitTimer = 0;
         Instantiate(spit, spitPos.position, transform.rotation);
+
     }
 
     public void takeDamage(int amount)
@@ -285,7 +286,8 @@ public class EnemyAI : MonoBehaviour, IDamage
             player.GetComponent<OnPlayerEnemySpawn>().spawnCount--;
             GameManager.instance.enemyBoardCount(-1);
             GameManager.instance.killCount++;
-            GameManager.instance.prog.getkills(1);
+            GameManager.instance.achieve.PlayerKills();
+
             player.AddPlayerMoney(killReward);
             manager.giveXP(experienceReward);
             player.UpdatePlayerUI();

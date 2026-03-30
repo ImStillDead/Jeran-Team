@@ -24,6 +24,8 @@ public class GameManager : MonoBehaviour
     public MenuController menus;
     public GameObject player;
     public PlayerController playerScript;
+    public supportGameProgression prog;
+    public AchievementController achieve;
 
     [Header("Static Objects")]
     [SerializeField] CharacterSelect baseCharacter;
@@ -102,7 +104,7 @@ public class GameManager : MonoBehaviour
     public float experience;
     public float levelUpCap = 50f;
     public float level;
-    public supportGameProgression prog;
+
     //Awake Start Update
     void Awake()
     {
@@ -130,7 +132,11 @@ public class GameManager : MonoBehaviour
         killCount = 0;
         menus = Object.FindAnyObjectByType<MenuController>();
         menus.stateUnpause();
+        if(prog == null) 
         prog = GetComponent<supportGameProgression>();
+
+        if(achieve == null) achieve = GetComponent<AchievementController>();
+
         if (moneyCount != null && playerScript != null)
             moneyCount.text = playerScript.GetplayerMoney().ToString();
         if(DataManager.instance != null)
@@ -477,11 +483,6 @@ public class GameManager : MonoBehaviour
     {
         killCount++;
         AddScore(enemyType);
-    }
-
-    public void CompleteLevel()
-    {
-        //EndGame();
     }
 
     //Experience
