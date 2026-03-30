@@ -854,6 +854,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
         foreach (GunStats gun in character.gunList)
         {
             playerData.gunList.Add(gun);
+            cardUI?.updateCards();
         }
         weaponPos.SetParent(GameManager.instance.player.transform);
         //MeshChange
@@ -884,6 +885,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
         foreach (GunStats gun in character.gunList)
         {
             staticBase.gunList.Add(gun);
+            cardUI?.updateCards();
         }
         SaveHub();
     }

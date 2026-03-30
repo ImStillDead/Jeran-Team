@@ -10,7 +10,6 @@ public class AchievementController : MonoBehaviour
     [Header("contollers")]
     public GameManager manager;
     public PlayerController player;
-    public supportGameProgression achievements;
     public Shooting currentgun;
     
     [Header("positions of the prefab")]
@@ -29,39 +28,93 @@ public class AchievementController : MonoBehaviour
 
     private int daysSurvived;
     public bool activate;
+    public string NameOfAchievement;
+    public string descriptionOfAchievement;
+    private int lastActivatedTier;
 
     void Start()
     {
-        manager = GameManager.instance;          // get manager instance
-        if (manager != null)
+        if (manager == null)
+            return;
+
+        // check prog is assigned
+        if (manager.prog == null)
         {
-            player = manager.playerScript;       // get player controller
-            achievements = manager.prog;         // get progression
-            if (player != null)
-                currentgun = player.Gun;         // get current gun
+            Debug.LogError("GameManager.prog is not assigned!");
         }
+
+        AchievementName.text = "this is a test";
+
     }
 
     // Update is called once per frame
     void Update()
     {
-        PlayerKills();
+
 
         if (activate)
         {
-            MoveAchievement(4f);  
+            MoveAchievement(2f);  
             activate = false;
         }
 
     }
 
-    void PlayerKills()
+    public void PlayerKills()
     {
-        
+        if (manager == null || manager.prog == null)
+        {
+            Debug.LogError("Achievements or Manager is NULL");
+            return;
+        }
 
-       giveEmblemColor(achievements.getkills(manager.killCount));
-        emblemImage.sprite = emblemAcheivementList[0];
-        activate = true;
+        int currentTier = manager.prog.getkills(); // highest unlocked tier
+
+        // Only trigger if the tier is higher than the last activated
+        if (currentTier > 0 && currentTier != lastActivatedTier)
+        {
+            lastActivatedTier = currentTier; // update counter
+
+            // Set achievement text based on the tier
+            switch (currentTier)
+            {
+                case 1:
+                    NameOfAchievement = "Kill 10 enemies";
+                    descriptionOfAchievement = "Kill 10 of any type of enemy";
+                    break;
+                case 2:
+                    NameOfAchievement = "Kill 50 enemies";
+                    descriptionOfAchievement = "Kill 50 of any type of enemy";
+                    break;
+                case 3:
+                    NameOfAchievement = "Kill 100 enemies";
+                    descriptionOfAchievement = "Kill 100 of any type of enemy";
+                    break;
+                case 4:
+                    NameOfAchievement = "Kill 500 enemies";
+                    descriptionOfAchievement = "Kill 500 of any type of enemy";
+                    break;
+                case 5:
+                    NameOfAchievement = "Kill 1000 enemies";
+                    descriptionOfAchievement = "Kill 1000 of any type of enemy";
+                    break;
+                case 6:
+                    NameOfAchievement = "Kill 40000 enemies";
+                    descriptionOfAchievement = "Kill 40000 of any type of enemy";
+                    break;
+            }
+
+            // Update UI
+            AchievementName.text = NameOfAchievement;
+            description.text = descriptionOfAchievement;
+            giveEmblemColor(currentTier);
+
+            if (emblemAcheivementList != null && emblemAcheivementList.Count > 0)
+                emblemImage.sprite = emblemAcheivementList[0];
+
+            // Activate animation
+            activate = true;
+        }
     }
 
     void giveEmblemColor(int number)
@@ -69,43 +122,43 @@ public class AchievementController : MonoBehaviour
         switch (number)
         {
             case 1:
-                boarderTierColor.color = Color.gray;
+                boarderTierColor.color = new Color32(128, 128, 128, 255); // gray
                 break;
             case 2:
-                boarderTierColor.color = Color.lightGreen;
+                boarderTierColor.color = new Color32(144, 238, 144, 255); // light green
                 break;
             case 3:
-                boarderTierColor.color = Color.lightBlue;
+                boarderTierColor.color = new Color32(173, 216, 230, 255); // light blue
                 break;
             case 4:
-                boarderTierColor.color = Color.lightYellow;
+                boarderTierColor.color = new Color32(255, 255, 224, 255); // light yellow
                 break;
             case 5:
-                boarderTierColor.color = Color.red;
+                boarderTierColor.color = new Color32(255, 0, 0, 255); // red
                 break;
             case 6:
-                boarderTierColor.color = Color.gold;
+                boarderTierColor.color = new Color32(255, 215, 0, 255); // gold
                 break;
-
         }
     }
 
     void MoveAchievement(float time)
     {
+        float drop = time / 4;
 
-         StartCoroutine(pullBarDown(time));
+         StartCoroutine(pullBarDown(drop,time));
         
     }
 
-    IEnumerator pullBarDown(float duration)
+    IEnumerator pullBarDown(float dropspeed, float stayAmount)
     {
         Vector3 startPos = achievementParent.position;
         Vector3 endPos = achievementTargetLocation.position;
         float elapsed = 0f;
 
-        while (elapsed < duration)
+        while (elapsed < dropspeed)
         {
-            achievement_bar.transform.position = Vector3.Lerp(startPos, endPos, elapsed / duration);
+            achievement_bar.transform.position = Vector3.Lerp(startPos, endPos, elapsed / dropspeed);
             elapsed += Time.deltaTime;
             yield return null;
         }
@@ -113,18 +166,19 @@ public class AchievementController : MonoBehaviour
         achievement_bar.transform.position = endPos;
 
   
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(stayAmount);
 
     
         elapsed = 0f;
-        while (elapsed < duration)
+        while (elapsed < dropspeed)
         {
-            achievement_bar.transform.position = Vector3.Lerp(endPos, startPos, elapsed / duration);
+            achievement_bar.transform.position = Vector3.Lerp(endPos, startPos, elapsed / dropspeed);
             elapsed += Time.deltaTime;
             yield return null;
         }
 
         achievement_bar.transform.position = startPos;
+
     }
 
 

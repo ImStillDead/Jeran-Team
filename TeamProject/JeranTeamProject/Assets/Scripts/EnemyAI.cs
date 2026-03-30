@@ -285,6 +285,7 @@ public class EnemyAI : MonoBehaviour, IDamage
             player.GetComponent<OnPlayerEnemySpawn>().spawnCount--;
             GameManager.instance.enemyBoardCount(-1);
             GameManager.instance.killCount++;
+            GameManager.instance.achieve.PlayerKills();
 
             player.AddPlayerMoney(killReward);
             manager.giveXP(experienceReward);

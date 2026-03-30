@@ -29,7 +29,7 @@ public class ButtonFunctions : MonoBehaviour
         if (instance == null)
         {
             instance = this;
-            DontDestroyOnLoad(gameObject);
+
         }
         else
         {

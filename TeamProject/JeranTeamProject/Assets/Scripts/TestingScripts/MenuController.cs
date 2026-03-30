@@ -43,7 +43,7 @@ public class MenuController : MonoBehaviour, IPointerEnterHandler
         if (instance == null)
         {
             instance = this;
-            DontDestroyOnLoad(gameObject);
+            //DontDestroyOnLoad(gameObject);
         }
         else
         {

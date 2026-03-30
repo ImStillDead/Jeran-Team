@@ -29,9 +29,6 @@ public class cardHolder : MonoBehaviour
         }
 
 
-        card1.gameObject.SetActive(false);
-        card2.gameObject.SetActive(false);
-
 
     }
 
