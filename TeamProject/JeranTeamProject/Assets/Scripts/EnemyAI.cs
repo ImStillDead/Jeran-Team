@@ -264,6 +264,7 @@ public class EnemyAI : MonoBehaviour, IDamage
         if (showcaseMode || !canSpit) return;
         spitTimer = 0;
         Instantiate(spit, spitPos.position, transform.rotation);
+
     }
 
     public void takeDamage(int amount)

@@ -85,6 +85,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
     public bool canSwap;
     Vector3 moveDir;
     Vector3 playerVel;
+    public float reloadProgress = 0f;
 
     //sliding varibles
     private Dashing dashingComponent;
@@ -646,6 +647,7 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
         float tartget = (float)playerData.HP / playerData.HPMax;
         float XPtarget = (float)playerData.experience / playerData.levelUpCap;
 
+
         if (manager.PlayerHP_bar != null)
         {
             manager.PlayerHP_bar.fillAmount = Mathf.Lerp(manager.PlayerHP_bar.fillAmount, tartget, Time.deltaTime * 50);
@@ -669,6 +671,10 @@ public class PlayerController : MonoBehaviour, IDamage, IPickup, IGunPickup, IDa
         {
             manager.updateItem(itemList[invPos].itemIndex);
         }
+
+        Gun.UpdateReloadBar();
+
+
         manager.UpdateUI(playerData);
     }
     public void SpawnPlayer()
