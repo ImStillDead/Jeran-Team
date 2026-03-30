@@ -7663,6 +7663,14 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5944464827141231571, guid: 9a8e8f7362c1537428ff6bfea6518f7b, type: 3}
+      propertyPath: bossTracks.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5944464827141231571, guid: 9a8e8f7362c1537428ff6bfea6518f7b, type: 3}
+      propertyPath: combatTracks.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5944464827141231571, guid: 9a8e8f7362c1537428ff6bfea6518f7b, type: 3}
       propertyPath: 'bossTracks.Array.data[0]'
       value: 
       objectReference: {fileID: 8300000, guid: 972f2d7f4f6a50349b41c5fb38948239, type: 3}
@@ -7678,6 +7686,10 @@ PrefabInstance:
       propertyPath: 'bossTracks.Array.data[3]'
       value: 
       objectReference: {fileID: 8300000, guid: 90f66df41bce0d247b1b0f51c8a0c0e1, type: 3}
+    - target: {fileID: 5944464827141231571, guid: 9a8e8f7362c1537428ff6bfea6518f7b, type: 3}
+      propertyPath: neutralTracks.Array.size
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5944464827141231571, guid: 9a8e8f7362c1537428ff6bfea6518f7b, type: 3}
       propertyPath: 'combatTracks.Array.data[0]'
       value: 
@@ -7697,7 +7709,7 @@ PrefabInstance:
     - target: {fileID: 5944464827141231571, guid: 9a8e8f7362c1537428ff6bfea6518f7b, type: 3}
       propertyPath: 'neutralTracks.Array.data[0]'
       value: 
-      objectReference: {fileID: 8300000, guid: 972f2d7f4f6a50349b41c5fb38948239, type: 3}
+      objectReference: {fileID: 8300000, guid: c0ce0fc7d66db3a459d6bd2a494a0bf8, type: 3}
     - target: {fileID: 5944464827141231571, guid: 9a8e8f7362c1537428ff6bfea6518f7b, type: 3}
       propertyPath: 'neutralTracks.Array.data[2]'
       value: 
@@ -7851,6 +7863,14 @@ PrefabInstance:
     - target: {fileID: 2497934519388468795, guid: ec88ca91a90761646bd11a378fba08ed, type: 3}
       propertyPath: m_AnchorMax.y
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2520708153116321541, guid: ec88ca91a90761646bd11a378fba08ed, type: 3}
+      propertyPath: m_Value
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2520708153116321541, guid: ec88ca91a90761646bd11a378fba08ed, type: 3}
+      propertyPath: m_MinValue
+      value: 0.0001
       objectReference: {fileID: 0}
     - target: {fileID: 2520708153116321541, guid: ec88ca91a90761646bd11a378fba08ed, type: 3}
       propertyPath: m_OnValueChanged.m_PersistentCalls.m_Calls.Array.size
